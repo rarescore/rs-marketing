@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 410 96" role="img" aria-labelledby="title desc">
+  <title id="title">RS Marketing logo</title><desc id="desc">Rare Score Marketing monogram and wordmark</desc>
+  <rect x="4" y="4" width="88" height="88" rx="24" fill="#d8ff3e"/>
+  <path d="M23 70V25h25c14 0 22 6 22 17 0 8-4 13-12 16l19 16H58L43 59h-5v15H23Zm15-26h11c5 0 8-2 8-6 0-3-3-5-8-5H38v11Z" fill="#0b0c0b"/>
+  <path d="M63 24h15l-7 12-8-12Z" fill="#f24b1a"/>
+  <text x="116" y="58" fill="#0b0c0b" font-family="Arial, Helvetica, sans-serif" font-size="45" font-weight="800" letter-spacing="-3">RS MARKETING</text>
+  <text x="119" y="80" fill="#545750" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="700" letter-spacing="4">RARE SCORE MARKETING</text>
+</svg>
