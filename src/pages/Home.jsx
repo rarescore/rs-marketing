@@ -1,72 +1,56 @@
-import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { ArrowDown, ArrowRight, ArrowUpRight, Check, Gauge, Play, Search, Sparkles, Zap } from 'lucide-react'
+import { ArrowRight, ArrowUpRight, BarChart3, Check, CirclePlay, Search, Sparkles, Target, Video } from 'lucide-react'
 import Seo from '../components/Seo'
-import { FaqList, Marquee, SectionIntro } from '../components/UI'
-import { articles, faqs, plans, processSteps, services } from '../data'
+import { FaqList, SectionIntro } from '../components/UI'
+import { articles, faqs, plans } from '../data'
 
-function Hero() {
-  const visual = useRef(null)
-  useEffect(()=>{
-    const el=visual.current
-    if(!el || matchMedia('(prefers-reduced-motion: reduce)').matches) return
-    const move=e=>{ const r=el.getBoundingClientRect(); el.style.setProperty('--rx',`${((e.clientY-r.top)/r.height-.5)*-4}deg`); el.style.setProperty('--ry',`${((e.clientX-r.left)/r.width-.5)*5}deg`) }
-    const reset=()=>{el.style.setProperty('--rx','0deg');el.style.setProperty('--ry','0deg')}
-    el.addEventListener('pointermove',move);el.addEventListener('pointerleave',reset)
-    return()=>{el.removeEventListener('pointermove',move);el.removeEventListener('pointerleave',reset)}
-  },[])
-  return <section className="hero">
-    <div className="hero-art" ref={visual}><img src="/assets/growth-engine.webp" srcSet="/assets/growth-engine-840.webp 840w, /assets/growth-engine.webp 1680w" sizes="100vw" width="1680" height="944" alt="Abstract glass growth engine with luminous data flowing through connected rings" fetchPriority="high"/><div className="hero-grid"/></div>
-    <div className="wrap hero-content">
-      <p className="eyebrow hero-eyebrow"><span/>Independent growth studio · Los Angeles / Remote</p>
-      <h1>Make your business<br/><i>impossible to overlook.</i></h1>
-      <div className="hero-bottom">
-        <p>AI-powered creative, search, paid media and performance websites—directed by people, measured against business outcomes.</p>
-        <div className="hero-actions"><Link to="/pricing" className="button button-acid">Explore packages <ArrowUpRight/></Link><Link to="/audit" className="text-link">Audit my website <ArrowRight/></Link></div>
-      </div>
-      <a className="scroll-cue" href="#system"><ArrowDown/> <span>Scroll to see the system</span></a>
+const signals = [
+  ['01', 'Be found', 'Search structure, local visibility and useful content help the right people discover you.'],
+  ['02', 'Be understood', 'Clear words and strong creative explain why your business is the right fit.'],
+  ['03', 'Be chosen', 'Fast pages, proof and simple next steps turn attention into calls and leads.'],
+]
+
+const studio = [
+  { icon: Video, title: 'AI video & social', text: 'We plan, create, test and post short-form content that looks like your brand—not a template.', tag: 'Create attention' },
+  { icon: Target, title: 'Ads that create leads', text: 'Meta, Instagram, TikTok and Google campaigns built around calls, forms and real sales conversations.', tag: 'Capture demand' },
+  { icon: Search, title: 'SEO & local growth', text: 'We improve the pages, Google signals and local presence that decide whether people can find you.', tag: 'Build visibility' },
+  { icon: Sparkles, title: 'Premium websites', text: 'High-performance sites that feel credible in seconds and make the next action obvious on every screen.', tag: 'Convert interest' },
+]
+
+function Hero(){return <section className="new-hero">
+  <div className="hero-lines" aria-hidden="true"><i/><i/><i/></div>
+  <div className="wrap new-hero-grid">
+    <div className="new-hero-copy">
+      <p className="eyebrow"><span/> Marketing that is clear, connected and built to grow</p>
+      <h1>Findable.<br/>Believable.<br/><i>Chosen.</i></h1>
+      <p>We build the videos, ads, search presence and websites that help people notice your business—and feel confident contacting you.</p>
+      <div className="new-hero-actions"><Link to="/pricing" className="button button-acid">See packages <ArrowUpRight/></Link><Link to="/audit" className="button button-quiet">Run a free website audit <ArrowRight/></Link></div>
+      <div className="hero-proof"><span><b>4</b> simple monthly plans</span><span><b>$1.5k</b> websites from</span><span><b>1 day</b> typical reply</span></div>
     </div>
-  </section>
-}
-
-function GrowthLab() {
-  const [budget,setBudget]=useState(2000)
-  const [goal,setGoal]=useState('Leads')
-  const [channel,setChannel]=useState('Paid + organic')
-  const leads=Math.round((budget*({Awareness:.25,Leads:.55,Sales:.38}[goal]||.4))/58)
-  const assets=Math.round(8+budget/180)
-  return <section className="lab-section" id="system"><div className="wrap lab-grid">
-    <SectionIntro eyebrow="The growth lab" title={'Plan for a system,<br/><i>not a lucky post.</i>'} copy="Change the inputs to see how we balance production and acquisition. This is a planning illustration—not a performance promise." light/>
-    <div className="lab-panel">
-      <div className="lab-controls">
-        <label>Monthly working budget <output>${budget.toLocaleString()}</output><input type="range" min="500" max="10000" step="500" value={budget} onChange={e=>setBudget(+e.target.value)}/></label>
-        <fieldset><legend>Primary goal</legend><div>{['Awareness','Leads','Sales'].map(x=><button className={goal===x?'active':''} onClick={()=>setGoal(x)} key={x}>{x}</button>)}</div></fieldset>
-        <fieldset><legend>Channel mix</legend><div>{['Organic','Paid + organic','Search + social'].map(x=><button className={channel===x?'active':''} onClick={()=>setChannel(x)} key={x}>{x}</button>)}</div></fieldset>
-      </div>
-      <div className="lab-output">
-        <div className="metric-orbit"><span className="orbit-ring"/><div><b>{assets}</b><small>planned<br/>assets</small></div></div>
-        <div className="lab-readout"><span>Planning scenario</span><strong>{goal}</strong><p>{channel}</p><div><b>~{leads}</b><small>modeled inquiries*</small></div></div>
-      </div>
-      <p className="lab-note">*Illustration uses a sample $58 cost per inquiry and does not predict actual results. Your market, offer, budget and sales process determine performance.</p>
+    <div className="brand-stage" aria-label="RS Marketing brand mark and growth dashboard">
+      <div className="brand-halo"/>
+      <img src="/assets/rs-logo-white.webp" width="1200" height="1200" alt="RS Marketing — Rare Score Marketing" fetchPriority="high"/>
+      <div className="float-card float-card-a"><BarChart3/><span>Search visibility</span><b>+ clearer signals</b></div>
+      <div className="float-card float-card-b"><CirclePlay/><span>Creative testing</span><b>Ideas that improve</b></div>
+      <div className="flight-tag"><span/> Strategy · Creative · Search · Growth</div>
     </div>
-  </div></section>
-}
+  </div>
+  <div className="continuity-strip"><div>{['AI VIDEO','SOCIAL MEDIA','PAID ADS','SEO','GOOGLE PROFILE','PREMIUM WEBSITES','LEAD SYSTEMS','AI VIDEO','SOCIAL MEDIA','PAID ADS','SEO','GOOGLE PROFILE','PREMIUM WEBSITES','LEAD SYSTEMS'].map((x,i)=><span key={`${x}-${i}`}>{x}<b>↗</b></span>)}</div></div>
+</section>}
 
-function ServicesPreview(){return <section className="services-preview section"><div className="wrap">
-  <SectionIntro eyebrow="One connected studio" title={'Every channel should make<br/><i>the others more valuable.</i>'} copy="We connect the message, production, distribution and measurement so the work compounds instead of fragmenting across vendors."/>
-  <div className="service-stack">{services.slice(0,6).map((s,i)=>{const Icon=s.icon;return <Link to="/services" className="service-row" key={s.title}><span>{String(i+1).padStart(2,'0')}</span><Icon/><h3>{s.title}</h3><p>{s.text}</p><ArrowUpRight/></Link>})}</div>
-  <Link to="/services" className="button button-dark">See every capability <ArrowRight/></Link>
-  </div></section>}
+function SignalSection(){return <section className="signal-section section"><div className="wrap"><div className="signal-title"><p className="eyebrow">The whole job, in plain language</p><h2>Good marketing moves people through<br/><i>three decisions.</i></h2></div><div className="signal-grid">{signals.map(([n,title,text])=><article key={n}><span>{n}</span><div className="signal-orbit"><i/><b>{title.split(' ')[1]}</b></div><h3>{title}</h3><p>{text}</p></article>)}</div></div></section>}
 
-function Process(){return <section className="process-section section"><div className="wrap"><SectionIntro light eyebrow="How we work" title={'Creativity with<br/><i>operating discipline.</i>'}/><div className="process-grid">{processSteps.map((p,i)=><article key={p.number}><div className="process-visual"><span>{p.number}</span>{i===0&&<Search/>}{i===1&&<Sparkles/>}{i===2&&<Gauge/>}{i===3&&<Zap/>}</div><h3>{p.title}</h3><p>{p.text}</p></article>)}</div></div></section>}
+function StudioSection(){return <section className="new-studio section"><div className="wrap"><div className="split-heading"><SectionIntro eyebrow="One connected studio" title={'Less to manage.<br/><i>More working together.</i>'} copy="You should not need five vendors to make one customer journey work. We connect the message, the content, the traffic and the page."/><Link to="/services" className="text-link">See every service <ArrowRight/></Link></div><div className="studio-grid">{studio.map((item,i)=>{const Icon=item.icon;return <Link to="/services" className={`studio-card studio-card-${i+1}`} key={item.title}><div className="studio-card-top"><span>{item.tag}</span><ArrowUpRight/></div><Icon/><h3>{item.title}</h3><p>{item.text}</p><div className="studio-pulse"><i/><i/><i/><i/><i/></div></Link>})}</div></div></section>}
 
-function PricingPreview(){return <section className="pricing-preview section"><div className="wrap"><SectionIntro eyebrow="Clear monthly scopes" title={'Start focused.<br/><i>Scale with evidence.</i>'} copy="Four levels for four operating stages. Media spend remains in your accounts and is never hidden inside our fee."/><div className="price-ribbon">{plans.map(p=><Link to={`/pricing#${p.id}`} className={`mini-plan ${p.popular?'featured':''}`} key={p.id}><p>{p.eyebrow}</p><h3>{p.name}</h3><div><strong>${p.price.toLocaleString()}</strong><span>/ month</span></div><ul>{p.features.slice(0,3).map(x=><li key={x}><Check/> {x}</li>)}</ul><span className="mini-plan-link">View scope <ArrowUpRight/></span></Link>)}</div><p className="price-foot">Need a focused website instead? <Link to="/pricing#website">Performance websites begin at $1,500.</Link></p></div></section>}
+function WorkFlow(){return <section className="flow-section"><div className="wrap flow-grid"><div><p className="eyebrow">A simple working rhythm</p><h2>You bring the business.<br/><i>We build the signal.</i></h2><p>Every month has a clear purpose, visible work and a plain-language review. You know what is being made, what it is meant to do and what we learned.</p><Link to="/contact" className="button button-acid">Tell us your goal <ArrowUpRight/></Link></div><div className="flow-steps">{[['01','Listen','We learn the offer, buyer and current bottleneck.'],['02','Build','We create the pages, content and campaigns.'],['03','Test','We compare messages, formats and audiences.'],['04','Improve','We keep what works and change what does not.']].map(([n,t,p])=><article key={n}><span>{n}</span><div><h3>{t}</h3><p>{p}</p></div><i/></article>)}</div></div></section>}
 
-function AuditCta(){return <section className="audit-cta"><div className="wrap audit-cta-grid"><div><p className="eyebrow">Free technical preview</p><h2>Your website is already<br/>telling us <i>what to fix.</i></h2><p>Run a live on-page audit for metadata, structure, crawl signals, media, mobile readiness and trust foundations. Get a score, prioritized issues and a transparent repair range.</p><Link className="button button-acid" to="/audit">Run my free audit <ArrowUpRight/></Link></div><div className="audit-gauge"><span className="gauge-score">?<small>/100</small></span><div className="gauge-lines">{Array.from({length:18}).map((_,i)=><i key={i} style={{'--i':i}}/>)}</div><div className="scan-card"><b><Play/> LIVE CRAWL</b><span>Title & metadata</span><span>Heading structure</span><span>Indexing signals</span><span>Image accessibility</span></div></div></div></section>}
+function PricingPreview(){return <section className="new-pricing section"><div className="wrap"><div className="split-heading"><SectionIntro eyebrow="Clear monthly options" title={'Choose the pace.<br/><i>Keep the clarity.</i>'} copy="Start with the amount of production and management you need now. Advertising spend remains separate and stays in accounts you own."/><Link to="/pricing" className="text-link">Compare every detail <ArrowRight/></Link></div><div className="new-price-grid">{plans.map(p=><article className={p.popular?'selected':''} key={p.id}>{p.popular&&<span className="choice-tag">Best place to start</span>}<p>{p.eyebrow}</p><h3>{p.name}</h3><div className="new-price"><b>${p.price.toLocaleString()}</b><span>/ month</span></div><p>{p.description}</p><ul>{p.features.slice(0,4).map(x=><li key={x}><Check/>{x}</li>)}</ul><Link to={`/pricing#${p.id}`} className="price-link">See this package <ArrowUpRight/></Link></article>)}</div><div className="website-bar"><div><span>Need the website first?</span><h3>Premium SEO-ready websites from $1,500.</h3></div><p>Mobile-first design, clear pages, analytics, metadata, schema and a working contact path.</p><Link to="/pricing#website" className="button button-dark">Website details <ArrowRight/></Link></div></div></section>}
 
-function InsightsPreview(){return <section className="insights-preview section"><div className="wrap"><div className="split-heading"><SectionIntro eyebrow="Field notes" title={'Ideas you can<br/><i>put to work.</i>'}/><Link to="/insights" className="text-link">Read all insights <ArrowRight/></Link></div><div className="article-grid">{articles.slice(0,3).map((a,i)=><Link to={`/insights/${a.slug}`} className={`article-card article-${i}`} key={a.slug}><div className="article-image"><img src={a.image} srcSet={`${a.image.replace('.webp','-840.webp')} 840w, ${a.image} 1680w`} sizes={i===0?'(max-width: 760px) 100vw, 50vw':'(max-width: 760px) 100vw, 25vw'} loading="lazy" width="1680" height="944" alt=""/></div><div><span>{a.category} · {a.minutes} min</span><h3>{a.title}</h3><p>{a.dek}</p><b>Read article <ArrowUpRight/></b></div></Link>)}</div></div></section>}
+function AuditBanner(){return <section className="new-audit-banner"><div className="wrap new-audit-grid"><div><p className="eyebrow">Free website audit</p><h2>See what may be holding<br/>your website <i>back.</i></h2><p>Get a score, animated breakdown, plain-language findings and a repair estimate. No password needed.</p><Link to="/audit" className="button button-acid">Run my free audit <ArrowUpRight/></Link></div><div className="audit-preview-card"><div className="mini-score"><strong>?</strong><span>/100</span></div><div className="mini-bars">{['Google basics','Mobile','Page structure','Trust'].map((x,i)=><div key={x}><span>{x}</span><i><b style={{'--bar':`${[78,91,64,83][i]}%`}}/></i></div>)}</div><p><span/> Your report opens on a new page</p></div></div></section>}
+
+function Insights(){return <section className="new-insights section"><div className="wrap"><div className="split-heading"><SectionIntro eyebrow="Useful thinking" title={'Understand the system.<br/><i>Make better decisions.</i>'}/><Link to="/insights" className="text-link">View all articles <ArrowRight/></Link></div><div className="new-article-grid">{articles.slice(0,3).map((a,i)=><Link to={`/insights/${a.slug}`} key={a.slug}><div><img src={a.image.replace('.webp','-840.webp')} width="840" height="472" alt="" loading="lazy"/></div><span>{String(i+1).padStart(2,'0')} · {a.category}</span><h3>{a.title}</h3><p>{a.dek}</p><b>Read the article <ArrowUpRight/></b></Link>)}</div></div></section>}
 
 export default function Home(){
   const schema={ '@context':'https://schema.org','@type':'ProfessionalService',name:'Rare Score Marketing',alternateName:'RS Marketing',email:'hello.rarescore@gmail.com',url:import.meta.env.VITE_SITE_URL||'https://rsmarketing.com',areaServed:'United States',serviceType:['Digital Marketing','Search Engine Optimization','Social Media Marketing','Web Design','Advertising'] }
-  return <><Seo schema={schema}/><Hero/><Marquee/><GrowthLab/><ServicesPreview/><Process/><PricingPreview/><AuditCta/><InsightsPreview/><section className="faq-section section"><div className="wrap faq-grid"><SectionIntro eyebrow="The honest answers" title={'Good partnerships<br/><i>start with clarity.</i>'}/><FaqList items={faqs.slice(0,6)}/></div></section></>
+  return <><Seo schema={schema}/><Hero/><SignalSection/><StudioSection/><WorkFlow/><PricingPreview/><AuditBanner/><Insights/><section className="faq-section section"><div className="wrap faq-grid"><SectionIntro eyebrow="Simple answers" title={'Know what you are<br/><i>buying before the call.</i>'}/><FaqList items={faqs.slice(0,6)}/></div></section></>
 }

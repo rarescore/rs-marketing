@@ -1,14 +1,15 @@
 # RS Marketing
 
-A production-ready marketing-agency website for **Rare Score Marketing**. It combines premium editorial design with clear pricing, original imagery, long-form articles, a live technical SEO audit, project intake, Stripe-ready checkout and responsive motion.
+A production-ready marketing-agency website for **Rare Score Marketing**. It combines a white-and-evergreen cinematic visual system with clear pricing, original imagery, long-form articles, a live technical SEO audit, project intake, Stripe-ready checkout and responsive motion.
 
 ## What is included
 
 - Home, services, pricing, audit, insights, article, contact, privacy, terms and 404 routes
 - Monthly packages at $500, $1,000, $2,000 and $5,000
 - Performance website offer beginning at $1,500
+- Dedicated audit report route with animated score and category bars, plain-language findings, repair pricing and contact/purchase actions
 - Live server-side audit for metadata, headings, crawl signals, media, mobile setup and trust foundations
-- Transparent audit limitation: keyword rankings require Search Console or a rank-data provider
+- Optional location-aware Google position check through Serper; exact rankings are never invented when the provider is not connected
 - Automated repair range based on observed issue severity
 - Stripe Checkout integration with a contact fallback when Stripe is not configured
 - Resend email delivery with a direct-email fallback
@@ -36,11 +37,12 @@ npm run preview
 
 Keep this code in GitHub and import the repository into **Vercel**. Vercel is recommended because the audit, contact and checkout features use the serverless files in `/api`. GitHub Pages can host the visual site but cannot run those API endpoints.
 
-1. Create a GitHub repository and upload the contents of this folder.
-2. Import the repository at Vercel.
-3. Use the default Vite settings: build command `npm run build`, output directory `dist`.
-4. Add the environment variables from `.env.example`.
-5. Deploy, connect the final domain and replace `https://rsmarketing.com` in `public/robots.txt` and `public/sitemap.xml` if the domain differs.
+1. Keep the previous IQ website in its current repository. Create a **new** GitHub repository for RS Marketing.
+2. Upload the contents of this folder so `package.json` sits at the repository root. The downloadable ZIP is already packaged this way.
+3. Import the new repository as a new Vercel project. A paid domain is not required; the free `vercel.app` address works.
+4. Keep **Root Directory** blank (repository root), choose Vite, use build command `npm run build`, and output directory `dist`.
+5. Add the environment variables from `.env.example`.
+6. Deploy, then replace `https://rsmarketing.com` in `public/robots.txt` and `public/sitemap.xml` when the final address is known.
 
 ## Payments
 
@@ -70,12 +72,15 @@ Create a Resend API key, verify the sending domain, set `RESEND_API_KEY`, and up
 
 ## Audit methodology and limits
 
-The audit endpoint validates the target, blocks private-network destinations, limits redirects and response size, and analyzes one public HTML page. It checks observable technical/on-page signals. It does not claim to be a complete security, accessibility, backlink, analytics, competitor or keyword-rank audit.
+The audit endpoint validates the target, blocks private-network destinations, limits redirects and response size, and analyzes one public HTML page. It checks observable technical/on-page signals. If `SERPER_API_KEY` is configured and the visitor supplies a keyword, it also checks up to 100 search results for the submitted domain and reports the estimated position and result page. Without that key, the report clearly labels exact ranking as not connected. It does not claim to be a complete security, accessibility, backlink, analytics, competitor or ranking audit.
 
 ## Brand assets
 
 - `public/rs-marketing-logo.svg` — horizontal wordmark
 - `public/rs-marketing-mark.svg` — compact mark
 - `public/favicon.svg` — browser icon
+- `public/assets/rs-logo-white.png` — cleaned full-resolution supplied logo on white
+- `public/assets/rs-logo-white.webp` — optimized website master
+- `public/assets/rs-logo-lockup.webp` — cropped lockup variant
 
 The artwork in `public/assets` is supplied in responsive WebP sizes. Icons are code-native Lucide SVGs rather than generated icon images.

@@ -1,20 +1,22 @@
 # RS Marketing launch report
 
-Tested build: 1.0.0  
+Tested build: 2.0.0  
 Test environment: local Vite production preview  
-Test date: August 1, 2026
+Test date: August 2, 2026
 
 ## Verified
 
 - Production build completes successfully.
 - ESLint passes with zero errors.
 - Vitest: 2 files, 5 tests, all passing.
-- Visual route suite: 18 route/viewport combinations, zero failures.
+- Visual route suite: 20 route/viewport combinations, zero failures.
 - Viewports: 390 × 844 and 1440 × 1000.
-- Routes: home, services, pricing, audit, insights, article, contact, privacy and 404.
+- Routes: home, services, pricing, audit, audit report, insights, article, contact, privacy and 404.
 - Each tested route has one H1, a main landmark, no failed images, no visible unclipped horizontal overflow and no browser-console errors.
 - Responsive generated images range from approximately 26–43 KB at 840 px and 78–123 KB at 1680 px.
 - Audit API syntax passes and automated tests confirm private-network destinations are rejected.
+- The audit result opens on a dedicated report page with an animated top score, six animated category bars, plain-language findings, verified rank status and repair actions.
+- The optional Google position check reports an exact page/position only when `SERPER_API_KEY`, keyword and location context are available; otherwise the interface states that rank data is not connected.
 - Contact fallback test passes when email delivery is unconfigured.
 
 ## Lighthouse — local production preview
@@ -35,6 +37,7 @@ Scores are from the included source before third-party analytics, advertising pi
 - Resend key and verified sending domain
 - Final service agreement and jurisdiction-specific legal review
 - Analytics, Search Console and consent configuration
+- Optional Serper key for location-aware Google position checks
 - Real client proof when available and authorized
 - Stripe webhook/onboarding workflow after a purchase
 

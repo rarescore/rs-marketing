@@ -45,6 +45,24 @@ const clamp = n => Math.max(0, Math.min(100, Math.round(n)))
 
 function issue(severity,title,detail,fix){ return {severity,title,detail,fix} }
 
+async function checkGooglePosition(hostname, keyword, location) {
+  const query=String(keyword||'').trim().slice(0,140)
+  const place=String(location||'').trim().slice(0,100)
+  if(!query)return {status:'not_requested',keyword:'',location:place}
+  if(!process.env.SERPER_API_KEY)return {status:'not_connected',keyword:query,location:place}
+  try{
+    const response=await fetch('https://google.serper.dev/search',{method:'POST',headers:{'X-API-KEY':process.env.SERPER_API_KEY,'Content-Type':'application/json'},body:JSON.stringify({q:[query,place].filter(Boolean).join(' '),num:100}) ,signal:AbortSignal.timeout(8000)})
+    if(!response.ok)throw new Error('Rank provider unavailable')
+    const data=await response.json()
+    const target=hostname.replace(/^www\./,'')
+    const organic=Array.isArray(data.organic)?data.organic:[]
+    const index=organic.findIndex(item=>{try{return new URL(item.link).hostname.replace(/^www\./,'')===target}catch{return false}})
+    if(index<0)return {status:'not_found',keyword:query,location:place,checked:organic.length}
+    const position=Number(organic[index].position)||index+1
+    return {status:'found',keyword:query,location:place,position,page:Math.ceil(position/10),checked:organic.length}
+  }catch{return {status:'not_connected',keyword:query,location:place}}
+}
+
 function analyze(html, headers, finalUrl, robotsOk, sitemapOk, duration) {
   const title=capture(html,/<title[^>]*>([\s\S]*?)<\/title>/i)
   const description=metaContent(html,'description')
@@ -62,19 +80,19 @@ function analyze(html, headers, finalUrl, robotsOk, sitemapOk, duration) {
   const https=finalUrl.startsWith('https://')
   const security=['content-security-policy','strict-transport-security','x-content-type-options','referrer-policy'].filter(h=>headers.get(h)).length
   const issues=[]
-  if(!title)issues.push(issue('high','The page has no title element','Search results and browser tabs lack a primary page label.','Write a unique, specific title around 45–60 characters.'))
-  else if(title.length<30||title.length>65)issues.push(issue('medium','The title length is unlikely to scan well',`The title is ${title.length} characters: “${title.slice(0,90)}”.`,'Rewrite it to communicate page topic and brand clearly within roughly 45–60 characters.'))
-  if(!description)issues.push(issue('medium','No meta description was detected','Search engines may assemble an unpredictable snippet from page copy.','Add a unique description that sets context and earns the click without repeating the title.'))
+  if(!title)issues.push(issue('high','Google cannot see a clear page title','The page is missing the main label Google usually shows in search results.','Add a short, specific title that names the service, location when useful, and business.'))
+  else if(title.length<30||title.length>65)issues.push(issue('medium','The Google title is hard to scan',`The title is ${title.length} characters: “${title.slice(0,90)}”.`,'Rewrite it in roughly 45–60 characters so people can understand the page quickly.'))
+  if(!description)issues.push(issue('medium','The Google search description is missing','Google may pull random page text instead of showing a clear summary.','Add a useful one- or two-sentence description of this page.'))
   else if(description.length<90||description.length>170)issues.push(issue('low','Meta description length can be improved',`The detected description is ${description.length} characters.`,'Aim for a useful, specific summary around 120–160 characters.'))
-  if(h1s===0)issues.push(issue('high','No primary H1 was detected','The page hierarchy does not expose a clear primary topic.','Add one visible, descriptive H1 that matches the page’s purpose.'))
-  if(h1s>1)issues.push(issue('medium','Multiple H1 headings were detected',`${h1s} H1 elements make the primary page topic less explicit.`,'Keep one dominant H1 and move subsections to H2/H3 levels.'))
-  if(!canonical)issues.push(issue('medium','No canonical URL was detected','Duplicate URL variants can compete or split signals.','Add a self-referencing canonical to the preferred public URL.'))
-  if(noindex)issues.push(issue('high','The page asks search engines not to index it','A robots noindex directive was detected.','Confirm this is intentional; remove the directive if this page should appear in search.'))
-  if(!viewport)issues.push(issue('high','No mobile viewport directive was detected','Mobile browsers may render the page at a desktop width.','Add a responsive viewport meta tag and verify the layout on real phones.'))
-  if(images.length&&missingAlt)issues.push(issue(missingAlt/images.length>.4?'high':'medium','Images are missing alternative text',`${missingAlt} of ${images.length} image tags have no alt attribute.`,'Add meaningful alt text to informative images and empty alt attributes to decorative images.'))
+  if(h1s===0)issues.push(issue('high','The main page topic is not clear','Google cannot find one main heading that explains what this page is about.','Add one clear main heading that matches the service or purpose of the page.'))
+  if(h1s>1)issues.push(issue('medium','The page has too many main headings',`${h1s} main headings make the primary topic less clear.`,'Keep one main heading and use smaller headings for the sections below it.'))
+  if(!canonical)issues.push(issue('medium','Google may see duplicate versions of this page','The page does not clearly name which web address is the main version.','Set the preferred web address so similar versions do not compete with each other.'))
+  if(noindex)issues.push(issue('high','This page tells Google not to show it','A hidden setting asks search engines to leave the page out of results.','Remove that setting if this page should appear in Google.'))
+  if(!viewport)issues.push(issue('high','The page may not work properly on phones','The mobile sizing setting is missing.','Add the correct mobile setting and test the page on common phone sizes.'))
+  if(images.length&&missingAlt)issues.push(issue(missingAlt/images.length>.4?'high':'medium','Some images are not explained',`${missingAlt} of ${images.length} images have no text description for Google or screen readers.`,'Add short, accurate descriptions to useful images. Mark decorative images as decorative.'))
   if(images.length>5&&lazyImages===0)issues.push(issue('low','Below-the-fold images may load too early',`${images.length} images were found and none explicitly use native lazy loading.`,'Lazy-load non-critical images and preserve explicit dimensions to reduce page work.'))
-  if(!schema)issues.push(issue('low','No JSON-LD structured data was detected','Search engines receive less explicit entity and page context.','Add only schema types that match visible, truthful page content.'))
-  if(!og)issues.push(issue('low','Social sharing metadata is incomplete','Shared links may use unpredictable copy or imagery.','Add Open Graph title, description and image metadata.'))
+  if(!schema)issues.push(issue('low','Google is missing extra business details','The page does not include the organized business information that can help search engines understand it.','Add accurate structured details for the business, service and page type.'))
+  if(!og)issues.push(issue('low','Shared links may look unfinished','Social platforms may choose random words or images when someone shares this page.','Set the title, description and image used when the page is shared.'))
   if(!lang)issues.push(issue('medium','The document language is not declared','Browsers and assistive technologies receive less context.','Set a valid lang attribute on the HTML element.'))
   if(forms>0&&labels===0)issues.push(issue('medium','Forms may lack visible programmatic labels',`${forms} form element(s) were found but no label elements were detected.`,'Associate every input with a clear label and useful validation text.'))
   if(!https)issues.push(issue('high','The audited page is not using HTTPS','Unencrypted transport weakens user trust and browser security.','Redirect all traffic to HTTPS and renew certificates automatically.'))
@@ -103,6 +121,8 @@ export default async function handler(req,res){
   if(req.method!=='POST')return res.status(405).json({error:'Method not allowed.'})
   try{
     const input=String(req.body?.url||'').trim().slice(0,500)
+    const keyword=String(req.body?.keyword||'').trim().slice(0,140)
+    const location=String(req.body?.location||'').trim().slice(0,100)
     if(!input)return res.status(400).json({error:'A website URL is required.'})
     const started=Date.now(); const {response,finalUrl}=await safeFetch(input)
     if(!response.ok)throw new Error(`The website returned HTTP ${response.status}.`)
@@ -115,6 +135,7 @@ export default async function handler(req,res){
     const probes=await Promise.allSettled([safeFetch(`${origin}/robots.txt`,{headers:{Accept:'text/plain'}}),safeFetch(`${origin}/sitemap.xml`,{headers:{Accept:'application/xml,text/xml'}})])
     const robotsOk=probes[0].status==='fulfilled'&&probes[0].value.response.ok
     const sitemapOk=probes[1].status==='fulfilled'&&probes[1].value.response.ok
-    return res.status(200).json(analyze(html,response.headers,finalUrl,robotsOk,sitemapOk,Date.now()-started))
+    const ranking=await checkGooglePosition(new URL(finalUrl).hostname,keyword,location)
+    return res.status(200).json({...analyze(html,response.headers,finalUrl,robotsOk,sitemapOk,Date.now()-started),ranking})
   }catch(error){return res.status(422).json({error:error.message||'We could not audit that website.'})}
 }

@@ -2,6 +2,12 @@
 
 The four website visuals were generated with the built-in image-generation workflow, then compressed into responsive WebP sizes for production.
 
+## Cleaned RS Marketing logo
+
+Built-in image editing mode using the supplied logo as the reference image.
+
+> Use case: logo-brand. Asset type: cleaned master brand logo for a premium marketing agency website. Edit the supplied RS Marketing logo only. Preserve the exact recognizable composition—the RS monogram, fighter jet, diagonal flight trails, “RS MARKETING” wordmark, and “RARE SCORE MARKETING” subtitle. Replace the black background with pure white. Render every logo element in deep forest green and very dark evergreen with restrained silver highlights. Keep the original relative positions and hierarchy. Remove black haze, heavy glow, noise, artifacts and muddy shadows; sharpen edges and typography. No extra words, watermark, symbols, distorted letters, mockup surface or border.
+
 ## Growth engine hero
 
 Premium digital marketing agency hero art: an abstract coordinated growth engine where content, search, paid media and analytics converge. Deep near-black infinite studio; transparent glass torus, polished chrome rails and restrained acid-chartreuse data particles; high-end cinematic 3D product visualization; right-weighted 16:9 composition with negative space for copy. No people, logos, text, numbers, watermarks, cyberpunk purple, generic AI brains or stock charts.

@@ -20,8 +20,8 @@ export default function CursorMist() {
       for (const p of particles) {
         p.x += p.dx; p.y += p.dy; p.r += .55; p.life *= .952
         const g = ctx.createRadialGradient(p.x,p.y,0,p.x,p.y,p.r)
-        g.addColorStop(0, `rgba(216,255,62,${.045*p.life})`)
-        g.addColorStop(.55, `rgba(230,235,215,${.025*p.life})`)
+        g.addColorStop(0, `rgba(71,119,91,${.075*p.life})`)
+        g.addColorStop(.55, `rgba(184,211,194,${.045*p.life})`)
         g.addColorStop(1, 'rgba(255,255,255,0)')
         ctx.fillStyle = g; ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,Math.PI*2); ctx.fill()
       }

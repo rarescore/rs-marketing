@@ -3,7 +3,7 @@ import chromium from '@sparticuz/chromium'
 import puppeteer from 'puppeteer-core'
 
 const base = process.env.QA_URL || 'http://127.0.0.1:4173'
-const routes = ['/', '/services', '/pricing', '/audit', '/insights', '/insights/creative-testing-without-content-chaos', '/contact', '/privacy', '/not-a-route']
+const routes = ['/', '/services', '/pricing', '/audit', '/audit/report', '/insights', '/insights/creative-testing-without-content-chaos', '/contact', '/privacy', '/not-a-route']
 const viewports = [{ name:'mobile', width:390, height:844, deviceScaleFactor:1 }, { name:'desktop', width:1440, height:1000, deviceScaleFactor:1 }]
 await fs.mkdir('.qa', { recursive:true })
 const browser = await puppeteer.launch({ args:chromium.args, defaultViewport:null, executablePath:await chromium.executablePath(), headless:'shell' })
