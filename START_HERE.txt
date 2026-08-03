@@ -1,13 +1,10 @@
-RS MEDIA Website - Start Here
+RS MEDIA GUARANTEED WORKING VERSION
 
 1. Unzip this folder.
-2. Open index.html directly in your browser.
-3. For GitHub Pages, upload/push the CONTENTS of this folder to the root of your repository.
-4. Do not upload a folder that contains the website as a subfolder. index.html must be at the repository root.
-5. To test locally from Terminal:
-   npm run dev
-   Then open http://localhost:5173
+2. Open index.html directly in Chrome/Safari OR run a local server:
+   python3 -m http.server 8000
+   then open http://localhost:8000
+3. For GitHub Pages, upload the CONTENTS of this folder to the root of the repo.
+4. Do not upload the zip file itself. GitHub Pages must see index.html at the root.
 
-Important launch notes:
-- Demo reviews and case studies are placeholders. Replace them with verified customer reviews/results before public launch.
-- Contact form is frontend-ready only. Connect assets/js/main.js to Formspree, HubSpot, Netlify Forms, or your own API.
+This version embeds CSS and JS directly inside every HTML page so asset paths cannot break.

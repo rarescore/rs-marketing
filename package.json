@@ -1,10 +1,1 @@
-{
-  "name": "rs-media-static-site",
-  "version": "1.0.0",
-  "private": true,
-  "scripts": {
-    "dev": "python3 -m http.server 5173",
-    "dev:node": "npx serve . -l 5173",
-    "build": "echo Static site ready for GitHub Pages"
-  }
-}
+{"scripts":{"start":"python3 -m http.server 8000","serve":"python3 -m http.server 8000"},"devDependencies":{}}
