@@ -1,38 +1,6 @@
 {
-  "name": "rs-marketing",
-  "private": true,
-  "version": "2.0.0",
-  "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "preview": "vite preview",
-    "lint": "eslint .",
-    "qa:visual": "node scripts/visual-qa.mjs",
-    "test": "vitest run"
-  },
-  "dependencies": {
-    "@vitejs/plugin-react": "latest",
-    "lucide-react": "latest",
-    "react": "latest",
-    "react-dom": "latest",
-    "react-router-dom": "latest",
-    "typescript": "latest",
-    "vite": "latest"
-  },
-  "devDependencies": {
-    "@eslint/js": "latest",
-    "@sparticuz/chromium": "^149.0.0",
-    "@testing-library/jest-dom": "latest",
-    "@testing-library/react": "latest",
-    "eslint": "latest",
-    "eslint-plugin-react-hooks": "latest",
-    "eslint-plugin-react-refresh": "latest",
-    "globals": "latest",
-    "jsdom": "latest",
-    "lighthouse": "^13.4.1",
-    "puppeteer-core": "^25.4.0",
-    "sharp": "^0.35.3",
-    "vitest": "latest"
+    "dev": "python3 -m http.server 5173",
+    "build": "echo Static site ready for GitHub Pages"
   }
 }

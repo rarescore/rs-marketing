@@ -1,0 +1,8 @@
+{
+  "name": "RS MEDIA",
+  "short_name": "RS MEDIA",
+  "start_url": "index.html",
+  "display": "standalone",
+  "background_color": "#050713",
+  "theme_color": "#00a4ef"
+}
