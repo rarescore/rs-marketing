@@ -1,31 +1,20 @@
-# RS Marketing — Pomegranate Website
+# RS Marketing — Pomegranate Edition
 
-## Run locally
+## Merge the ZIP parts
+Extract all parts into the same folder. Allow folders to merge; do not replace the entire folder when prompted.
 
-Open a terminal in this folder and run:
-
+## Run
 ```bash
-python3 -m http.server 8080
+npm install
+npm run dev
 ```
 
-Then open `http://localhost:8080`.
+## Main editing files
+- `src/App.jsx`: page sections and copy
+- `src/data/site.js`: packages and services
+- `src/styles.css`: red / white / black design system
+- `src/components/PomegranateSequence.jsx`: scroll sequence timing
+- `public/sequence/desktop` and `mobile`: rendered frames
 
-You can also use the VS Code Live Server extension.
-
-## Deploy
-
-Upload the entire folder to Netlify, Vercel, GitHub Pages, or any static hosting service.
-
-## Contact form
-
-The included form shows a local success state. Connect its submit handler in `app.js` to Formspree, HubSpot, GoHighLevel, or your own API endpoint to receive submissions.
-
-## Animation settings
-
-At the top of `app.js`:
-- Desktop seed count: 128
-- Mobile seed count: 78
-- Physics duration: 8.5 seconds distributed across scroll
-
-In `styles.css`:
-- `.seed-scroll { height: 520vh; }` controls the desktop scroll distance.
+## Final production upgrade
+The included sequence is a complete working visual prototype created from the approved storyboard. For final cinema-grade output, replace the 90 desktop and 90 mobile WebP frames with Blender-rendered frames using the same names. No React code changes are required.
