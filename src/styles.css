@@ -15,3 +15,17 @@ footer img{width:170px;height:auto;filter:invert(1)}
 .builder.white .button.line{color:#111}
 .builder.white p{color:#222}
 @media(max-width:600px){.brand img{width:140px;height:52px}}
+
+
+/* Short, automatic 3.6-second pomegranate intro */
+.sequence.sequence-auto{height:100vh;min-height:100vh;position:relative;background:#fff;overflow:hidden;opacity:1;transition:opacity var(--transition-ms,650ms) cubic-bezier(.22,1,.36,1),transform var(--transition-ms,650ms) cubic-bezier(.22,1,.36,1)}
+.sequence.sequence-auto .sequence-sticky{position:absolute;inset:0;height:100%;overflow:hidden;background:#fff}
+.sequence.sequence-auto canvas{display:block;width:100%;height:100%;opacity:0;transition:opacity .35s ease}
+.sequence.sequence-auto.is-ready canvas{opacity:1}
+.sequence.sequence-auto .sequence-copy{top:43%;transition:opacity .45s ease,transform .65s cubic-bezier(.22,1,.36,1)}
+.sequence.sequence-auto .sequence-copy span{color:#111}
+.sequence.sequence-auto .sequence-copy strong{color:#050505;text-shadow:0 1px 0 rgba(255,255,255,.35)}
+.sequence.sequence-auto.is-finishing{opacity:0;transform:translateY(-2vh);pointer-events:none}
+.sequence.sequence-auto.is-finishing .sequence-copy{opacity:0;transform:translateY(-18px)}
+.sequence.sequence-auto .load-meter{position:absolute}
+@media(max-width:600px){.sequence.sequence-auto{height:100svh;min-height:100svh}.sequence.sequence-auto .sequence-copy{top:40%}.sequence.sequence-auto .sequence-copy strong{font-size:clamp(44px,14vw,76px);line-height:.9}}
