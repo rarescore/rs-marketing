@@ -17,8 +17,4 @@ npm run dev
 - `public/sequence/desktop` and `mobile`: rendered frames
 
 ## Final production upgrade
-The included sequence is a complete working visual prototype created from the approved storyboard. For final cinema-grade output, replace the 180 desktop and 180 mobile WebP frames with Blender-rendered frames using the same names. No React code changes are required.
-
-
-## Fast opening timing
-The opening sequence is intentionally compressed to 185vh on desktop and 170vh on mobile, so the full animation completes in roughly one strong scroll gesture or two short scrolls.
+The included sequence is a complete working visual prototype created from the approved storyboard. For final cinema-grade output, replace the 90 desktop and 90 mobile WebP frames with Blender-rendered frames using the same names. No React code changes are required.

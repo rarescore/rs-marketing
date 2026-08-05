@@ -1,169 +1,216 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import useReducedMotion from '../hooks/useReducedMotion';
 
 gsap.registerPlugin(ScrollTrigger);
-const SEED_COUNT = 320;
-const SPRITE_COUNT = 5;
 
-function mulberry32(seed) {
-  return function random() {
-    let t = seed += 0x6D2B79F5;
-    t = Math.imul(t ^ (t >>> 15), t | 1);
-    t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
-    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
-  };
-}
-
-function smoothstep(value) {
-  const t = Math.max(0, Math.min(1, value));
-  return t * t * (3 - 2 * t);
-}
+const FRAME_COUNT = 90;
+const PRIORITY_FRAMES = [0,1,2,3,4,5,8,12,16,20,24,28,32,36,40,44,48,52,56,60,64,68,72,76,80,84,89];
 
 export default function PomegranateSequence() {
   const sectionRef = useRef(null);
   const canvasRef = useRef(null);
-  const progressRef = useRef(0);
-  const displayProgressRef = useRef(0);
-  const rafRef = useRef(0);
   const imagesRef = useRef([]);
-  const [ready, setReady] = useState(false);
+  const targetFrameRef = useRef(0);
+  const displayFrameRef = useRef(0);
+  const [loaded, setLoaded] = useState(0);
   const reducedMotion = useReducedMotion();
 
-  const particles = useMemo(() => {
-    const random = mulberry32(20260805);
-    return Array.from({ length: SEED_COUNT }, (_, index) => {
-      const depth = random();
-      return {
-        sprite: index % SPRITE_COUNT,
-        x: -0.08 + random() * 1.16,
-        start: 0.015 + random() * 0.34,
-        duration: 0.43 + random() * 0.29,
-        depth,
-        size: (0.46 + random() * 0.78) * (0.55 + depth * 1.15),
-        rotation: random() * Math.PI * 2,
-        spin: (-5.5 + random() * 11) * Math.PI,
-        sway: 0.005 + random() * 0.065,
-        frequency: 0.8 + random() * 2.5,
-        phase: random() * Math.PI * 2,
-      };
-    });
-  }, []);
-
   useEffect(() => {
-    if (reducedMotion) return;
+    if (reducedMotion) return undefined;
+
+    const sequence = window.matchMedia('(max-width: 700px)').matches ? 'mobile' : 'desktop';
     let active = true;
-    Promise.all(Array.from({ length: SPRITE_COUNT }, (_, index) => new Promise((resolve) => {
+    const loadedIndices = new Set();
+
+    const loadFrame = index => new Promise(resolve => {
+      if (imagesRef.current[index]) {
+        resolve();
+        return;
+      }
+
       const image = new Image();
       image.decoding = 'async';
-      image.onload = () => resolve(image);
-      image.onerror = () => resolve(null);
-      image.src = `/seeds/seed-${index}.webp`;
-    }))).then((images) => {
-      if (!active) return;
-      imagesRef.current = images;
-      setReady(images.some(Boolean));
+      image.onload = () => {
+        if (active) {
+          imagesRef.current[index] = image;
+          if (!loadedIndices.has(index)) {
+            loadedIndices.add(index);
+            setLoaded(loadedIndices.size);
+          }
+        }
+        resolve();
+      };
+      image.onerror = resolve;
+      image.src = `/sequence/${sequence}/frame-${String(index).padStart(3, '0')}.webp`;
     });
-    return () => { active = false; };
+
+    const loadBatch = async indices => {
+      await Promise.all(indices.map(loadFrame));
+    };
+
+    (async () => {
+      await loadBatch(PRIORITY_FRAMES);
+
+      const remaining = Array.from({ length: FRAME_COUNT }, (_, index) => index)
+        .filter(index => !PRIORITY_FRAMES.includes(index));
+
+      for (let start = 0; start < remaining.length && active; start += 12) {
+        await loadBatch(remaining.slice(start, start + 12));
+        await new Promise(resolve => window.setTimeout(resolve, 18));
+      }
+    })();
+
+    return () => {
+      active = false;
+    };
   }, [reducedMotion]);
 
   useEffect(() => {
-    if (reducedMotion || !ready) return;
-    const section = sectionRef.current;
+    if (reducedMotion || !canvasRef.current || !sectionRef.current) return undefined;
+
     const canvas = canvasRef.current;
-    const ctx = canvas.getContext('2d', { alpha: false, desynchronized: true });
-    let width = 0, height = 0, dpr = 1;
+    const context = canvas.getContext('2d', {
+      alpha: false,
+      desynchronized: true
+    });
+
+    let animationFrameId = 0;
+    let width = 0;
+    let height = 0;
+    let lastRenderedFrame = -100;
+
+    const getClosestImage = index => {
+      if (imagesRef.current[index]) return imagesRef.current[index];
+
+      for (let offset = 1; offset < FRAME_COUNT; offset += 1) {
+        const before = index - offset;
+        const after = index + offset;
+        if (before >= 0 && imagesRef.current[before]) return imagesRef.current[before];
+        if (after < FRAME_COUNT && imagesRef.current[after]) return imagesRef.current[after];
+      }
+      return null;
+    };
+
+    const drawCover = (image, opacity = 1) => {
+      if (!image) return;
+      const scale = Math.max(width / image.width, height / image.height);
+      const drawWidth = image.width * scale;
+      const drawHeight = image.height * scale;
+      const x = (width - drawWidth) * 0.5;
+      const y = (height - drawHeight) * 0.5;
+
+      context.globalAlpha = opacity;
+      context.drawImage(image, x, y, drawWidth, drawHeight);
+    };
+
+    const renderFrame = frame => {
+      if (width <= 0 || height <= 0) return;
+
+      const clamped = Math.max(0, Math.min(FRAME_COUNT - 1, frame));
+      const lowerIndex = Math.floor(clamped);
+      const upperIndex = Math.min(FRAME_COUNT - 1, lowerIndex + 1);
+      const blend = clamped - lowerIndex;
+      const lowerImage = getClosestImage(lowerIndex);
+      const upperImage = getClosestImage(upperIndex);
+
+      if (!lowerImage && !upperImage) return;
+
+      context.globalAlpha = 1;
+      context.fillStyle = '#ffffff';
+      context.fillRect(0, 0, width, height);
+      drawCover(lowerImage || upperImage, 1);
+
+      if (upperImage && upperImage !== lowerImage && blend > 0.01) {
+        drawCover(upperImage, blend);
+      }
+
+      context.globalAlpha = 1;
+      lastRenderedFrame = clamped;
+    };
 
     const resize = () => {
       const rect = canvas.getBoundingClientRect();
-      width = Math.max(1, Math.round(rect.width));
-      height = Math.max(1, Math.round(rect.height));
-      dpr = Math.min(window.devicePixelRatio || 1, 2);
-      canvas.width = Math.round(width * dpr);
-      canvas.height = Math.round(height * dpr);
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      ctx.imageSmoothingEnabled = true;
-      ctx.imageSmoothingQuality = 'high';
-    };
-
-    const draw = (progress) => {
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      ctx.globalAlpha = 1;
-      ctx.fillStyle = '#fff';
-      ctx.fillRect(0, 0, width, height);
-      const portrait = height > width;
-      const baseSize = portrait ? height * 0.044 : height * 0.072;
-      const visible = [];
-
-      for (const particle of particles) {
-        const local = (progress - particle.start) / particle.duration;
-        if (local >= 0 && local <= 1) visible.push({ particle, local });
-      }
-      visible.sort((a, b) => a.particle.depth - b.particle.depth);
-
-      for (const { particle, local } of visible) {
-        const image = imagesRef.current[particle.sprite];
-        if (!image) continue;
-        const travel = smoothstep(local);
-        let x = particle.x + Math.sin(local * particle.frequency * Math.PI * 2 + particle.phase) * particle.sway;
-        if (portrait) x = 0.5 + (x - 0.5) * 0.86;
-        const y = -0.18 + travel * 1.42;
-        let size = baseSize * particle.size;
-        if (particle.depth > 0.88) size *= 1.45;
-        if (particle.depth > 0.97) size *= 1.75;
-        const ratio = image.width / image.height;
-        const dw = ratio >= 1 ? size : size * ratio;
-        const dh = ratio >= 1 ? size / ratio : size;
-
-        ctx.save();
-        ctx.translate(x * width, y * height);
-        ctx.rotate(particle.rotation + particle.spin * local);
-        if (particle.depth > 0.72 && local > 0.05) {
-          ctx.globalAlpha = 0.10;
-          ctx.drawImage(image, -dw / 2, -dh / 2 - Math.min(20, height * 0.012), dw, dh);
-        }
-        ctx.globalAlpha = particle.depth < 0.06 ? 0.76 : 1;
-        ctx.drawImage(image, -dw / 2, -dh / 2, dw, dh);
-        ctx.restore();
-      }
+      const pixelRatio = Math.min(window.devicePixelRatio || 1, 2);
+      width = Math.max(1, rect.width);
+      height = Math.max(1, rect.height);
+      canvas.width = Math.round(width * pixelRatio);
+      canvas.height = Math.round(height * pixelRatio);
+      context.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
+      renderFrame(displayFrameRef.current);
     };
 
     const tick = () => {
-      displayProgressRef.current += (progressRef.current - displayProgressRef.current) * 0.38;
-      if (Math.abs(progressRef.current - displayProgressRef.current) < 0.0001) {
-        displayProgressRef.current = progressRef.current;
+      const target = targetFrameRef.current;
+      const current = displayFrameRef.current;
+      const distance = target - current;
+
+      // Fast enough to follow one or two scroll gestures, but damped enough
+      // to remove visible frame stepping on 60–120 Hz displays.
+      displayFrameRef.current = Math.abs(distance) < 0.002
+        ? target
+        : current + distance * 0.24;
+
+      if (Math.abs(displayFrameRef.current - lastRenderedFrame) > 0.002) {
+        renderFrame(displayFrameRef.current);
       }
-      draw(displayProgressRef.current);
-      rafRef.current = requestAnimationFrame(tick);
+
+      animationFrameId = window.requestAnimationFrame(tick);
     };
 
     resize();
     window.addEventListener('resize', resize, { passive: true });
-    rafRef.current = requestAnimationFrame(tick);
+
     const trigger = ScrollTrigger.create({
-      trigger: section,
+      trigger: sectionRef.current,
       start: 'top top',
       end: 'bottom bottom',
-      scrub: true,
-      onUpdate: (self) => { progressRef.current = self.progress; },
+      scrub: false,
+      onUpdate: self => {
+        // Slightly ease the densest middle portion so it remains readable,
+        // while the full sequence still completes in roughly two scrolls.
+        const progress = self.progress;
+        const shaped = progress < 0.48
+          ? progress * 0.94
+          : progress < 0.67
+            ? 0.4512 + (progress - 0.48) * 0.72
+            : 0.588 + (progress - 0.67) * 1.2485;
+        targetFrameRef.current = Math.min(FRAME_COUNT - 1, shaped * (FRAME_COUNT - 1));
+      }
     });
 
+    animationFrameId = window.requestAnimationFrame(tick);
+
     return () => {
-      cancelAnimationFrame(rafRef.current);
+      window.cancelAnimationFrame(animationFrameId);
       window.removeEventListener('resize', resize);
       trigger.kill();
     };
-  }, [particles, ready, reducedMotion]);
+  }, [loaded, reducedMotion]);
 
   if (reducedMotion) {
-    return <section className="sequence reduced seed-fallback"><img src="/seeds/seed-0.webp" alt="Ruby-red pomegranate seed" /></section>;
+    return (
+      <section className="sequence reduced">
+        <img
+          src="/sequence/desktop/frame-055.webp"
+          alt="Falling ruby-red pomegranate seeds"
+        />
+      </section>
+    );
   }
 
   return (
     <section ref={sectionRef} className="sequence">
-      <div className="sequence-stage"><canvas ref={canvasRef} aria-hidden="true" /></div>
-      <div className="sequence-copy"><span>Scroll to begin</span><strong>Make them notice.</strong></div>
+      <canvas ref={canvasRef} aria-hidden="true" />
+      <div className="sequence-copy">
+        <span>Scroll to begin</span>
+        <strong>Make them notice.</strong>
+      </div>
+      <div
+        className="load-meter"
+        style={{ '--p': `${Math.min(100, (loaded / FRAME_COUNT) * 100)}%` }}
+      />
     </section>
   );
 }
