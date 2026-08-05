@@ -1,23 +1,31 @@
-# RS MEDIA Static Website
-
-Premium static marketing website for RS MEDIA.
+# RS Marketing — Pomegranate Website
 
 ## Run locally
 
+Open a terminal in this folder and run:
+
 ```bash
-python3 -m http.server 5173
+python3 -m http.server 8080
 ```
 
-Open `http://localhost:5173`.
+Then open `http://localhost:8080`.
 
-## Deploy to GitHub Pages
+You can also use the VS Code Live Server extension.
 
-Push this folder to a GitHub repository and enable GitHub Pages from the repository settings, or use the included workflow.
+## Deploy
 
-## Launch checklist
+Upload the entire folder to Netlify, Vercel, GitHub Pages, or any static hosting service.
 
-- Replace demo testimonials with verified reviews.
-- Replace placeholder metrics/case studies with verified results.
-- Connect the contact form in `assets/js/main.js` to Formspree, HubSpot, Netlify Forms, or a custom API.
-- Replace `https://example.com` in metadata, sitemap, and schema with the real domain.
-- Review legal copy with a qualified legal professional.
+## Contact form
+
+The included form shows a local success state. Connect its submit handler in `app.js` to Formspree, HubSpot, GoHighLevel, or your own API endpoint to receive submissions.
+
+## Animation settings
+
+At the top of `app.js`:
+- Desktop seed count: 128
+- Mobile seed count: 78
+- Physics duration: 8.5 seconds distributed across scroll
+
+In `styles.css`:
+- `.seed-scroll { height: 520vh; }` controls the desktop scroll distance.
