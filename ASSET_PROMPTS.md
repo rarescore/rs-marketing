@@ -2,11 +2,11 @@
 
 The four website visuals were generated with the built-in image-generation workflow, then compressed into responsive WebP sizes for production.
 
-## Cleaned RS Marketing logo
+## Cleaned LG Growth Studio logo
 
 Built-in image editing mode using the supplied logo as the reference image.
 
-> Use case: logo-brand. Asset type: cleaned master brand logo for a premium marketing agency website. Edit the supplied RS Marketing logo only. Preserve the exact recognizable composition—the RS monogram, fighter jet, diagonal flight trails, “RS MARKETING” wordmark, and “RARE SCORE MARKETING” subtitle. Replace the black background with pure white. Render every logo element in deep forest green and very dark evergreen with restrained silver highlights. Keep the original relative positions and hierarchy. Remove black haze, heavy glow, noise, artifacts and muddy shadows; sharpen edges and typography. No extra words, watermark, symbols, distorted letters, mockup surface or border.
+> Use case: logo-brand. Asset type: cleaned master brand logo for a premium marketing agency website. Edit the supplied LG Growth Studio logo only. Preserve the exact recognizable composition—the RS monogram, fighter jet, diagonal flight trails, “RS MARKETING” wordmark, and “RARE SCORE MARKETING” subtitle. Replace the black background with pure white. Render every logo element in deep forest green and very dark evergreen with restrained silver highlights. Keep the original relative positions and hierarchy. Remove black haze, heavy glow, noise, artifacts and muddy shadows; sharpen edges and typography. No extra words, watermark, symbols, distorted letters, mockup surface or border.
 
 ## Growth engine hero
 

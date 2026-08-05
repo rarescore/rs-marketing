@@ -1,4 +1,4 @@
-# RS Marketing — Pomegranate Edition
+# LG Growth Studio — Pomegranate Edition
 
 ## Merge the ZIP parts
 Extract all parts into the same folder. Allow folders to merge; do not replace the entire folder when prompted.

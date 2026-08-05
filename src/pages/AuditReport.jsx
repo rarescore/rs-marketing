@@ -22,7 +22,7 @@ export default function AuditReport(){
   const rank=result.ranking||{status:'not_connected'}
   const keyword=result.request?.keyword||rank.keyword
   const locationName=result.request?.location||rank.location
-  return <><Seo title={`Website Audit Score: ${result.score}/100 | RS Marketing`} noindex/>
+  return <><Seo title={`Website Audit Score: ${result.score}/100 | LG Growth Studio`} noindex/>
     <section className="report-top">
       <div className="wrap report-nav"><Link to="/audit"><ArrowLeft/> Run another audit</Link><button onClick={()=>window.print()}><Download/> Save report</button></div>
       <div className="wrap report-hero">

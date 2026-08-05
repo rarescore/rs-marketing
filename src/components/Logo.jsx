@@ -12,7 +12,7 @@ export function Mark({ size = 42 }) {
 
 export default function Logo({ light = false }) {
   return (
-    <Link to="/" className={`logo ${light ? 'logo-light' : ''}`} aria-label="RS — Rare Score Marketing home">
+    <Link to="/" className={`logo ${light ? 'logo-light' : ''}`} aria-label="RS — LG Growth Studio home">
       <Mark />
       <span className="logo-type"><b>RS</b><span>Rare Score<br/>Marketing</span></span>
     </Link>

@@ -5,212 +5,91 @@ import useReducedMotion from '../hooks/useReducedMotion';
 
 gsap.registerPlugin(ScrollTrigger);
 
-const FRAME_COUNT = 90;
-const PRIORITY_FRAMES = [0,1,2,3,4,5,8,12,16,20,24,28,32,36,40,44,48,52,56,60,64,68,72,76,80,84,89];
-
 export default function PomegranateSequence() {
   const sectionRef = useRef(null);
   const canvasRef = useRef(null);
   const imagesRef = useRef([]);
-  const targetFrameRef = useRef(0);
-  const displayFrameRef = useRef(0);
   const [loaded, setLoaded] = useState(0);
   const reducedMotion = useReducedMotion();
 
   useEffect(() => {
-    if (reducedMotion) return undefined;
+    if (reducedMotion) return;
+    const mobile = window.matchMedia('(max-width: 700px)').matches;
+    const sequence = mobile ? 'mobile' : 'desktop';
+    const frameCount = mobile ? 150 : 180;
+    let cancelled = false;
+    imagesRef.current = new Array(frameCount);
 
-    const sequence = window.matchMedia('(max-width: 700px)').matches ? 'mobile' : 'desktop';
-    let active = true;
-    const loadedIndices = new Set();
+    const priority = Array.from(new Set([0,1,2,3,4,5,8,12,18,24,32,40,50,60,72,84,96,108,120,132,frameCount-1].filter(i=>i<frameCount)));
+    const remaining = Array.from({length:frameCount},(_,i)=>i).filter(i=>!priority.includes(i));
+    const order = [...priority, ...remaining];
 
-    const loadFrame = index => new Promise(resolve => {
-      if (imagesRef.current[index]) {
-        resolve();
-        return;
-      }
-
-      const image = new Image();
-      image.decoding = 'async';
-      image.onload = () => {
-        if (active) {
-          imagesRef.current[index] = image;
-          if (!loadedIndices.has(index)) {
-            loadedIndices.add(index);
-            setLoaded(loadedIndices.size);
-          }
-        }
-        resolve();
-      };
-      image.onerror = resolve;
-      image.src = `/sequence/${sequence}/frame-${String(index).padStart(3, '0')}.webp`;
+    const load = index => new Promise(resolve => {
+      const img = new Image();
+      img.decoding = 'async';
+      img.onload = () => { if(!cancelled){ imagesRef.current[index]=img; setLoaded(v=>v+1); } resolve(); };
+      img.onerror = resolve;
+      img.src = `/sequence/${sequence}/frame-${String(index).padStart(3,'0')}.webp`;
     });
 
-    const loadBatch = async indices => {
-      await Promise.all(indices.map(loadFrame));
-    };
-
-    (async () => {
-      await loadBatch(PRIORITY_FRAMES);
-
-      const remaining = Array.from({ length: FRAME_COUNT }, (_, index) => index)
-        .filter(index => !PRIORITY_FRAMES.includes(index));
-
-      for (let start = 0; start < remaining.length && active; start += 12) {
-        await loadBatch(remaining.slice(start, start + 12));
-        await new Promise(resolve => window.setTimeout(resolve, 18));
+    (async()=>{
+      for(let i=0;i<order.length;i+=16){
+        await Promise.all(order.slice(i,i+16).map(load));
+        await new Promise(r=>setTimeout(r,8));
       }
     })();
+    return()=>{cancelled=true};
+  },[reducedMotion]);
 
-    return () => {
-      active = false;
-    };
-  }, [reducedMotion]);
-
-  useEffect(() => {
-    if (reducedMotion || !canvasRef.current || !sectionRef.current) return undefined;
-
+  useEffect(()=>{
+    if(reducedMotion || !sectionRef.current || !canvasRef.current) return;
+    const mobile = window.matchMedia('(max-width: 700px)').matches;
+    const frameCount = mobile ? 150 : 180;
     const canvas = canvasRef.current;
-    const context = canvas.getContext('2d', {
-      alpha: false,
-      desynchronized: true
-    });
+    const ctx = canvas.getContext('2d',{alpha:false,desynchronized:true});
+    let w=0,h=0,raf=0,current=0,target=0,last=-1;
 
-    let animationFrameId = 0;
-    let width = 0;
-    let height = 0;
-    let lastRenderedFrame = -100;
-
-    const getClosestImage = index => {
-      if (imagesRef.current[index]) return imagesRef.current[index];
-
-      for (let offset = 1; offset < FRAME_COUNT; offset += 1) {
-        const before = index - offset;
-        const after = index + offset;
-        if (before >= 0 && imagesRef.current[before]) return imagesRef.current[before];
-        if (after < FRAME_COUNT && imagesRef.current[after]) return imagesRef.current[after];
+    const nearest = i => {
+      if(imagesRef.current[i]) return imagesRef.current[i];
+      for(let d=1;d<frameCount;d++){
+        if(i-d>=0 && imagesRef.current[i-d]) return imagesRef.current[i-d];
+        if(i+d<frameCount && imagesRef.current[i+d]) return imagesRef.current[i+d];
       }
       return null;
     };
-
-    const drawCover = (image, opacity = 1) => {
-      if (!image) return;
-      const scale = Math.max(width / image.width, height / image.height);
-      const drawWidth = image.width * scale;
-      const drawHeight = image.height * scale;
-      const x = (width - drawWidth) * 0.5;
-      const y = (height - drawHeight) * 0.5;
-
-      context.globalAlpha = opacity;
-      context.drawImage(image, x, y, drawWidth, drawHeight);
+    const draw = frame => {
+      const img=nearest(Math.round(frame)); if(!img||!w||!h)return;
+      ctx.fillStyle='#fff';ctx.fillRect(0,0,w,h);
+      const scale=Math.max(w/img.width,h/img.height);
+      const dw=img.width*scale,dh=img.height*scale;
+      ctx.drawImage(img,(w-dw)/2,(h-dh)/2,dw,dh);last=Math.round(frame);
     };
-
-    const renderFrame = frame => {
-      if (width <= 0 || height <= 0) return;
-
-      const clamped = Math.max(0, Math.min(FRAME_COUNT - 1, frame));
-      const lowerIndex = Math.floor(clamped);
-      const upperIndex = Math.min(FRAME_COUNT - 1, lowerIndex + 1);
-      const blend = clamped - lowerIndex;
-      const lowerImage = getClosestImage(lowerIndex);
-      const upperImage = getClosestImage(upperIndex);
-
-      if (!lowerImage && !upperImage) return;
-
-      context.globalAlpha = 1;
-      context.fillStyle = '#ffffff';
-      context.fillRect(0, 0, width, height);
-      drawCover(lowerImage || upperImage, 1);
-
-      if (upperImage && upperImage !== lowerImage && blend > 0.01) {
-        drawCover(upperImage, blend);
-      }
-
-      context.globalAlpha = 1;
-      lastRenderedFrame = clamped;
+    const resize=()=>{
+      const rect=canvas.getBoundingClientRect(); const dpr=Math.min(devicePixelRatio||1,2);
+      w=rect.width;h=rect.height;canvas.width=Math.round(w*dpr);canvas.height=Math.round(h*dpr);
+      ctx.setTransform(dpr,0,0,dpr,0,0);draw(current);
     };
-
-    const resize = () => {
-      const rect = canvas.getBoundingClientRect();
-      const pixelRatio = Math.min(window.devicePixelRatio || 1, 2);
-      width = Math.max(1, rect.width);
-      height = Math.max(1, rect.height);
-      canvas.width = Math.round(width * pixelRatio);
-      canvas.height = Math.round(height * pixelRatio);
-      context.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
-      renderFrame(displayFrameRef.current);
+    const tick=()=>{
+      current += (target-current)*0.34;
+      if(Math.abs(target-current)<.01) current=target;
+      if(Math.round(current)!==last) draw(current);
+      raf=requestAnimationFrame(tick);
     };
-
-    const tick = () => {
-      const target = targetFrameRef.current;
-      const current = displayFrameRef.current;
-      const distance = target - current;
-
-      // Fast enough to follow one or two scroll gestures, but damped enough
-      // to remove visible frame stepping on 60–120 Hz displays.
-      displayFrameRef.current = Math.abs(distance) < 0.002
-        ? target
-        : current + distance * 0.24;
-
-      if (Math.abs(displayFrameRef.current - lastRenderedFrame) > 0.002) {
-        renderFrame(displayFrameRef.current);
-      }
-
-      animationFrameId = window.requestAnimationFrame(tick);
-    };
-
-    resize();
-    window.addEventListener('resize', resize, { passive: true });
-
-    const trigger = ScrollTrigger.create({
-      trigger: sectionRef.current,
-      start: 'top top',
-      end: 'bottom bottom',
-      scrub: false,
-      onUpdate: self => {
-        // Slightly ease the densest middle portion so it remains readable,
-        // while the full sequence still completes in roughly two scrolls.
-        const progress = self.progress;
-        const shaped = progress < 0.48
-          ? progress * 0.94
-          : progress < 0.67
-            ? 0.4512 + (progress - 0.48) * 0.72
-            : 0.588 + (progress - 0.67) * 1.2485;
-        targetFrameRef.current = Math.min(FRAME_COUNT - 1, shaped * (FRAME_COUNT - 1));
-      }
+    resize();window.addEventListener('resize',resize,{passive:true});
+    const trigger=ScrollTrigger.create({
+      trigger:sectionRef.current,start:'top top',end:'bottom bottom',scrub:true,
+      onUpdate:self=>{ target=self.progress*(frameCount-1); }
     });
+    raf=requestAnimationFrame(tick);
+    return()=>{cancelAnimationFrame(raf);window.removeEventListener('resize',resize);trigger.kill()};
+  },[loaded,reducedMotion]);
 
-    animationFrameId = window.requestAnimationFrame(tick);
-
-    return () => {
-      window.cancelAnimationFrame(animationFrameId);
-      window.removeEventListener('resize', resize);
-      trigger.kill();
-    };
-  }, [loaded, reducedMotion]);
-
-  if (reducedMotion) {
-    return (
-      <section className="sequence reduced">
-        <img
-          src="/sequence/desktop/frame-055.webp"
-          alt="Falling ruby-red pomegranate seeds"
-        />
-      </section>
-    );
-  }
-
-  return (
-    <section ref={sectionRef} className="sequence">
-      <canvas ref={canvasRef} aria-hidden="true" />
-      <div className="sequence-copy">
-        <span>Scroll to begin</span>
-        <strong>Make them notice.</strong>
-      </div>
-      <div
-        className="load-meter"
-        style={{ '--p': `${Math.min(100, (loaded / FRAME_COUNT) * 100)}%` }}
-      />
-    </section>
-  );
+  if(reducedMotion) return <section className="sequence reduced"><img src="/sequence/desktop/frame-110.webp" alt="Ruby-red pomegranate seeds falling on white"/></section>;
+  const total = typeof window!=='undefined' && window.matchMedia('(max-width:700px)').matches ? 150 : 180;
+  return <section ref={sectionRef} className="sequence">
+    <div className="sequence-sticky"><canvas ref={canvasRef} aria-hidden="true"/>
+      <div className="sequence-copy"><span>Scroll to begin</span><strong>Make them notice.</strong></div>
+    </div>
+    <div className="load-meter" style={{'--p':`${Math.min(100,(loaded/total)*100)}%`}}/>
+  </section>;
 }

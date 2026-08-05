@@ -1,4 +1,4 @@
-# RS Marketing launch report
+# LG Growth Studio launch report
 
 Tested build: 2.0.0  
 Test environment: local Vite production preview  

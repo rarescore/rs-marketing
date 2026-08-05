@@ -40,7 +40,7 @@ function Footer() {
         <div><h3>Services</h3><Link to="/services#creative">Creative studio</Link><Link to="/services#paid">Paid growth</Link><Link to="/services#search">SEO & local</Link><Link to="/services#web">Websites</Link></div>
         <div><h3>Start a conversation</h3><a href="mailto:hello.rarescore@gmail.com">hello.rarescore@gmail.com</a><span>Remote studio · Serving U.S. businesses</span></div>
       </div>
-      <div className="footer-bottom wrap"><span>© {new Date().getFullYear()} Rare Score Marketing</span><div><Link to="/privacy">Privacy</Link><Link to="/terms">Terms</Link></div></div>
+      <div className="footer-bottom wrap"><span>© {new Date().getFullYear()} LG Growth Studio</span><div><Link to="/privacy">Privacy</Link><Link to="/terms">Terms</Link></div></div>
     </footer>
   )
 }

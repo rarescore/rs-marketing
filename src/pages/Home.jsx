@@ -27,9 +27,9 @@ function Hero(){return <section className="new-hero">
       <div className="new-hero-actions"><Link to="/pricing" className="button button-acid">See packages <ArrowUpRight/></Link><Link to="/audit" className="button button-quiet">Run a free website audit <ArrowRight/></Link></div>
       <div className="hero-proof"><span><b>4</b> simple monthly plans</span><span><b>$1.5k</b> websites from</span><span><b>1 day</b> typical reply</span></div>
     </div>
-    <div className="brand-stage" aria-label="RS Marketing brand mark and growth dashboard">
+    <div className="brand-stage" aria-label="LG Growth Studio brand mark and growth dashboard">
       <div className="brand-halo"/>
-      <img src="/assets/rs-logo-white.webp" width="1200" height="1200" alt="RS Marketing — Rare Score Marketing" fetchPriority="high"/>
+      <img src="/assets/rs-logo-white.webp" width="1200" height="1200" alt="LG Growth Studio — LG Growth Studio" fetchPriority="high"/>
       <div className="float-card float-card-a"><BarChart3/><span>Search visibility</span><b>+ clearer signals</b></div>
       <div className="float-card float-card-b"><CirclePlay/><span>Creative testing</span><b>Ideas that improve</b></div>
       <div className="flight-tag"><span/> Strategy · Creative · Search · Growth</div>
@@ -51,6 +51,6 @@ function AuditBanner(){return <section className="new-audit-banner"><div classNa
 function Insights(){return <section className="new-insights section"><div className="wrap"><div className="split-heading"><SectionIntro eyebrow="Useful thinking" title={'Understand the system.<br/><i>Make better decisions.</i>'}/><Link to="/insights" className="text-link">View all articles <ArrowRight/></Link></div><div className="new-article-grid">{articles.slice(0,3).map((a,i)=><Link to={`/insights/${a.slug}`} key={a.slug}><div><img src={a.image.replace('.webp','-840.webp')} width="840" height="472" alt="" loading="lazy"/></div><span>{String(i+1).padStart(2,'0')} · {a.category}</span><h3>{a.title}</h3><p>{a.dek}</p><b>Read the article <ArrowUpRight/></b></Link>)}</div></div></section>}
 
 export default function Home(){
-  const schema={ '@context':'https://schema.org','@type':'ProfessionalService',name:'Rare Score Marketing',alternateName:'RS Marketing',email:'hello.rarescore@gmail.com',url:import.meta.env.VITE_SITE_URL||'https://rsmarketing.com',areaServed:'United States',serviceType:['Digital Marketing','Search Engine Optimization','Social Media Marketing','Web Design','Advertising'] }
+  const schema={ '@context':'https://schema.org','@type':'ProfessionalService',name:'LG Growth Studio',alternateName:'LG Growth Studio',email:'hello.rarescore@gmail.com',url:import.meta.env.VITE_SITE_URL||'https://rsmarketing.com',areaServed:'United States',serviceType:['Digital Marketing','Search Engine Optimization','Social Media Marketing','Web Design','Advertising'] }
   return <><Seo schema={schema}/><Hero/><SignalSection/><StudioSection/><WorkFlow/><PricingPreview/><AuditBanner/><Insights/><section className="faq-section section"><div className="wrap faq-grid"><SectionIntro eyebrow="Simple answers" title={'Know what you are<br/><i>buying before the call.</i>'}/><FaqList items={faqs.slice(0,6)}/></div></section></>
 }

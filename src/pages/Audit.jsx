@@ -44,7 +44,7 @@ export default function Audit(){
     }
   }
 
-  return <><Seo title="Free Website SEO Audit | RS Marketing" description="Get a clear website score, Google visibility context, simple findings and a repair estimate from RS Marketing."/>
+  return <><Seo title="Free Website SEO Audit | LG Growth Studio" description="Get a clear website score, Google visibility context, simple findings and a repair estimate from LG Growth Studio."/>
     <section className="new-audit-page">
       <div className="audit-scan-lines" aria-hidden="true"><i/><i/><i/></div>
       <div className="wrap new-audit-layout">

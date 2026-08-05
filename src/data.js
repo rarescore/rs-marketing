@@ -119,8 +119,8 @@ export const nav = [
 ]
 
 export const seoDefaults = {
-  title: 'RS Marketing | AI Creative, SEO & Paid Growth',
-  description: 'Rare Score Marketing creates performance websites, AI video, SEO, paid media and local growth systems for ambitious businesses.',
+  title: 'LG Growth Studio | AI Creative, SEO & Paid Growth',
+  description: 'LG Growth Studio creates performance websites, AI video, SEO, paid media and local growth systems for ambitious businesses.',
 }
 
 export const capabilityIcons = [Megaphone, Globe2, Bot, FileSearch, Compass, BarChart3]

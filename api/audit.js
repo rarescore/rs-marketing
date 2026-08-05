@@ -24,7 +24,7 @@ async function validateTarget(input) {
 
 async function safeFetch(input, options = {}, redirects = 0) {
   const url = await validateTarget(input.toString())
-  const response = await fetch(url, { ...options, redirect: 'manual', signal: AbortSignal.timeout(9000), headers: { 'User-Agent':'RSMarketingAudit/1.0 (+https://rsmarketing.com)', Accept:'text/html,application/xhtml+xml,text/plain;q=.8', ...(options.headers||{}) } })
+  const response = await fetch(url, { ...options, redirect: 'manual', signal: AbortSignal.timeout(9000), headers: { 'User-Agent':'LGGrowthStudioAudit/1.0 (+https://rsmarketing.com)', Accept:'text/html,application/xhtml+xml,text/plain;q=.8', ...(options.headers||{}) } })
   if ([301,302,303,307,308].includes(response.status) && response.headers.get('location')) {
     if (redirects >= 3) throw new Error('The website redirected too many times.')
     return safeFetch(new URL(response.headers.get('location'), url), options, redirects + 1)
