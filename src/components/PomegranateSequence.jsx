@@ -22,7 +22,7 @@ export default function PomegranateSequence(){
     if(reduced) return;
     const mobile=window.matchMedia('(max-width: 700px)').matches;
     const folder=mobile?'mobile':'desktop';
-    const count=mobile?150:180;
+    const count=180;
     const frames=new Array(count);
     framesRef.current=frames;
     let cancelled=false;
@@ -66,7 +66,7 @@ export default function PomegranateSequence(){
   useEffect(()=>{
     if(reduced||!sectionRef.current||!canvasRef.current) return;
     const mobile=window.matchMedia('(max-width: 700px)').matches;
-    const count=mobile?150:180;
+    const count=180;
     const canvas=canvasRef.current;
     const ctx=canvas.getContext('2d',{alpha:false,desynchronized:true});
     let cssW=1,cssH=1,dpr=1,lastDraw=-1;
@@ -141,7 +141,7 @@ export default function PomegranateSequence(){
   },[reduced]);
 
   if(reduced) return <section className="sequence reduced"><img src="/sequence/desktop/frame-110.webp" alt="Pomegranate seeds falling on a white background"/></section>;
-  const total=typeof window!=='undefined'&&window.matchMedia('(max-width:700px)').matches?150:180;
+  const total=typeof window!=='undefined'&&window.matchMedia('(max-width:700px)').matches?180:180;
 
   return <section ref={sectionRef} className={`sequence ${ready?'is-ready':''}`} aria-label="Pomegranate seed scroll animation">
     <div className="sequence-sticky">
