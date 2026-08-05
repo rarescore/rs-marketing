@@ -1,1 +1,169 @@
-import{useEffect,useRef,useState}from'react';import{gsap}from'gsap';import{ScrollTrigger}from'gsap/ScrollTrigger';import useReducedMotion from'../hooks/useReducedMotion';gsap.registerPlugin(ScrollTrigger);const COUNT=180;export default function PomegranateSequence(){const section=useRef(null),canvas=useRef(null),images=useRef([]),[loaded,setLoaded]=useState(0),reduced=useReducedMotion();useEffect(()=>{if(reduced)return;const mobile=matchMedia('(max-width: 700px)').matches,path=mobile?'mobile':'desktop';let alive=true;const load=i=>new Promise(res=>{const img=new Image();img.onload=()=>{if(alive){images.current[i]=img;setLoaded(v=>v+1)}res()};img.onerror=res;img.src=`/sequence/${path}/frame-${String(i).padStart(3,'0')}.webp`});(async()=>{for(const i of [0,1,2,3,4,8,16,24,32,48,64,80,96,112,128,144,160,179])await load(i);for(let i=0;i<COUNT;i++)if(!images.current[i])load(i)})();return()=>{alive=false}},[reduced]);useEffect(()=>{if(reduced)return;const c=canvas.current,ctx=c.getContext('2d',{alpha:false});let last=-1;const resize=()=>{const r=c.getBoundingClientRect(),d=Math.min(devicePixelRatio||1,2);c.width=Math.round(r.width*d);c.height=Math.round(r.height*d);ctx.setTransform(d,0,0,d,0,0);if(last>=0)draw(last)};const draw=i=>{const img=images.current[i]||images.current.slice(0,i+1).reverse().find(Boolean);if(!img)return;last=i;const w=c.clientWidth,h=c.clientHeight,scale=Math.max(w/img.width,h/img.height),dw=img.width*scale,dh=img.height*scale;ctx.fillStyle='#fff';ctx.fillRect(0,0,w,h);ctx.drawImage(img,(w-dw)/2,(h-dh)/2,dw,dh)};resize();addEventListener('resize',resize);const state={frame:0};const tween=gsap.to(state,{frame:COUNT-1,ease:'none',snap:'frame',onUpdate:()=>draw(state.frame),scrollTrigger:{trigger:section.current,start:'top top',end:'bottom bottom',scrub:.08}});const pin=ScrollTrigger.create({trigger:section.current,start:'top top',end:'bottom bottom',pin:canvas.current,pinSpacing:false});return()=>{removeEventListener('resize',resize);tween.kill();pin.kill()}},[loaded,reduced]);if(reduced)return <section className="sequence reduced"><img src="/sequence/desktop/frame-110.webp" alt="Falling ruby-red pomegranate seeds"/></section>;return <section ref={section} className="sequence"><canvas ref={canvas} aria-hidden="true"/><div className="sequence-copy"><span>Scroll to begin</span><strong>Make them notice.</strong></div><div className="load-meter" style={{'--p':Math.min(100,loaded/COUNT*100)+'%'}}/></section>}
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { gsap } from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import useReducedMotion from '../hooks/useReducedMotion';
+
+gsap.registerPlugin(ScrollTrigger);
+const SEED_COUNT = 320;
+const SPRITE_COUNT = 5;
+
+function mulberry32(seed) {
+  return function random() {
+    let t = seed += 0x6D2B79F5;
+    t = Math.imul(t ^ (t >>> 15), t | 1);
+    t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
+function smoothstep(value) {
+  const t = Math.max(0, Math.min(1, value));
+  return t * t * (3 - 2 * t);
+}
+
+export default function PomegranateSequence() {
+  const sectionRef = useRef(null);
+  const canvasRef = useRef(null);
+  const progressRef = useRef(0);
+  const displayProgressRef = useRef(0);
+  const rafRef = useRef(0);
+  const imagesRef = useRef([]);
+  const [ready, setReady] = useState(false);
+  const reducedMotion = useReducedMotion();
+
+  const particles = useMemo(() => {
+    const random = mulberry32(20260805);
+    return Array.from({ length: SEED_COUNT }, (_, index) => {
+      const depth = random();
+      return {
+        sprite: index % SPRITE_COUNT,
+        x: -0.08 + random() * 1.16,
+        start: 0.015 + random() * 0.34,
+        duration: 0.43 + random() * 0.29,
+        depth,
+        size: (0.46 + random() * 0.78) * (0.55 + depth * 1.15),
+        rotation: random() * Math.PI * 2,
+        spin: (-5.5 + random() * 11) * Math.PI,
+        sway: 0.005 + random() * 0.065,
+        frequency: 0.8 + random() * 2.5,
+        phase: random() * Math.PI * 2,
+      };
+    });
+  }, []);
+
+  useEffect(() => {
+    if (reducedMotion) return;
+    let active = true;
+    Promise.all(Array.from({ length: SPRITE_COUNT }, (_, index) => new Promise((resolve) => {
+      const image = new Image();
+      image.decoding = 'async';
+      image.onload = () => resolve(image);
+      image.onerror = () => resolve(null);
+      image.src = `/seeds/seed-${index}.webp`;
+    }))).then((images) => {
+      if (!active) return;
+      imagesRef.current = images;
+      setReady(images.some(Boolean));
+    });
+    return () => { active = false; };
+  }, [reducedMotion]);
+
+  useEffect(() => {
+    if (reducedMotion || !ready) return;
+    const section = sectionRef.current;
+    const canvas = canvasRef.current;
+    const ctx = canvas.getContext('2d', { alpha: false, desynchronized: true });
+    let width = 0, height = 0, dpr = 1;
+
+    const resize = () => {
+      const rect = canvas.getBoundingClientRect();
+      width = Math.max(1, Math.round(rect.width));
+      height = Math.max(1, Math.round(rect.height));
+      dpr = Math.min(window.devicePixelRatio || 1, 2);
+      canvas.width = Math.round(width * dpr);
+      canvas.height = Math.round(height * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      ctx.imageSmoothingEnabled = true;
+      ctx.imageSmoothingQuality = 'high';
+    };
+
+    const draw = (progress) => {
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      ctx.globalAlpha = 1;
+      ctx.fillStyle = '#fff';
+      ctx.fillRect(0, 0, width, height);
+      const portrait = height > width;
+      const baseSize = portrait ? height * 0.044 : height * 0.072;
+      const visible = [];
+
+      for (const particle of particles) {
+        const local = (progress - particle.start) / particle.duration;
+        if (local >= 0 && local <= 1) visible.push({ particle, local });
+      }
+      visible.sort((a, b) => a.particle.depth - b.particle.depth);
+
+      for (const { particle, local } of visible) {
+        const image = imagesRef.current[particle.sprite];
+        if (!image) continue;
+        const travel = smoothstep(local);
+        let x = particle.x + Math.sin(local * particle.frequency * Math.PI * 2 + particle.phase) * particle.sway;
+        if (portrait) x = 0.5 + (x - 0.5) * 0.86;
+        const y = -0.18 + travel * 1.42;
+        let size = baseSize * particle.size;
+        if (particle.depth > 0.88) size *= 1.45;
+        if (particle.depth > 0.97) size *= 1.75;
+        const ratio = image.width / image.height;
+        const dw = ratio >= 1 ? size : size * ratio;
+        const dh = ratio >= 1 ? size / ratio : size;
+
+        ctx.save();
+        ctx.translate(x * width, y * height);
+        ctx.rotate(particle.rotation + particle.spin * local);
+        if (particle.depth > 0.72 && local > 0.05) {
+          ctx.globalAlpha = 0.10;
+          ctx.drawImage(image, -dw / 2, -dh / 2 - Math.min(20, height * 0.012), dw, dh);
+        }
+        ctx.globalAlpha = particle.depth < 0.06 ? 0.76 : 1;
+        ctx.drawImage(image, -dw / 2, -dh / 2, dw, dh);
+        ctx.restore();
+      }
+    };
+
+    const tick = () => {
+      displayProgressRef.current += (progressRef.current - displayProgressRef.current) * 0.38;
+      if (Math.abs(progressRef.current - displayProgressRef.current) < 0.0001) {
+        displayProgressRef.current = progressRef.current;
+      }
+      draw(displayProgressRef.current);
+      rafRef.current = requestAnimationFrame(tick);
+    };
+
+    resize();
+    window.addEventListener('resize', resize, { passive: true });
+    rafRef.current = requestAnimationFrame(tick);
+    const trigger = ScrollTrigger.create({
+      trigger: section,
+      start: 'top top',
+      end: 'bottom bottom',
+      scrub: true,
+      onUpdate: (self) => { progressRef.current = self.progress; },
+    });
+
+    return () => {
+      cancelAnimationFrame(rafRef.current);
+      window.removeEventListener('resize', resize);
+      trigger.kill();
+    };
+  }, [particles, ready, reducedMotion]);
+
+  if (reducedMotion) {
+    return <section className="sequence reduced seed-fallback"><img src="/seeds/seed-0.webp" alt="Ruby-red pomegranate seed" /></section>;
+  }
+
+  return (
+    <section ref={sectionRef} className="sequence">
+      <div className="sequence-stage"><canvas ref={canvasRef} aria-hidden="true" /></div>
+      <div className="sequence-copy"><span>Scroll to begin</span><strong>Make them notice.</strong></div>
+    </section>
+  );
+}
