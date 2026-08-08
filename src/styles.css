@@ -797,3 +797,14 @@ a,button,summary,select{cursor:pointer}input,textarea{cursor:text}
 .builder-fine-tune{margin:16px 0 6px;border:1px solid #d8d3ca;background:#fff;padding:14px 16px;display:grid;grid-template-columns:1fr auto auto;align-items:center;gap:18px}.builder-fine-tune>div:first-child{display:grid;gap:3px}.builder-fine-tune span{font-size:7px;letter-spacing:.14em;text-transform:uppercase;color:#777}.builder-fine-tune strong{font-size:14px}.builder-fine-tune>input{width:46px;height:32px;border:0;padding:0;background:transparent}.accent-swatches{display:flex!important;gap:7px!important}.accent-swatches button{width:25px!important;height:25px!important;min-height:0!important;border:2px solid transparent!important;padding:0!important}.accent-swatches button.active{border-color:#080808!important;transform:scale(.88)}
 .builder-live{--preview-accent:#ef101d}.builder-browser-nav button,.builder-browser-hero button{background:var(--preview-accent)!important}.builder-browser-hero small{color:var(--preview-accent)!important}
 @media(max-width:760px){.builder-fine-tune{grid-template-columns:1fr auto}.accent-swatches{grid-column:1/-1;flex-wrap:wrap}}
+
+/* PERFORMANCE PASS — scroll-scrubbed pomegranate video.
+   The old 4K bitmap decoder was the main source of whole-page jank. */
+.sequence-video{height:190vh;background:#fff}
+.sequence-video .sequence-sticky{position:sticky;top:0;height:100vh;overflow:hidden;background:#fff;contain:layout paint style}
+.sequence-scrub-video{position:absolute;inset:0;z-index:1;width:100%;height:100%;object-fit:cover;display:block;opacity:0;transition:opacity .18s linear;will-change:opacity;transform:translateZ(0);backface-visibility:hidden}
+.sequence-video.is-ready .sequence-scrub-video{opacity:1}
+.sequence-video.is-ready .sequence-poster{opacity:0}
+.sequence-video .sequence-poster{z-index:0}
+.sequence-video .sequence-copy{z-index:3!important}
+@media(max-width:700px){.sequence-video{height:175vh}}
