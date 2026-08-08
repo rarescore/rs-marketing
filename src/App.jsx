@@ -126,17 +126,24 @@ function WebsiteMock({after=false}){
   </div>
 }
 
-function Transformation(){return <section className="section transformation black">
-  <div className="eyebrow">Before → better</div>
-  <ScrollReveal dark>A better website is not just a redesign.</ScrollReveal>
-  <p className="section-intro">The difference should be visible before someone reads a case study.</p>
-  <div className="transformation-stage">
-    <div className="transformation-column"><span className="transform-label">Before</span><WebsiteMock/></div>
-    <div className="transform-arrow" aria-hidden="true"><i/><b>→</b></div>
-    <div className="transformation-column"><span className="transform-label">After the right problems are fixed</span><WebsiteMock after/></div>
-  </div>
-  <div className="transformation-proof"><span>Hierarchy</span><span>CTA placement</span><span>Mobile clarity</span><span>Trust</span><span>SEO structure</span></div>
-</section>}
+function Transformation(){
+  const ref=useRef(null);
+  useEffect(()=>{
+    const update=()=>{const el=ref.current;if(!el)return;const r=el.getBoundingClientRect();const p=Math.max(0,Math.min(1,(window.innerHeight*.8-r.top)/(r.height+window.innerHeight*.35)));el.style.setProperty('--transform-progress',String(p))};
+    update();addEventListener('scroll',update,{passive:true});addEventListener('resize',update,{passive:true});return()=>{removeEventListener('scroll',update);removeEventListener('resize',update)};
+  },[]);
+  return <section ref={ref} className="section transformation black">
+    <div className="eyebrow">Before → rebuilt</div>
+    <ScrollReveal dark>Watch the structure change.</ScrollReveal>
+    <p className="section-intro">Not a color swap. Hierarchy, clarity, conversion and search structure rebuilt as one system.</p>
+    <div className="transformation-stage">
+      <div className="transformation-column"><span className="transform-label">Current state</span><WebsiteMock/></div>
+      <div className="transform-arrow" aria-hidden="true"><i/><b>→</b></div>
+      <div className="transformation-column"><span className="transform-label">Rebuilt experience</span><WebsiteMock after/></div>
+    </div>
+    <div className="transformation-proof"><span>Hierarchy</span><span>CTA placement</span><span>Mobile clarity</span><span>Trust</span><span>SEO structure</span></div>
+  </section>
+}
 
 function Process(){
   const ref=useRef(null);
@@ -162,9 +169,42 @@ function Process(){
 
 function ReviewRail(){return <div className="review-rail" aria-label="Review layout preview"><div className="review-track">{[...featuredReviews,...featuredReviews].map((r,i)=><article key={`${r.name}-${i}`}><div className="stars">★★★★★</div><p>“{r.text}”</p><strong>{r.name}</strong><small>{r.service}</small></article>)}</div></div>}
 
+function ReviewOrbit(){
+  const orbitReviews=featuredReviews.slice(0,8);
+  return <div className="review-orbit" aria-label="Interactive featured review showcase">
+    <div className="review-orbit-core"><span>CLIENT<br/>PROOF</span></div>
+    <div className="review-orbit-ring">{orbitReviews.map((r,i)=><article className="review-orbit-card" style={{'--i':i}} key={`${r.name}-${i}`}><div className="stars">★★★★★</div><p>“{r.text}”</p><strong>{r.name}</strong><small>{r.service}</small></article>)}</div>
+  </div>
+}
+
+function BuiltDifferently(){return <section className="built-different" aria-label="LG capabilities showcase"><div className="built-stage"><div className="built-grid"/><span className="built-word">Web Design</span><span className="built-word">SEO</span><span className="built-word">Paid Growth</span><span className="built-word">AI Automation</span><span className="built-word">Development</span><div className="built-core"><div className="eyebrow">Built differently</div><h2>Make it<br/><em>felt.</em></h2></div></div></section>}
+
+function FuturisticShell(){
+  useEffect(()=>{
+    const move=e=>{document.documentElement.style.setProperty('--mx',`${e.clientX}px`);document.documentElement.style.setProperty('--my',`${e.clientY}px`)};
+    const over=e=>{if(e.target.closest('a,button,input,summary,[role=button]'))document.body.classList.add('cursor-hot')};
+    const out=e=>{if(e.target.closest('a,button,input,summary,[role=button]'))document.body.classList.remove('cursor-hot')};
+    addEventListener('pointermove',move,{passive:true});document.addEventListener('pointerover',over);document.addEventListener('pointerout',out);
+    return()=>{removeEventListener('pointermove',move);document.removeEventListener('pointerover',over);document.removeEventListener('pointerout',out)};
+  },[]);
+  return <div className="future-cursor" aria-hidden="true"/>;
+}
+
+const activityItems=[
+  {icon:'↗',title:'A•••••• Plumbing ran a website audit',meta:'Los Angeles · recent',demo:true},
+  {icon:'✓',title:'M•••••• Dental opened a website plan',meta:'Phoenix · recent',demo:true},
+  {icon:'$',title:'R•••••• Law Group reserved a project',meta:'Las Vegas · recent',demo:true},
+  {icon:'↗',title:'S•••••• Roofing ran a website audit',meta:'Dallas · recent',demo:true}
+];
+function ActivityPopups(){
+  const[index,setIndex]=useState(-1);const[out,setOut]=useState(false);
+  useEffect(()=>{let show,hide,next;const schedule=()=>{next=setTimeout(()=>{setOut(false);setIndex(i=>(i+1)%activityItems.length);hide=setTimeout(()=>{setOut(true);show=setTimeout(schedule,450)},5200)},18000+Math.random()*18000)};show=setTimeout(schedule,7000);return()=>{clearTimeout(show);clearTimeout(hide);clearTimeout(next)}},[]);
+  if(index<0)return null;const x=activityItems[index];return <div className="activity-stack"><div className={`activity-toast ${out?'out':''}`}><div className="activity-icon">{x.icon}</div><div className="activity-copy"><strong>{x.title}</strong><span>{x.meta}</span></div><div className="activity-badge">Demo activity</div></div></div>;
+}
+
 function Results(){return <section id="results" className="section results black">
   <div className="results-heading"><div><div className="eyebrow">Review experience</div><h2>Proof should be easy to find.</h2><p className="section-intro">Featured feedback here. The full review library gets its own page.</p></div><div className="review-score"><strong>200</strong><span>review slots</span><small>Development content — replace with verified client reviews before launch.</small></div></div>
-  <ReviewRail/>
+  <ReviewOrbit/>
   <a className="button line light" href="/reviews">Open the full review page</a>
 </section>}
 
@@ -189,12 +229,13 @@ function FinalCTA(){return <section className="section final-cta black"><div cla
 function HomePage(){
   const reduced=useReducedMotion();
   useEffect(()=>{if(reduced)return;const lenis=new Lenis({duration:.82,smoothWheel:true,wheelMultiplier:.92});let id;const raf=t=>{lenis.raf(t);id=requestAnimationFrame(raf)};id=requestAnimationFrame(raf);return()=>{cancelAnimationFrame(id);lenis.destroy()}},[reduced]);
-  return <><SiteHeader/><main><HeroStory/><DecisionSection/><Transformation/><Process/><Results/><Pricing/><Faq/><FinalCTA/></main><Footer/></>
+  return <><FuturisticShell/><ActivityPopups/><SiteHeader/><main><HeroStory/><DecisionSection/><Transformation/><Process/><Results/><BuiltDifferently/><Pricing/><Faq/><FinalCTA/></main><Footer/></>
 }
 
 function AuditPage(){
   const initial=new URLSearchParams(window.location.search).get('url')||'';
-  const[url,setUrl]=useState(initial);const[status,setStatus]=useState('idle');const[step,setStep]=useState(0);const[result,setResult]=useState(null);const[error,setError]=useState('');
+  const[url,setUrl]=useState(initial);const[status,setStatus]=useState('idle');const[step,setStep]=useState(0);const[result,setResult]=useState(null);const[error,setError]=useState('');const[assist,setAssist]=useState(false);
+  useEffect(()=>{if(status==='idle')return;const seen=sessionStorage.getItem('lg-audit-assist');if(seen)return;const t=setTimeout(()=>{setAssist(true);sessionStorage.setItem('lg-audit-assist','1')},15000);return()=>clearTimeout(t)},[status]);
   useEffect(()=>{if(initial)runAudit(initial)},[]); // eslint-disable-line react-hooks/exhaustive-deps
   async function runAudit(value=url){
     if(!value.trim()){setError('Enter a website address.');return}
@@ -211,11 +252,11 @@ function AuditPage(){
   }
   const tone=result?scoreTone(result.score):['',''];
   const progress=((step+1)/scanSteps.length)*100;
-  return <><SiteHeader dark/><main className="audit-page">
+  return <><FuturisticShell/><ActivityPopups/><SiteHeader dark/><main className="audit-page">
     {status==='idle'&&<section className="audit-page-start"><div className="eyebrow">LG Website Analyzer</div><h1>Find out what is<br/><em>holding the site back.</em></h1><p>We inspect performance, technical SEO, content, mobile usability, trust signals and website modernity. Then we translate the findings into what matters first.</p><form onSubmit={e=>{e.preventDefault();runAudit()}}><input value={url} onChange={e=>setUrl(e.target.value)} placeholder="yourwebsite.com"/><button>Analyze website</button></form><small>No email required. Public information only.</small>{error&&<p className="form-error">{error}</p>}</section>}
     {status==='scanning'&&<section className="audit-scanning"><div className="scan-progress"><i style={{width:`${progress}%`}}/></div><div className="eyebrow">Analyzing {url.replace(/^https?:\/\//,'')}</div><h1>{scanSteps[step]}<span className="scan-dots">…</span></h1><p className="scan-count">{String(step+1).padStart(2,'0')} / {String(scanSteps.length).padStart(2,'0')}</p><div className="scan-history">{scanSteps.slice(0,step).slice(-4).map(s=><span key={s}>✓ {s}</span>)}</div></section>}
     {status==='done'&&result&&<AuditResults result={result} tone={tone}/>} 
-  </main><Footer/></>
+  </main>{assist&&<div className="audit-assist"><button className="audit-assist-close" aria-label="Close" onClick={()=>setAssist(false)}>×</button><small>Human review</small><strong>Want us to read this with you?</strong><p>Send the audit to LG and we’ll tell you which findings matter first — and which ones can wait.</p><div className="audit-assist-actions"><button className="button red" onClick={()=>{setAssist(false);document.querySelector('.audit-next')?.scrollIntoView({behavior:'smooth'})}}>Send this audit to LG</button><button className="button line light" onClick={()=>setAssist(false)}>Keep exploring</button></div></div>}<Footer/></>
 }
 
 function AuditContact({result}){
@@ -235,30 +276,30 @@ function AuditResults({result,tone}){
   const opportunities=issues.filter(x=>x.severity==='low');
   const strengths=Object.entries(result.categories||{}).filter(([,v])=>v>=85).slice(0,4);
   const weightText=result.weights?Object.entries(result.weights).map(([k,v])=>`${k} ${Math.round(v*100)}%`).join(' · '):'Performance, SEO, accessibility, technical health and trust signals';
-  const renderIssueGroup=(title,subtitle,list,toneName)=> <section className={`audit-issue-band ${toneName}`}><div className="issue-band-heading"><div className="eyebrow">{title}</div><h2>{subtitle}</h2></div><div className="issue-list">{list.length?list.slice(0,6).map((x,i)=><article key={`${x.title}-${i}`}><span>{String(i+1).padStart(2,'0')}</span><div><h3>{x.title}</h3><p>{x.detail}</p><div className="fix"><b>What would make a difference</b><p>{x.fix}</p></div></div></article>):<article className="positive"><span>✓</span><div><h3>No issues in this priority group.</h3><p>The public signals measured here did not flag a problem at this level.</p></div></article>}</div></section>;
+  const renderIssueGroup=(title,subtitle,list,toneName)=> <section id={toneName==='must'?'audit-priority':undefined} className={`audit-issue-band ${toneName}`}><div className="issue-band-heading"><div className="eyebrow">{title}</div><h2>{subtitle}</h2></div><div className="issue-list">{list.length?list.slice(0,6).map((x,i)=><article key={`${x.title}-${i}`}><span>{String(i+1).padStart(2,'0')}</span><div><h3>{x.title}</h3><p>{x.detail}</p><div className="fix"><b>What would make a difference</b><p>{x.fix}</p></div></div></article>):<article className="positive"><span>✓</span><div><h3>No issues in this priority group.</h3><p>The public signals measured here did not flag a problem at this level.</p></div></article>}</div></section>;
   const rec=result.recommendation||{label:'Optimize',detail:'Keep the current foundation and address the highest-impact issues first.'};
   const modernity=result.modernity||{};const content=result.content||{};
-  return <div className="audit-report">
-    <section className="audit-score-hero"><div><div className="eyebrow">Analysis complete</div><h1>{new URL(result.url).hostname}</h1><p>{result.source}</p><small className="score-method">Score combines {weightText}.</small></div><div className={`score-orbit ${toneClass}`}><strong>{result.score}</strong><span>/100</span><b>{label}</b></div></section>
+  return <div className="audit-report"><nav className="audit-sticky-nav" aria-label="Audit sections"><a href="#audit-overview" data-label="Overview"/><a href="#audit-priority" data-label="Priorities"/><a href="#audit-seo" data-label="SEO"/><a href="#audit-modernity" data-label="Modernity"/><a href="#audit-next" data-label="Next step"/></nav>
+    <section id="audit-overview" className="audit-score-hero"><div><div className="eyebrow">Analysis complete</div><h1>{new URL(result.url).hostname}</h1><p>{result.source}</p><small className="score-method">Score combines {weightText}.</small></div><div className={`score-orbit ${toneClass}`}><strong>{result.score}</strong><span>/100</span><b>{label}</b></div></section>
     <section className="audit-verdict white"><div><div className="eyebrow">The short version</div><h2>{result.verdict||'The site works, but there is room to make it more competitive.'}</h2></div><div className="verdict-note"><span>LG recommendation</span><strong>{rec.label}</strong><p>{rec.detail}</p></div></section>
     {renderIssueGroup('Must fix','These should be addressed first.',mustFix,'must')}
     {renderIssueGroup('High impact','These changes can materially improve the site.',highImpact,'impact')}
     {renderIssueGroup('Opportunity','Good next moves after the fundamentals.',opportunities,'opportunity')}
     <section className="audit-metrics section black"><div className="eyebrow">How the score breaks down</div><h2>See the signals behind the number.</h2><div className="metric-grid">{Object.entries(result.categories||{}).map(([k,v])=><article key={k}><div><span>{k}</span><strong>{v}</strong></div><i><b style={{width:`${v}%`}}/></i></article>)}</div></section>
-    <section className="audit-modernity section white"><div className="modernity-head"><div><div className="eyebrow">Website modernity</div><h2>{modernity.score??'—'} / 100</h2><p>{modernity.summary||'We compare public implementation signals with current web practices.'}</p></div><div className="modernity-signals">{(modernity.signals||[]).map((x,i)=><article key={i}><span>{x.status==='good'?'✓':'!'}</span><p>{x.text}</p></article>)}</div></div><div className="retire-note"><span>Repair or replace?</span><strong>{rec.label}</strong><p>{rec.detail}</p></div></section>
-    <section className="audit-seo section black"><div><div className="eyebrow">SEO deep dive</div><h2>What Google has to work with.</h2></div><div className="seo-columns"><article><span>Technical SEO</span><strong>{result.categories?.SEO??result.categories?.Technical??'—'}</strong><p>{result.seo?.technical||'We checked metadata, headings, crawl signals, canonical setup, structured data and mobile fundamentals.'}</p></article><article><span>Content depth</span><strong>{content.score??'—'}</strong><p>{content.summary||'We reviewed visible homepage copy and links to service, location and article-style content.'}</p></article><article><span>Search coverage</span><strong>{content.indexableUrls??'—'}</strong><p>{content.indexableUrls!=null?`${content.indexableUrls} URLs were visible in the confirmed XML sitemap. More useful pages can create more ways to be discovered.`:'A confirmed sitemap was not available to estimate public page coverage.'}</p></article></div></section>
+    <section id="audit-modernity" className="audit-modernity section white"><div className="modernity-head"><div><div className="eyebrow">Website modernity</div><h2>{modernity.score??'—'} / 100</h2><p>{modernity.summary||'We compare public implementation signals with current web practices.'}</p></div><div className="modernity-signals">{(modernity.signals||[]).map((x,i)=><article key={i}><span>{x.status==='good'?'✓':'!'}</span><p>{x.text}</p></article>)}</div></div><div className="retire-note"><span>Repair or replace?</span><strong>{rec.label}</strong><p>{rec.detail}</p></div></section>
+    <section id="audit-seo" className="audit-seo section black"><div><div className="eyebrow">SEO deep dive</div><h2>What Google has to work with.</h2></div><div className="seo-columns"><article><span>Technical SEO</span><strong>{result.categories?.SEO??result.categories?.Technical??'—'}</strong><p>{result.seo?.technical||'We checked metadata, headings, crawl signals, canonical setup, structured data and mobile fundamentals.'}</p></article><article><span>Content depth</span><strong>{content.score??'—'}</strong><p>{content.summary||'We reviewed visible homepage copy and links to service, location and article-style content.'}</p></article><article><span>Search coverage</span><strong>{content.indexableUrls??'—'}</strong><p>{content.indexableUrls!=null?`${content.indexableUrls} URLs were visible in the confirmed XML sitemap. More useful pages can create more ways to be discovered.`:'A confirmed sitemap was not available to estimate public page coverage.'}</p></article></div></section>
     <section className="audit-content-gaps section white"><div className="eyebrow">Content opportunities</div><h2>What are you not answering yet?</h2><div className="content-gap-grid">{(content.opportunities||['Dedicated service pages','Useful customer questions','Location-specific pages','Case studies and proof']).map((x,i)=><article key={i}><span>0{i+1}</span><h3>{x}</h3></article>)}</div><p className="section-intro">The goal is not to publish articles for the sake of publishing. It is to create useful pages that match real customer questions and services.</p></section>
     <section className="audit-impact red"><div><div className="eyebrow">What would make the biggest difference?</div><h2>{rec.label==='Rebuild recommended'?'A cleaner foundation may cost less than continuing to patch the old one.':'Fix the highest-impact problems before adding more marketing.'}</h2></div><div className="impact-list">{issues.slice(0,3).map((x,i)=><article key={i}><span>0{i+1}</span><div><h3>{x.fix}</h3><p>{x.detail}</p></div></article>)}</div></section>
     <section className="audit-do-nothing black"><div className="eyebrow">Leaving it as-is</div><h2>Nothing breaks tomorrow.<br/><em>But nothing improves either.</em></h2><p>Existing speed, SEO, content and conversion limitations remain in place while competitors continue improving theirs.</p></section>
     <section className="audit-strengths section white"><div><div className="eyebrow">What is already helping</div><h2>Keep the good parts.</h2></div><div>{strengths.length?strengths.map(([k,v])=><article key={k}><span>✓</span><div><h3>{k}</h3><p>{v}/100 — a strong signal in this scan.</p></div></article>):<p>No measured category scored above 85. That does not mean the site has no strengths; it means the public signals measured here have room to improve.</p>}</div></section>
-    <section className="audit-next red"><div><div className="eyebrow">Choose your next step</div><h2>Use the audit. Don't let it sit in a tab.</h2><p>Send it to us for a human review, improve the current site, or plan a cleaner rebuild.</p><AuditContact result={result}/></div><div className="audit-actions"><a className="button dark" href="/build-website">Build me a new website</a><a className="button line light" href="mailto:hello.rarescore@gmail.com?subject=Improve%20My%20Existing%20Website">Improve this website</a><a className="button line light" href="mailto:hello.rarescore@gmail.com?subject=Website%20Audit%20Strategy%20Call">Schedule a strategy call</a><a className="button line light" href="mailto:hello.rarescore@gmail.com?subject=Website%20Audit%20Question">Contact us</a><a className="button line light" href={`mailto:?subject=${encodeURIComponent('My LG Growth Studio website audit')}&body=${encodeURIComponent(`Website: ${result.url}\nScore: ${result.score}/100\nRecommendation: ${rec.label}`)}`}>Email me this audit</a></div></section>
+    <section id="audit-next" className="audit-next red"><div><div className="eyebrow">Choose your next step</div><h2>Use the audit. Don't let it sit in a tab.</h2><p>Send it to us for a human review, improve the current site, or plan a cleaner rebuild.</p><AuditContact result={result}/></div><div className="audit-actions"><a className="button dark" href="/build-website">Build me a new website</a><a className="button line light" href="mailto:hello.rarescore@gmail.com?subject=Improve%20My%20Existing%20Website">Improve this website</a><a className="button line light" href="mailto:hello.rarescore@gmail.com?subject=Website%20Audit%20Strategy%20Call">Schedule a strategy call</a><a className="button line light" href="mailto:hello.rarescore@gmail.com?subject=Website%20Audit%20Question">Contact us</a><a className="button line light" href={`mailto:?subject=${encodeURIComponent('My LG Growth Studio website audit')}&body=${encodeURIComponent(`Website: ${result.url}\nScore: ${result.score}/100\nRecommendation: ${rec.label}`)}`}>Email me this audit</a></div></section>
     <div className="audit-disclaimer">This report analyzes public signals from the homepage, Google PageSpeed Insights when available, and confirmed crawl files. Website age and business impact cannot be known exactly from public HTML alone; “modernity” and LG recommendations are heuristic guidance, not guarantees.</div>
   </div>
 }
 
 function ReviewsPage(){
   const params=new URLSearchParams(window.location.search);const requested=Math.max(1,Number(params.get('page'))||1);const perPage=20;const pages=Math.ceil(generatedReviews.length/perPage);const page=Math.min(requested,pages);const start=(page-1)*perPage;const list=generatedReviews.slice(start,start+perPage);
-  return <><SiteHeader dark/><main className="reviews-page"><section className="reviews-hero black"><div className="eyebrow">Review experience preview</div><h1>200 review slots.<br/><em>20 at a time.</em></h1><p>This page is wired for 200 reviews with clean pagination. The current text is sample development content and must be replaced with verified customer reviews before the site is published.</p><ReviewRail/></section><section className="review-feature white"><div><span className="stars">★★★★★</span><blockquote>“Your strongest verified customer story belongs here — larger, calmer, and easy to read.”</blockquote></div><small>Featured review position</small></section><section className="review-page-grid white">{list.map(r=><article key={r.id}><div className="stars">★★★★★</div><p>“{r.text}”</p><footer><div><strong>{r.name}</strong><small>{r.service}</small></div><span>{r.date}</span></footer></article>)}</section><nav className="pagination" aria-label="Review pages">{page>1&&<a href={`/reviews?page=${page-1}`}>← Previous</a>}<span>Page {page} of {pages}</span>{page<pages&&<a href={`/reviews?page=${page+1}`}>Next →</a>}</nav></main><Footer/></>
+  return <><FuturisticShell/><ActivityPopups/><SiteHeader dark/><main className="reviews-page"><section className="reviews-hero black"><div className="eyebrow">Review experience preview</div><h1>200 review slots.<br/><em>20 at a time.</em></h1><p>This page is wired for 200 reviews with clean pagination. The current text is sample development content and must be replaced with verified customer reviews before the site is published.</p><ReviewOrbit/></section><section className="review-feature white"><div><span className="stars">★★★★★</span><blockquote>“Your strongest verified customer story belongs here — larger, calmer, and easy to read.”</blockquote></div><small>Featured review position</small></section><section className="review-page-grid white">{list.map(r=><article key={r.id}><div className="stars">★★★★★</div><p>“{r.text}”</p><footer><div><strong>{r.name}</strong><small>{r.service}</small></div><span>{r.date}</span></footer></article>)}</section><nav className="pagination" aria-label="Review pages">{page>1&&<a href={`/reviews?page=${page-1}`}>← Previous</a>}<span>Page {page} of {pages}</span>{page<pages&&<a href={`/reviews?page=${page+1}`}>Next →</a>}</nav></main><Footer/></>
 }
 
 const buildScreens=[
@@ -289,7 +330,7 @@ function BuildWebsitePage(){
   const summary=buildScreens.map((s,i)=>`${s.title}: ${printable(choices[i])}`).join('\n');const mail=`mailto:hello.rarescore@gmail.com?subject=${encodeURIComponent('My LG Growth Studio Website Plan')}&body=${encodeURIComponent(summary)}`;
   const reserve=async()=>{try{const r=await fetch('/api/create-checkout',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({plan:'deposit'})});const d=await r.json();if(d.url){location.href=d.url;return}location.href='mailto:hello.rarescore@gmail.com?subject=Reserve%20My%20Website%20Project%20-%20$250'}catch{location.href='mailto:hello.rarescore@gmail.com?subject=Reserve%20My%20Website%20Project%20-%20$250'}};
   const canContinue=screen.multi?Array.isArray(selected)&&selected.length>0:Boolean(selected);
-  return <><SiteHeader dark/><main className="builder-page"><section className="builder-shell">{!done?<><div className="builder-progress"><span>0{step+1}</span><i><b style={{width:`${((step+1)/buildScreens.length)*100}%`}}/></i><span>0{buildScreens.length}</span></div><div className="eyebrow">Professional website configurator</div><h1>{screen.title}</h1><div className={`builder-options visual-options ${screen.multi?'multi':''}`}>{screen.options.map(v=><button key={v} className={(Array.isArray(selected)?selected.includes(v):selected===v)?'selected':''} onClick={()=>choose(v)}><OptionPreview type={screen.type} label={v}/><div><b>{v}</b><span>{screen.multi?'Select':'Choose'} →</span></div></button>)}</div><div className="builder-nav">{step>0?<button onClick={()=>setStep(step-1)}>← Back</button>:<span/>}{screen.multi&&canContinue&&<button className="button red" onClick={()=>setDone(true)}>Build my website plan</button>}</div></>:<div className="builder-complete"><div className="eyebrow">Your website direction</div><h1>Clear enough to build from.</h1><div className="builder-summary-grid">{buildScreens.map((s,i)=><article key={s.title}><span>{s.title}</span><b>{printable(choices[i])}</b></article>)}</div><div className="estimate"><span>Estimated starting investment</span><strong>From $1,500</strong><small>Final price depends on pages, integrations, content and animation scope.</small></div><div className="builder-final-actions"><a className="button red" href={mail}>Submit my website plan</a><button className="button dark" onClick={reserve}>Reserve project — $250</button></div><small>The $250 reservation is intended to be applied to the agreed project total after scope is confirmed. Stripe checkout activates when STRIPE_PRICE_DEPOSIT is configured; otherwise the button opens an email reservation.</small></div>}</section></main><Footer/></>
+  return <><FuturisticShell/><ActivityPopups/><SiteHeader dark/><main className="builder-page"><section className="builder-shell">{!done?<><div className="builder-progress"><span>0{step+1}</span><i><b style={{width:`${((step+1)/buildScreens.length)*100}%`}}/></i><span>0{buildScreens.length}</span></div><div className="eyebrow">Professional website configurator</div><h1>{screen.title}</h1><div className={`builder-options visual-options ${screen.multi?'multi':''}`}>{screen.options.map(v=><button key={v} className={(Array.isArray(selected)?selected.includes(v):selected===v)?'selected':''} onClick={()=>choose(v)}><OptionPreview type={screen.type} label={v}/><div><b>{v}</b><span>{screen.multi?'Select':'Choose'} →</span></div></button>)}</div><div className="builder-nav">{step>0?<button onClick={()=>setStep(step-1)}>← Back</button>:<span/>}{screen.multi&&canContinue&&<button className="button red" onClick={()=>setDone(true)}>Build my website plan</button>}</div></>:<div className="builder-complete"><div className="eyebrow">Your website direction</div><h1>Clear enough to build from.</h1><div className="builder-summary-grid">{buildScreens.map((s,i)=><article key={s.title}><span>{s.title}</span><b>{printable(choices[i])}</b></article>)}</div><div className="estimate"><span>Estimated starting investment</span><strong>From $1,500</strong><small>Final price depends on pages, integrations, content and animation scope.</small></div><div className="builder-final-actions"><a className="button red" href={mail}>Submit my website plan</a><button className="button dark" onClick={reserve}>Reserve project — $250</button></div><small>The $250 reservation is intended to be applied to the agreed project total after scope is confirmed. Stripe checkout activates when STRIPE_PRICE_DEPOSIT is configured; otherwise the button opens an email reservation.</small></div>}</section></main><Footer/></>
 }
 
 function Footer(){return <footer className="site-footer-simple"><img src="/lg-growth-studio-logo.png" alt="LG Growth Studio"/><span>Performance Marketing · Web Design · SEO · Paid Advertising · AI Automation</span><div><a href="/audit">Audit</a><a href="/reviews">Reviews</a><a href="/#pricing">Pricing</a></div></footer>}
