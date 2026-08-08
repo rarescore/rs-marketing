@@ -69,10 +69,10 @@ function SiteHeader({dark=false}){
   useEffect(()=>{document.body.style.overflow=menuOpen?'hidden':'';return()=>{document.body.style.overflow=''}},[menuOpen]);
   return <header className={dark?'solid-header':''}>
     <a className="brand" href="/"><img src="/lg-growth-studio-logo.png" alt="LG Growth Studio"/></a>
-    <nav><a href="/contact">Contact</a><a href="/audit">Audit</a><a href="/#process">Process</a><a href="/reviews">Reviews</a><a href="/#pricing">Pricing</a></nav>
+    <nav><a href="/contact">Contact</a><a href="/audit">Audit</a><a href="/process">Process</a><a href="/reviews">Reviews</a><a href="/pricing">Pricing</a></nav>
     <a className="top-cta" href="/build-website">Start</a>
     <button className="menu-toggle" aria-expanded={menuOpen} aria-label={menuOpen?'Close menu':'Open menu'} onClick={()=>setMenuOpen(v=>!v)}><span>{menuOpen?'Close':'Menu'}</span><i/><i/></button>
-    <div className={`mobile-menu ${menuOpen?'open':''}`}><a href="/contact"><span>01</span>Contact</a><a href="/audit"><span>02</span>Audit</a><a href="/#process"><span>03</span>Process</a><a href="/reviews"><span>04</span>Reviews</a><a href="/#pricing"><span>05</span>Pricing</a><a href="/build-website"><span>06</span>Start a project</a></div>
+    <div className={`mobile-menu ${menuOpen?'open':''}`}><a href="/contact"><span>01</span>Contact</a><a href="/audit"><span>02</span>Audit</a><a href="/process"><span>03</span>Process</a><a href="/reviews"><span>04</span>Reviews</a><a href="/pricing"><span>05</span>Pricing</a><a href="/build-website"><span>06</span>Start a project</a></div>
   </header>
 }
 
@@ -185,7 +185,7 @@ function Transformation(){
 }
 
 function WebsiteAutopsy(){
-  const ref=useRef(null);
+  const ref=useRef(null);const[activeLayer,setActiveLayer]=useState(0);
   useEffect(()=>{
     const el=ref.current;if(!el)return;
     let ticking=false;
@@ -194,10 +194,12 @@ function WebsiteAutopsy(){
       const r=el.getBoundingClientRect();
       const travel=Math.max(1,r.height-innerHeight);
       const p=Math.max(0,Math.min(1,-r.top/travel));
-      const spreadBase=Math.sin(Math.min(1,p/.72)*Math.PI/2);
-      const returnPhase=Math.max(0,Math.min(1,(p-.72)/.28));
+      const spreadBase=Math.sin(Math.min(1,p/.78)*Math.PI/2);
+      const returnPhase=Math.max(0,Math.min(1,(p-.82)/.14));
       const spread=spreadBase*(1-returnPhase);
-      const handoff=Math.max(0,Math.min(1,(p-.82)/.18));
+      const handoff=Math.max(0,Math.min(1,(p-.95)/.05));
+      const nextLayer=Math.min(3,Math.floor(Math.min(.999,p)*4));
+      setActiveLayer(v=>v===nextLayer?v:nextLayer);
       el.style.setProperty('--autopsy-p',String(p));
       el.style.setProperty('--autopsy-spread',String(spread));
       el.style.setProperty('--autopsy-handoff',String(handoff));
@@ -220,7 +222,7 @@ function WebsiteAutopsy(){
         <div className="eyebrow">Under the surface</div>
         <h2>What you see is only<br/>the <em>surface.</em></h2>
         <p>Pull the page apart and the real system shows up: attention, search, proof and performance working together.</p>
-        <div className="autopsy-steps">{layers.map(([n,t,d])=><article key={n}><span>{n}</span><div><strong>{t}</strong><small>{d}</small></div></article>)}</div>
+        <div className="autopsy-steps">{layers.map(([n,t,d],i)=><article className={activeLayer===i?'active':''} key={n}><span>{n}</span><div><strong>{t}</strong><small>{d}</small></div></article>)}</div>
       </div>
       <div className="autopsy-stage" aria-hidden="true">
         <div className="autopsy-frame">
@@ -229,7 +231,6 @@ function WebsiteAutopsy(){
           <div className="autopsy-layer al-2"><b>SEARCH STRUCTURE</b><strong>Can they find it?</strong><span>Services · locations · intent</span></div>
           <div className="autopsy-layer al-3"><b>CONVERSION PATH</b><strong>Why act now?</strong><span>Trust · clarity · response path</span></div>
           <div className="autopsy-layer al-4"><b>PERFORMANCE</b><strong>Does it feel fast?</strong><span>Speed · stability · mobile</span></div>
-          <div className="autopsy-scan-core"><span>CORE</span><i/></div>
         </div>
         <div className="autopsy-depth-label"><span>SURFACE</span><i/><span>SYSTEM</span></div>
       </div>
@@ -381,14 +382,17 @@ function BuiltDifferently(){
     return()=>{io.disconnect();el.removeEventListener('pointermove',move);el.removeEventListener('pointerleave',leave)};
   },[]);
   const nodes=[['Website','site'],['Search','search'],['Paid Growth','ads'],['Content','content'],['Automation','automation']];
-  return <section ref={ref} className="built-different system-section" aria-label="Connected growth system">
+  return <section ref={ref} className="built-different system-section system-section-v2" aria-label="Connected growth system">
     <div className="system-glow"/>
-    <div className="system-kicker"><span>THE SYSTEM</span><i/><span>05 CONNECTED SIGNALS</span></div>
-    <div className="system-stage">
-      <svg className="system-lines" viewBox="0 0 1000 700" preserveAspectRatio="none" aria-hidden="true"><path d="M500 350 L190 170"/><path d="M500 350 L805 145"/><path d="M500 350 L865 435"/><path d="M500 350 L500 620"/><path d="M500 350 L145 480"/><circle cx="500" cy="350" r="208"/><circle cx="500" cy="350" r="292"/></svg>
+    <div className="system-v2-head">
+      <div><div className="eyebrow">Built as one system</div><h2>Nothing works <em>alone.</em></h2></div>
+      <p>A strong website makes the offer clear. Search creates discovery. Paid media creates demand. Content builds proof. Automation keeps the follow-up moving.</p>
+    </div>
+    <div className="system-kicker"><span>CONNECTED GROWTH</span><i/><span>05 WORKING PARTS</span></div>
+    <div className="system-stage system-stage-v2">
+      <svg className="system-lines system-lines-v2" viewBox="0 0 1000 620" preserveAspectRatio="none" aria-hidden="true"><path d="M500 310 L180 130"/><path d="M500 310 L820 120"/><path d="M500 310 L875 400"/><path d="M500 310 L500 565"/><path d="M500 310 L125 420"/><circle cx="500" cy="310" r="200"/><circle cx="500" cy="310" r="274"/></svg>
+      <div className="system-center-pulse" aria-hidden="true"><i/><i/><i/></div>
       {nodes.map(([label,key],i)=><div className={`system-node node-${key}`} key={key}><span>0{i+1}</span><strong>{label}</strong><small>{['Convert attention','Build discovery','Capture demand','Create proof','Remove friction'][i]}</small></div>)}
-      <div className="system-core system-core-text"><b>CONNECTED</b><span>ONE SYSTEM</span></div>
-      <div className="system-copy"><div className="eyebrow">Built differently</div><h2>Nothing works<br/><em>alone.</em></h2><p>Website, search, paid growth, content and automation should behave like one connected system.</p></div>
     </div>
   </section>
 }
@@ -558,7 +562,7 @@ function OptionPreview({type,label}){
   return <div className="type-preview"><i/><b/><span/></div>;
 }
 
-function BuilderLivePreview({choices}){
+function BuilderLivePreview({choices,accent='#ef101d'}){
   const val=i=>Array.isArray(choices[i])?choices[i]:choices[i]||'';
   const business=val(0)||'Your business';const goal=val(1)||'Generate calls';const style=val(2)||'Minimal';const motion=val(3)||'Essential';const color=val(4)||'Light and minimal';const typeface=val(5)||'Clean sans';const layout=val(6)||'Conversion focused';const features=Array.isArray(choices[7])?choices[7]:[];
   const slug=x=>String(x).toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
@@ -566,9 +570,9 @@ function BuilderLivePreview({choices}){
   const motionCost=motion==='Interactive'?350:motion==='Cinematic'?900:motion==='Immersive 3D'?1800:0;
   const featureCost=features.reduce((sum,f)=>sum+({'Advanced animation':650,'E-commerce':800,'Multilingual pages':350,'Custom calculator':500,'Online booking':150,'CRM / forms':250}[f]||0),0);
   const estimate=1500+motionCost+featureCost;
-  return <aside className={`builder-live preview-${slug(style)} preview-${slug(color)} preview-${slug(typeface)} motion-${slug(motion)} layout-${slug(layout)}`}>
+  return <aside style={{'--preview-accent':accent}} className={`builder-live preview-${slug(style)} preview-${slug(color)} preview-${slug(typeface)} motion-${slug(motion)} layout-${slug(layout)}`}>
     <div className="builder-live-top"><span>LIVE DIRECTION</span><b>{style} / {motion}</b></div>
-    <div className="builder-browser">
+    <div className="builder-browser" style={{'--preview-accent':accent}}>
       <div className="builder-browser-chrome"><i/><i/><i/><span>preview.site</span></div>
       <div className="builder-browser-nav"><strong>{business==='Your business'?'YOUR BUSINESS':business.toUpperCase()}</strong><span>Work</span><span>About</span><button>{goal.replace('Generate','Get').replace('Book','Book')}</button></div>
       <div className="builder-browser-hero"><small>{goal.toUpperCase()}</small><h3>{headline}</h3><p>Clear hierarchy, useful proof and one obvious next action.</p><button>START HERE</button></div>
@@ -580,7 +584,7 @@ function BuilderLivePreview({choices}){
 }
 
 function BuildWebsitePage(){
-  const[step,setStep]=useState(0);const[choices,setChoices]=useState({});const[done,setDone]=useState(false);const screen=buildScreens[step];
+  const[step,setStep]=useState(0);const[choices,setChoices]=useState({});const[done,setDone]=useState(false);const[accent,setAccent]=useState('#ef101d');const screen=buildScreens[step];
   const selected=choices[step];
   const choose=v=>{if(screen.multi){setChoices(x=>{const current=Array.isArray(x[step])?x[step]:[];return {...x,[step]:current.includes(v)?current.filter(a=>a!==v):[...current,v]}})}else setChoices(x=>({...x,[step]:v}))};
   const printable=value=>Array.isArray(value)?value.join(', '):value||'Not selected';
@@ -595,10 +599,11 @@ function BuildWebsitePage(){
         <div className="builder-kicker"><span>Build your direction</span><b>{Math.round(((step+1)/buildScreens.length)*100)}%</b></div>
         <h1>{screen.title}</h1>
         <div className={`builder-options visual-options ${screen.multi?'multi':''}`}>{screen.options.map(v=><button key={v} className={(Array.isArray(selected)?selected.includes(v):selected===v)?'selected':''} onClick={()=>choose(v)}><OptionPreview type={screen.type} label={v}/><div><b>{v}</b><span>{(Array.isArray(selected)?selected.includes(v):selected===v)?'Selected':'Choose'} →</span></div></button>)}</div>
+        {screen.type==='color'&&<div className="builder-fine-tune"><div><span>Fine tune the accent</span><strong>{accent.toUpperCase()}</strong></div><input aria-label="Choose accent color" type="color" value={accent} onChange={e=>setAccent(e.target.value)}/><div className="accent-swatches">{['#ef101d','#111111','#2457ff','#ff6a00','#00a67a','#6d35ff'].map(c=><button aria-label={`Use ${c}`} key={c} style={{background:c}} onClick={()=>setAccent(c)} className={accent===c?'active':''}/>)}</div></div>}
         <div className="builder-nav"><button className="builder-back" disabled={step===0} onClick={()=>setStep(v=>Math.max(0,v-1))}>← Back</button><button className="button red" disabled={!canContinue} onClick={next}>{step===buildScreens.length-1?'Build my website plan':'Next direction'} →</button></div>
       </div>
-      <BuilderLivePreview choices={choices}/>
-    </>:<div className="builder-complete builder-complete-v2"><div className="builder-complete-copy"><div className="eyebrow">Your website direction</div><h1>Now it has a point of view.</h1><p>Use this as the starting brief. We can refine the pages, motion, content and integrations after scope is confirmed.</p></div><BuilderLivePreview choices={choices}/><div className="builder-summary-grid">{buildScreens.map((s,i)=><article key={s.title}><span>{s.title}</span><b>{printable(choices[i])}</b></article>)}</div><div className="estimate"><span>Estimated starting investment</span><strong>From $1,500</strong><small>Final price depends on pages, integrations, content and animation scope.</small></div><div className="builder-final-actions"><a className="button red" href={mail}>Submit my website plan</a><button className="button dark" onClick={reserve}>Reserve project — $250</button></div></div>}
+      <BuilderLivePreview choices={choices} accent={accent}/>
+    </>:<div className="builder-complete builder-complete-v2"><div className="builder-complete-copy"><div className="eyebrow">Your website direction</div><h1>Now it has a point of view.</h1><p>Use this as the starting brief. We can refine the pages, motion, content and integrations after scope is confirmed.</p></div><BuilderLivePreview choices={choices} accent={accent}/><div className="builder-summary-grid">{buildScreens.map((s,i)=><article key={s.title}><span>{s.title}</span><b>{printable(choices[i])}</b></article>)}</div><div className="estimate"><span>Estimated starting investment</span><strong>From $1,500</strong><small>Final price depends on pages, integrations, content and animation scope.</small></div><div className="builder-final-actions"><a className="button red" href={mail}>Submit my website plan</a><button className="button dark" onClick={reserve}>Reserve project — $250</button></div></div>}
   </section></main><Footer/></>
 }
 
@@ -613,13 +618,33 @@ function ContactPage(){
   return <><FuturisticShell/><ActivityPopups/><SiteHeader dark/><main className="contact-page black"><section className="contact-hero"><div className="contact-copy"><div className="eyebrow">Contact LG Growth Studio</div><h1>Tell us what<br/>needs to <em>change.</em></h1><p>New website, stronger search, better ads, or simply a second opinion. Give us the problem. We’ll tell you what we would do first.</p><div className="contact-shortcuts"><a href="/audit">Run the audit ↗</a><a href="/build-website">Plan a website ↗</a><a href="mailto:hello.rarescore@gmail.com">Email directly ↗</a></div></div><div className="contact-console"><div className="console-top"><span>PROJECT SIGNAL</span><b>{progress}/4 READY</b></div><div className="console-map" aria-hidden="true"><i className={progress>0?'on':''}/><i className={progress>1?'on':''}/><i className={progress>2?'on':''}/><i className={progress>3?'on':''}/><span/></div>{status==='sent'?<div className="contact-sent"><span>✓</span><h2>Received.</h2><p>We have your project details. Expect a reply within one business day.</p><a className="button line light" href="/">Back to the site</a></div>:<form className="contact-form-award" onSubmit={submit}><input className="honeypot" tabIndex="-1" autoComplete="off" value={form.company_url} onChange={e=>set('company_url',e.target.value)}/><div className="contact-field-grid"><label><span>Your name *</span><input required value={form.name} onChange={e=>set('name',e.target.value)} placeholder="Name"/></label><label><span>Email *</span><input required type="email" value={form.email} onChange={e=>set('email',e.target.value)} placeholder="you@business.com"/></label><label><span>Business *</span><input required value={form.company} onChange={e=>set('company',e.target.value)} placeholder="Business name"/></label><label><span>Phone</span><input value={form.phone} onChange={e=>set('phone',e.target.value)} placeholder="(000) 000-0000"/></label></div><label><span>Current website</span><input value={form.website} onChange={e=>set('website',e.target.value)} placeholder="yourwebsite.com"/></label><label><span>What do you need?</span><select value={form.need} onChange={e=>set('need',e.target.value)}><option>Website</option><option>SEO / local growth</option><option>Paid advertising</option><option>Website + growth</option><option>Not sure yet</option></select></label><label><span>What would you like to improve? *</span><textarea required value={form.details} onChange={e=>set('details',e.target.value)} placeholder="Tell us what is not working, what you want to change, or what you want the business to achieve." rows="5"/></label><button className="contact-submit" disabled={status==='sending'}>{status==='sending'?'Sending…':'Send project signal'}<span>↗</span></button>{error&&<p className="form-error">{error}</p>}</form>}</div></section><section className="contact-bottom"><div><span>Prefer to start with proof?</span><strong>Run the website audit first.</strong></div><a href="/audit">Analyze my website →</a></section></main><Footer/></>
 }
 
-function Footer(){return <footer className="site-footer-simple"><img src="/lg-growth-studio-logo.png" alt="LG Growth Studio"/><span>Performance Marketing · Web Design · SEO · Paid Advertising · AI Automation</span><div><a href="/contact">Contact</a><a href="/audit">Audit</a><a href="/reviews">Reviews</a><a href="/#pricing">Pricing</a></div></footer>}
+function ProcessPage(){
+  return <><FuturisticShell/><ActivityPopups/><SiteHeader dark/><main className="process-page standalone-page">
+    <section className="standalone-hero black"><div className="eyebrow">How the work moves</div><h1>From problem to <em>progress.</em></h1><p>We diagnose what is actually slowing the business down, choose the highest-impact work, build it properly, then keep improving what proves useful.</p></section>
+    <Process/>
+    <section className="process-detail-grid white"><article><span>01</span><h3>One owner for the outcome.</h3><p>Strategy, design, development and growth decisions stay connected instead of being passed between disconnected vendors.</p></article><article><span>02</span><h3>Work in the right order.</h3><p>A faster website does not help if the offer is unclear. More traffic does not help if the conversion path is weak. We fix the bottleneck first.</p></article><article><span>03</span><h3>Measure after launch.</h3><p>Search visibility, paid traffic and conversion behavior tell us what deserves the next round of work.</p></article></section>
+    <FinalCTA/>
+  </main><Footer/></>;
+}
+
+function PricingPage(){
+  return <><FuturisticShell/><ActivityPopups/><SiteHeader dark/><main className="pricing-page standalone-page">
+    <section className="standalone-hero black"><div className="eyebrow">Pricing</div><h1>Clear scope. <em>No mystery.</em></h1><p>Start with a website project or ongoing growth support. Open each plan to see what it is for, what is included and where the next step goes.</p></section>
+    <Pricing/>
+    <section className="pricing-clarity white"><div><span>ONE-TIME</span><h2>Website project</h2><p>Best when the website itself is the bottleneck. Scope is confirmed before work starts.</p><a href="/build-website">Plan my website →</a></div><div><span>ONGOING</span><h2>Monthly growth</h2><p>Best when the foundation exists and you want SEO, advertising, content and conversion work managed continuously.</p><a href="/contact">Talk through the right plan →</a></div></section>
+    <Faq/><FinalCTA/>
+  </main><Footer/></>;
+}
+
+function Footer(){return <footer className="site-footer-simple"><img src="/lg-growth-studio-logo.png" alt="LG Growth Studio"/><span>Performance Marketing · Web Design · SEO · Paid Advertising · AI Automation</span><div><a href="/contact">Contact</a><a href="/audit">Audit</a><a href="/process">Process</a><a href="/reviews">Reviews</a><a href="/pricing">Pricing</a></div></footer>}
 
 export default function App(){
   const path=window.location.pathname.replace(/\/+$/,'')||'/';
   if(path==='/contact')return <ContactPage/>;
   if(path==='/audit')return <AuditPage/>;
   if(path==='/reviews')return <ReviewsPage/>;
+  if(path==='/process')return <ProcessPage/>;
+  if(path==='/pricing')return <PricingPage/>;
   if(path==='/build-website')return <BuildWebsitePage/>;
   return <HomePage/>;
 }
