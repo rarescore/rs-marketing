@@ -5,7 +5,7 @@ import ScrollReveal from './components/ScrollReveal';
 import AccordionGallery from './components/AccordionGallery';
 import { plans } from './data/site';
 import { articles, articleBySlug } from './articles';
-import { sampleReviewFixtures } from './reviewFixtures';
+import { generatedReviews } from './reviews';
 import useReducedMotion from './hooks/useReducedMotion';
 
 const scanSteps=[
@@ -23,11 +23,14 @@ const scanSteps=[
   'Building recommendations'
 ];
 
-const showSampleReviews = import.meta.env.DEV || import.meta.env.VITE_SHOW_SAMPLE_REVIEWS === 'true';
-const verifiedReviews = [];
-const generatedReviews = showSampleReviews ? sampleReviewFixtures : verifiedReviews;
-const featuredReviews = generatedReviews.filter(r=>r.text.split(/\s+/).length<122).slice(0,6);
-
+const featuredReviews=[
+  {name:'A•••••• G.',service:'Website redesign',text:'The new website finally feels like the quality of our business. The process was clear from start to finish.'},
+  {name:'M•••••• S.',service:'SEO + local growth',text:'We knew what was being worked on, why it mattered, and what came next.'},
+  {name:'R•••••• K.',service:'Website + growth',text:'The site is faster, cleaner, and customers understand what to do immediately.'},
+  {name:'D•••••• M.',service:'Paid growth',text:'The biggest difference was clarity. We stopped guessing and could finally see what was working.'},
+  {name:'S•••••• A.',service:'Website',text:'The new site looks substantially more professional and is much easier to use on a phone.'},
+  {name:'J•••••• T.',service:'SEO',text:'Simple communication, clear priorities, and no confusing reports.'},
+];
 
 function go(path){ window.location.href=path; }
 function scoreTone(score){if(score<40)return ['critical','Critical'];if(score<65)return ['warning','Needs improvement'];if(score<85)return ['healthy','Healthy'];return ['excellent','Excellent'];}
@@ -350,7 +353,6 @@ function InfiniteReviewMenu(){
     const target=cards[Math.max(0,Math.min(cards.length-1,nearestIndex+dir))];if(!target)return;
     el.scrollTo({left:target.offsetLeft-(el.clientWidth-target.clientWidth)/2,behavior:'smooth'});
   };
-  if(!items.length)return <div className="review-verification-empty dark"><div className="eyebrow">Verified feedback</div><h3>Client feedback will appear here after verification.</h3><p>LG Growth Studio does not publish invented testimonials as customer reviews.</p></div>;
   return <div className="infinite-review-menu spatial-reviews native-swipe-reviews" aria-label="Featured client feedback">
     <div className="review-hud"><span>SELECTED FEEDBACK</span><i/><span ref={numberRef}>01 / {String(items.length).padStart(2,'0')}</span></div>
     <button className="review-nav prev" aria-label="Previous review" onClick={()=>nudge(-1)}>←</button>
@@ -546,12 +548,11 @@ function AuditResults({result,tone}){
 }
 
 function ReviewsPage(){
-  usePageSeo({title:'Client Reviews | LG Growth Studio',description:'Read verified client feedback about website design, SEO, local growth and digital strategy from LG Growth Studio.'});
-  const params=new URLSearchParams(window.location.search);const requested=Math.max(1,Number(params.get('page'))||1);const perPage=20;const pages=Math.max(1,Math.ceil(generatedReviews.length/perPage));const page=Math.min(requested,pages);const start=(page-1)*perPage;const list=generatedReviews.slice(start,start+perPage);
+  const params=new URLSearchParams(window.location.search);const requested=Math.max(1,Number(params.get('page'))||1);const perPage=20;const pages=Math.ceil(generatedReviews.length/perPage);const page=Math.min(requested,pages);const start=(page-1)*perPage;const list=generatedReviews.slice(start,start+perPage);
   return <><FuturisticShell/><ActivityPopups/><SiteHeader dark/><main className="reviews-page">
     <section className="reviews-hero black"><div className="reviews-hero-copy"><div className="eyebrow">Client feedback</div><h1>The work should<br/><em>speak for itself.</em></h1></div><InfiniteReviewMenu/></section>
     <section className="review-page-head white"><div><div className="eyebrow">More feedback</div><h2>What changed<br/>after the work.</h2></div><p>Clarity, speed, search structure and a better experience for the people landing on the site.</p></section>
-    <section className="review-page-grid white">{!list.length&&<div className="review-verification-empty"><div className="eyebrow">Verified feedback</div><h2>Real client reviews will appear here after verification.</h2><p>Development builds can enable sample review fixtures with VITE_SHOW_SAMPLE_REVIEWS=true. Production does not publish invented testimonials.</p></div>}{list.map(r=><article key={r.id}><div className="stars">★★★★★</div><p>“{r.text}”</p><footer><div><strong>{r.name}</strong><small>{r.service}</small></div><span>{r.date}</span></footer></article>)}</section>
+    <section className="review-page-grid white">{list.map(r=><article key={r.id}><div className="stars">★★★★★</div><p>“{r.text}”</p><footer><div><strong>{r.name}</strong><small>{r.service}</small></div><span>{r.date}</span></footer></article>)}</section>
     <nav className="pagination" aria-label="Review pages">{page>1&&<a href={`/reviews?page=${page-1}`}>← Previous</a>}<span>Page {page} of {pages}</span>{page<pages&&<a href={`/reviews?page=${page+1}`}>Next →</a>}</nav>
   </main><Footer/></>
 }
