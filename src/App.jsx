@@ -184,20 +184,86 @@ function Transformation(){
   </section>
 }
 
+function WebsiteAutopsy(){
+  const ref=useRef(null);
+  useEffect(()=>{
+    const el=ref.current;if(!el)return;
+    let ticking=false;
+    const update=()=>{
+      ticking=false;
+      const r=el.getBoundingClientRect();
+      const travel=Math.max(1,r.height-innerHeight);
+      const p=Math.max(0,Math.min(1,-r.top/travel));
+      el.style.setProperty('--autopsy',String(p));
+      const vals=[0,1,2,3].map(i=>{const start=.04+i*.21;return Math.max(0,Math.min(1,(p-start)/.24))});
+      const transforms=[
+        `translate3d(${-22*vals[0]}px,${-62*vals[0]}px,${150*vals[0]}px)`,
+        `translate3d(${22*vals[1]}px,${-20*vals[1]}px,${105*vals[1]}px)`,
+        `translate3d(${-16*vals[2]}px,${30*vals[2]}px,${65*vals[2]}px)`,
+        `translate3d(${12*vals[3]}px,${72*vals[3]}px,${30*vals[3]}px)`
+      ];
+      transforms.forEach((v,i)=>el.style.setProperty(`--al${i+1}`,v));
+      el.style.setProperty('--ao1',String(Math.max(.55,1-vals[1]*.45)));
+      el.style.setProperty('--ao2',String(.12+vals[1]*.88));
+      el.style.setProperty('--ao3',String(.08+vals[2]*.92));
+      el.style.setProperty('--ao4',String(.06+vals[3]*.94));
+      el.style.setProperty('--core-z',`${220+p*80}px`);
+    };
+    const onScroll=()=>{if(!ticking){ticking=true;requestAnimationFrame(update)}};
+    update();addEventListener('scroll',onScroll,{passive:true});addEventListener('resize',onScroll,{passive:true});
+    return()=>{removeEventListener('scroll',onScroll);removeEventListener('resize',onScroll)};
+  },[]);
+  const layers=[
+    ['01','First impression','What the visitor understands in the first few seconds.'],
+    ['02','Search structure','What Google can clearly associate with services, locations and intent.'],
+    ['03','Conversion path','Where proof appears and how easily a visitor can take the next step.'],
+    ['04','Performance','What loads first, what causes friction and what makes the experience feel dated.']
+  ];
+  return <section ref={ref} className="website-autopsy white">
+    <div className="autopsy-sticky">
+      <div className="autopsy-copy">
+        <div className="eyebrow">Website autopsy</div>
+        <h2>A website is more than<br/>what you <em>see.</em></h2>
+        <p>Pull the surface apart and the real system shows up underneath.</p>
+        <div className="autopsy-steps">{layers.map(([n,t,d],i)=><article key={n} style={{'--i':i}}><span>{n}</span><div><strong>{t}</strong><small>{d}</small></div></article>)}</div>
+      </div>
+      <div className="autopsy-stage" aria-hidden="true">
+        <div className="autopsy-frame">
+          <div className="autopsy-chrome"><i/><i/><i/><span>yourbusiness.com</span></div>
+          <div className="autopsy-layer al-1"><b>FIRST IMPRESSION</b><strong>What do you do?</strong><span>Clear offer · useful proof · obvious next step</span></div>
+          <div className="autopsy-layer al-2"><b>SEARCH STRUCTURE</b><strong>How are you found?</strong><span>Services · locations · metadata · internal links</span></div>
+          <div className="autopsy-layer al-3"><b>CONVERSION PATH</b><strong>Why should they act?</strong><span>Trust · CTA · reviews · response path</span></div>
+          <div className="autopsy-layer al-4"><b>PERFORMANCE</b><strong>How does it feel?</strong><span>Speed · stability · mobile · accessibility</span></div>
+          <div className="autopsy-core"><span>LG</span><small>SYSTEM VIEW</small></div>
+        </div>
+        <div className="autopsy-axis"><i/><span>Surface</span><span>System</span></div>
+      </div>
+    </div>
+  </section>
+}
+
 function Process(){
-  return <section id="process" className="section process red">
+  const ref=useRef(null);
+  useEffect(()=>{
+    const el=ref.current;if(!el)return;
+    const io=new IntersectionObserver(([entry])=>{if(entry.isIntersecting)el.classList.add('is-active')},{threshold:.35});
+    io.observe(el);return()=>io.disconnect();
+  },[]);
+  const steps=[
+    ['01','Diagnose','Find the friction: website, search visibility, traffic path and conversion.'],
+    ['02','Prioritize','Choose the few changes most likely to move the business first.'],
+    ['03','Build','Design, write, develop, connect tracking and launch the new experience.'],
+    ['04','Compound','Use search, ads, content and conversion data to keep improving the system.']
+  ];
+  return <section ref={ref} id="process" className="section process red">
     <div className="process-copy">
       <div className="eyebrow">From idea to growth</div>
       <h2>One team. One system. No handoff maze.</h2>
-      <p className="section-intro">We find the bottleneck, build what fixes it, launch it cleanly, then use real performance to decide what happens next.</p>
+      <p className="section-intro">Strategy, design, development and growth stay connected from the first diagnosis through the next iteration.</p>
     </div>
     <div className="timeline">
-      {[
-        ['01','Diagnose','Audit the website, search visibility, traffic path, and conversion friction.'],
-        ['02','Prioritize','Choose the few changes most likely to move the business forward first.'],
-        ['03','Build','Design, write, develop, connect tracking, and launch the new experience.'],
-        ['04','Compound','Use search, ads, content, and conversion data to keep improving the system.']
-      ].map(([n,t,p])=><article key={n}><span>{n}</span><div><h3>{t}</h3><p>{p}</p></div></article>)}
+      <div className="timeline-route" aria-hidden="true"><i/><b/><b/><b/><b/></div>
+      {steps.map(([n,t,p],i)=><article key={n} style={{'--step':i}}><span>{n}</span><div><h3>{t}</h3><p>{p}</p></div></article>)}
     </div>
   </section>
 }
@@ -207,16 +273,16 @@ function ReviewRail(){return <div className="review-rail" aria-label="Review lay
 function InfiniteReviewMenu(){
   const items=featuredReviews;
   const track=useRef(null);const numberRef=useRef(null);const raf=useRef(0);const resetting=useRef(false);
-  const repeated=useMemo(()=>[...items,...items,...items], [items]);
+  const repeated=useMemo(()=>[...items,...items,...items],[items]);
   useEffect(()=>{
     const el=track.current;if(!el)return;
     const cards=[...el.querySelectorAll('.infinite-review-card')];
     if(!cards.length)return;
     const group=items.length;
+    let drag=null;
     const centerCard=(index,behavior='auto')=>{
       const card=cards[index];if(!card)return;
-      const left=card.offsetLeft-(el.clientWidth-card.clientWidth)/2;
-      el.scrollTo({left,behavior});
+      el.scrollTo({left:card.offsetLeft-(el.clientWidth-card.clientWidth)/2,behavior});
     };
     const render=()=>{
       raf.current=0;
@@ -225,47 +291,80 @@ function InfiniteReviewMenu(){
       cards.forEach((card,i)=>{
         const cardCenter=card.offsetLeft+card.clientWidth/2;
         const d=(cardCenter-viewCenter)/Math.max(320,el.clientWidth*.52);
-        const ad=Math.min(1.6,Math.abs(d));
-        const scale=1-Math.min(.14,ad*.095);
-        const ry=Math.max(-14,Math.min(14,-d*10));
-        const y=Math.min(18,ad*13);
-        card.style.transform=`translate3d(0,${y}px,0) rotateY(${ry}deg) scale(${scale})`;
-        card.style.opacity=String(Math.max(.38,1-ad*.34));
-        card.classList.toggle('is-focused',ad<.25);
+        const ad=Math.min(1.5,Math.abs(d));
+        const scale=1-Math.min(.11,ad*.075);
+        const rotate=Math.max(-9,Math.min(9,-d*7));
+        const lift=Math.min(16,ad*11);
+        card.style.transform=`translate3d(0,${lift}px,0) rotateY(${rotate}deg) scale(${scale})`;
+        card.style.opacity=String(Math.max(.46,1-ad*.34));
+        card.classList.toggle('is-focused',ad<.24);
         if(ad<best){best=ad;closest=i}
       });
-      if(numberRef.current){const logical=((closest%group)+group)%group;numberRef.current.textContent=`${String(logical+1).padStart(2,'0')} / ${String(group).padStart(2,'0')}`}
+      if(numberRef.current){
+        const logical=((closest%group)+group)%group;
+        numberRef.current.textContent=`${String(logical+1).padStart(2,'0')} / ${String(group).padStart(2,'0')}`;
+      }
       if(!resetting.current){
         const groupWidth=cards[group].offsetLeft-cards[0].offsetLeft;
         if(groupWidth>0){
-          if(el.scrollLeft<groupWidth*.45){resetting.current=true;el.scrollLeft+=groupWidth;resetting.current=false}
-          else if(el.scrollLeft>groupWidth*1.55){resetting.current=true;el.scrollLeft-=groupWidth;resetting.current=false}
+          if(el.scrollLeft<groupWidth*.42){resetting.current=true;el.scrollLeft+=groupWidth;resetting.current=false}
+          else if(el.scrollLeft>groupWidth*1.58){resetting.current=true;el.scrollLeft-=groupWidth;resetting.current=false}
         }
       }
     };
     const request=()=>{if(!raf.current)raf.current=requestAnimationFrame(render)};
     const onResize=()=>{centerCard(group);request()};
+    const onPointerDown=e=>{
+      if(e.pointerType!=='mouse'||e.button!==0)return;
+      drag={id:e.pointerId,x:e.clientX,left:el.scrollLeft};
+      el.setPointerCapture?.(e.pointerId);el.classList.add('is-dragging');
+    };
+    const onPointerMove=e=>{
+      if(!drag||drag.id!==e.pointerId)return;
+      el.scrollLeft=drag.left-(e.clientX-drag.x)*1.08;request();
+    };
+    const endDrag=e=>{
+      if(!drag||drag.id!==e.pointerId)return;
+      el.releasePointerCapture?.(e.pointerId);el.classList.remove('is-dragging');drag=null;
+      clearTimeout(el._lgSnapTimer);el._lgSnapTimer=setTimeout(()=>{
+        const vc=el.scrollLeft+el.clientWidth/2;
+        let nearest=cards[group],dist=Infinity;
+        cards.forEach(card=>{const d=Math.abs(card.offsetLeft+card.clientWidth/2-vc);if(d<dist){dist=d;nearest=card}});
+        if(nearest)el.scrollTo({left:nearest.offsetLeft-(el.clientWidth-nearest.clientWidth)/2,behavior:'smooth'});
+      },90);
+    };
     requestAnimationFrame(()=>{centerCard(group);request()});
     el.addEventListener('scroll',request,{passive:true});
+    el.addEventListener('pointerdown',onPointerDown);
+    el.addEventListener('pointermove',onPointerMove);
+    el.addEventListener('pointerup',endDrag);
+    el.addEventListener('pointercancel',endDrag);
     addEventListener('resize',onResize,{passive:true});
-    return()=>{cancelAnimationFrame(raf.current);el.removeEventListener('scroll',request);removeEventListener('resize',onResize)};
+    return()=>{
+      cancelAnimationFrame(raf.current);clearTimeout(el._lgSnapTimer);
+      el.removeEventListener('scroll',request);el.removeEventListener('pointerdown',onPointerDown);
+      el.removeEventListener('pointermove',onPointerMove);el.removeEventListener('pointerup',endDrag);
+      el.removeEventListener('pointercancel',endDrag);removeEventListener('resize',onResize);
+    };
   },[items]);
   const nudge=dir=>{
     const el=track.current;if(!el)return;
-    const card=el.querySelector('.infinite-review-card');
-    const gap=parseFloat(getComputedStyle(el).columnGap||getComputedStyle(el).gap||'22')||22;
-    const amount=(card?.getBoundingClientRect().width||320)+gap;
-    el.scrollBy({left:dir*amount,behavior:'smooth'});
+    const cards=[...el.querySelectorAll('.infinite-review-card')];
+    const vc=el.scrollLeft+el.clientWidth/2;
+    let nearestIndex=0,dist=Infinity;
+    cards.forEach((card,i)=>{const d=Math.abs(card.offsetLeft+card.clientWidth/2-vc);if(d<dist){dist=d;nearestIndex=i}});
+    const target=cards[Math.max(0,Math.min(cards.length-1,nearestIndex+dir))];if(!target)return;
+    el.scrollTo({left:target.offsetLeft-(el.clientWidth-target.clientWidth)/2,behavior:'smooth'});
   };
-  return <div className="infinite-review-menu spatial-reviews native-swipe-reviews" aria-label="Swipe through featured reviews">
-    <div className="review-hud"><span>SWIPE · DRAG · SCROLL</span><i/><span ref={numberRef}>01 / {String(items.length).padStart(2,'0')}</span></div>
+  return <div className="infinite-review-menu spatial-reviews native-swipe-reviews" aria-label="Featured client feedback">
+    <div className="review-hud"><span>SELECTED FEEDBACK</span><i/><span ref={numberRef}>01 / {String(items.length).padStart(2,'0')}</span></div>
     <button className="review-nav prev" aria-label="Previous review" onClick={()=>nudge(-1)}>←</button>
     <button className="review-nav next" aria-label="Next review" onClick={()=>nudge(1)}>→</button>
     <div ref={track} className="review-native-track">
       {repeated.map((r,i)=><article className="infinite-review-card" key={`${r.name}-${i}`}>
         <div className="review-card-top"><span className="stars">★★★★★</span><small>{String((i%items.length)+1).padStart(2,'0')}</small></div>
         <p>“{r.text}”</p>
-        <footer><div><strong>{r.name}</strong><small>{r.service}</small></div><a href="/reviews">Open reviews ↗</a></footer>
+        <footer><div><strong>{r.name}</strong><small>{r.service}</small></div><a href="/reviews">All reviews ↗</a></footer>
       </article>)}
     </div>
   </div>
@@ -328,14 +427,19 @@ function ActivityPopups(){
 }
 
 function Results(){return <section id="results" className="section results black">
-  <div className="results-heading"><div><div className="eyebrow">Client feedback</div><h2>Good work should be easy to recognize.</h2><p className="section-intro">A few reactions to better websites, clearer strategy, and marketing people can actually understand.</p></div><a className="results-link" href="/reviews">Read all reviews →</a></div>
+  <div className="results-heading">
+    <div className="results-copy"><div className="eyebrow">Selected feedback</div><h2>The difference should feel obvious.</h2><p>Cleaner pages. Clearer decisions. A stronger first impression.</p></div>
+    <a className="results-link" href="/reviews">Read all reviews →</a>
+  </div>
   <InfiniteReviewMenu/>
-  <a className="button line light" href="/reviews">Read more reviews</a>
 </section>}
 
 function Pricing(){
   const items=useMemo(()=>plans,[]);
-  return <section id="pricing" className="section pricing red"><div className="eyebrow">Pricing</div><h2>Choose what fits now.</h2><p className="section-intro">Website projects are one-time. Growth plans are ongoing. Exact scope is confirmed before work starts.</p><AccordionGallery items={items}/></section>
+  return <section id="pricing" className="section pricing red">
+    <div className="pricing-head"><div><div className="eyebrow">Pricing</div><h2>Choose what fits now.</h2></div><p>Website projects are one-time. Growth plans are ongoing. Pick a plan to see exactly what is included.</p></div>
+    <AccordionGallery items={items}/>
+  </section>
 }
 
 function Faq(){const q=[
@@ -354,7 +458,7 @@ function FinalCTA(){return <section className="section final-cta black"><div cla
 function HomePage(){
   const reduced=useReducedMotion();
   useEffect(()=>{if(reduced)return;const lenis=new Lenis({duration:.82,smoothWheel:true,wheelMultiplier:.92});let id;const raf=t=>{lenis.raf(t);id=requestAnimationFrame(raf)};id=requestAnimationFrame(raf);return()=>{cancelAnimationFrame(id);lenis.destroy()}},[reduced]);
-  return <><FuturisticShell/><ActivityPopups/><SiteHeader/><main><HeroStory/><Transformation/><Process/><Results/><BuiltDifferently/><Pricing/><Faq/><FinalCTA/></main><Footer/></>
+  return <><FuturisticShell/><ActivityPopups/><SiteHeader/><main><HeroStory/><Transformation/><WebsiteAutopsy/><Process/><Results/><BuiltDifferently/><Pricing/><Faq/><FinalCTA/></main><Footer/></>
 }
 
 function AuditPage(){
@@ -425,8 +529,8 @@ function AuditResults({result,tone}){
 function ReviewsPage(){
   const params=new URLSearchParams(window.location.search);const requested=Math.max(1,Number(params.get('page'))||1);const perPage=20;const pages=Math.ceil(generatedReviews.length/perPage);const page=Math.min(requested,pages);const start=(page-1)*perPage;const list=generatedReviews.slice(start,start+perPage);
   return <><FuturisticShell/><ActivityPopups/><SiteHeader dark/><main className="reviews-page">
-    <section className="reviews-hero black"><div className="reviews-hero-copy"><div className="eyebrow">Client feedback</div><h1>Proof should be<br/><em>easy to explore.</em></h1><p>Swipe through a few highlighted reactions, then keep reading below without fighting the interface.</p></div><InfiniteReviewMenu/></section>
-    <section className="review-page-head white"><div><div className="eyebrow">More feedback</div><h2>Real stories.<br/>Clean reading.</h2></div><p>Twenty at a time, formatted for readability on desktop and mobile.</p></section>
+    <section className="reviews-hero black"><div className="reviews-hero-copy"><div className="eyebrow">Client feedback</div><h1>The work should<br/><em>speak for itself.</em></h1></div><InfiniteReviewMenu/></section>
+    <section className="review-page-head white"><div><div className="eyebrow">More feedback</div><h2>What changed<br/>after the work.</h2></div><p>Clarity, speed, search structure and a better experience for the people landing on the site.</p></section>
     <section className="review-page-grid white">{list.map(r=><article key={r.id}><div className="stars">★★★★★</div><p>“{r.text}”</p><footer><div><strong>{r.name}</strong><small>{r.service}</small></div><span>{r.date}</span></footer></article>)}</section>
     <nav className="pagination" aria-label="Review pages">{page>1&&<a href={`/reviews?page=${page-1}`}>← Previous</a>}<span>Page {page} of {pages}</span>{page<pages&&<a href={`/reviews?page=${page+1}`}>Next →</a>}</nav>
   </main><Footer/></>
