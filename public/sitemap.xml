@@ -1,12 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>https://rsmarketing.com/</loc><priority>1.0</priority></url>
-  <url><loc>https://rsmarketing.com/services</loc><priority>0.9</priority></url>
-  <url><loc>https://rsmarketing.com/pricing</loc><priority>0.9</priority></url>
-  <url><loc>https://rsmarketing.com/process</loc><priority>0.8</priority></url>
-  <url><loc>https://rsmarketing.com/reviews</loc><priority>0.8</priority></url>
-  <url><loc>https://rsmarketing.com/build-website</loc><priority>0.8</priority></url>
-  <url><loc>https://rsmarketing.com/audit</loc><priority>0.9</priority></url>
-  <url><loc>https://rsmarketing.com/insights</loc><priority>0.8</priority></url>
-  <url><loc>https://rsmarketing.com/contact</loc><priority>0.8</priority></url>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+<url><loc>https://lggrowthstudio.com/</loc><lastmod>2026-08-08</lastmod><changefreq>weekly</changefreq><priority>1.0</priority></url>
+<url><loc>https://lggrowthstudio.com/audit</loc><lastmod>2026-08-08</lastmod><changefreq>monthly</changefreq><priority>.8</priority></url>
+<url><loc>https://lggrowthstudio.com/process</loc><lastmod>2026-08-08</lastmod><changefreq>monthly</changefreq><priority>.8</priority></url>
+<url><loc>https://lggrowthstudio.com/reviews</loc><lastmod>2026-08-08</lastmod><changefreq>monthly</changefreq><priority>.8</priority></url>
+<url><loc>https://lggrowthstudio.com/pricing</loc><lastmod>2026-08-08</lastmod><changefreq>monthly</changefreq><priority>.8</priority></url>
+<url><loc>https://lggrowthstudio.com/build-website</loc><lastmod>2026-08-08</lastmod><changefreq>monthly</changefreq><priority>.8</priority></url>
+<url><loc>https://lggrowthstudio.com/contact</loc><lastmod>2026-08-08</lastmod><changefreq>monthly</changefreq><priority>.8</priority></url>
+<url><loc>https://lggrowthstudio.com/articles</loc><lastmod>2026-08-08</lastmod><changefreq>weekly</changefreq><priority>.9</priority></url>
+<url><loc>https://lggrowthstudio.com/articles/50-milliseconds-website-first-impression</loc><lastmod>2026-08-08</lastmod><changefreq>monthly</changefreq><priority>.8</priority><image:image><image:loc>https://lggrowthstudio.com/article-images/first-impression.webp</image:loc><image:title>Your Website Is Judged in 50 Milliseconds. Here’s What the Research Actually Says</image:title></image:image></url>
+<url><loc>https://lggrowthstudio.com/articles/google-doesnt-need-more-blog-posts-information-architecture-seo</loc><lastmod>2026-08-08</lastmod><changefreq>monthly</changefreq><priority>.8</priority><image:image><image:loc>https://lggrowthstudio.com/article-images/seo-architecture.webp</image:loc><image:title>Google Doesn’t Need More Blog Posts. It Needs a Site It Can Understand</image:title></image:image></url>
+<url><loc>https://lggrowthstudio.com/articles/core-web-vitals-2-5-second-problem</loc><lastmod>2026-08-08</lastmod><changefreq>monthly</changefreq><priority>.8</priority><image:image><image:loc>https://lggrowthstudio.com/article-images/core-web-vitals.webp</image:loc><image:title>The 2.5-Second Problem: Why a Beautiful Website Can Still Lose Customers</image:title></image:image></url>
+<url><loc>https://lggrowthstudio.com/articles/ai-search-seo-overviews-mode</loc><lastmod>2026-08-08</lastmod><changefreq>monthly</changefreq><priority>.8</priority><image:image><image:loc>https://lggrowthstudio.com/article-images/ai-search.webp</image:loc><image:title>AI Search Changed SEO—But Not the Way Most Agencies Claim</image:title></image:image></url>
+<url><loc>https://lggrowthstudio.com/articles/mobile-site-is-your-real-website</loc><lastmod>2026-08-08</lastmod><changefreq>monthly</changefreq><priority>.8</priority><image:image><image:loc>https://lggrowthstudio.com/article-images/mobile-first.webp</image:loc><image:title>Your Mobile Site Is Your Real Website Now. Design Like It</image:title></image:image></url>
+<url><loc>https://lggrowthstudio.com/articles/web-accessibility-business-problem</loc><lastmod>2026-08-08</lastmod><changefreq>monthly</changefreq><priority>.8</priority><image:image><image:loc>https://lggrowthstudio.com/article-images/accessibility.webp</image:loc><image:title>Most Websites Are Still Inaccessible. That’s a Business Problem, Not a Checkbox</image:title></image:image></url>
+<url><loc>https://lggrowthstudio.com/articles/seo-security-hacked-website-recovery</loc><lastmod>2026-08-08</lastmod><changefreq>monthly</changefreq><priority>.8</priority><image:image><image:loc>https://lggrowthstudio.com/article-images/hacked-site.webp</image:loc><image:title>The SEO Security Problem Nobody Talks About: What Happens After a Website Gets Hacked</image:title></image:image></url>
+<url><loc>https://lggrowthstudio.com/articles/local-seo-trust-system</loc><lastmod>2026-08-08</lastmod><changefreq>monthly</changefreq><priority>.8</priority><image:image><image:loc>https://lggrowthstudio.com/article-images/local-seo.webp</image:loc><image:title>Local SEO Is Not a Map Pack Trick. It’s a Trust System</image:title></image:image></url>
+<url><loc>https://lggrowthstudio.com/articles/more-traffic-wrong-growth-goal</loc><lastmod>2026-08-08</lastmod><changefreq>monthly</changefreq><priority>.8</priority><image:image><image:loc>https://lggrowthstudio.com/article-images/qualified-growth.webp</image:loc><image:title>“More Traffic” Is Often the Wrong Growth Goal. Here’s the Metric That Matters More</image:title></image:image></url>
+<url><loc>https://lggrowthstudio.com/articles/structured-data-wont-rank-you-number-one</loc><lastmod>2026-08-08</lastmod><changefreq>monthly</changefreq><priority>.8</priority><image:image><image:loc>https://lggrowthstudio.com/article-images/structured-data.webp</image:loc><image:title>Structured Data Won’t Rank You #1—So Why Does It Matter?</image:title></image:image></url>
+<url><loc>https://lggrowthstudio.com/articles/when-to-redesign-website-repair-or-rebuild</loc><lastmod>2026-08-08</lastmod><changefreq>monthly</changefreq><priority>.8</priority><image:image><image:loc>https://lggrowthstudio.com/article-images/redesign-decision.webp</image:loc><image:title>Stop Patching It: The Evidence-Based Test for When a Website Should Be Rebuilt</image:title></image:image></url>
 </urlset>

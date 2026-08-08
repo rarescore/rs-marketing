@@ -1,0 +1,11 @@
+{
+  "name": "LG Growth Studio",
+  "short_name": "LG Growth",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#050505",
+  "theme_color": "#ef101d",
+  "icons": [
+    {"src":"/lg-growth-studio-logo.png","sizes":"512x512","type":"image/png","purpose":"any"}
+  ]
+}

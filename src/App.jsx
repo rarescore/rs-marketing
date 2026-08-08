@@ -4,6 +4,8 @@ import PomegranateSequence from './components/PomegranateSequence';
 import ScrollReveal from './components/ScrollReveal';
 import AccordionGallery from './components/AccordionGallery';
 import { plans } from './data/site';
+import { articles, articleBySlug } from './articles';
+import { sampleReviewFixtures } from './reviewFixtures';
 import useReducedMotion from './hooks/useReducedMotion';
 
 const scanSteps=[
@@ -21,48 +23,35 @@ const scanSteps=[
   'Building recommendations'
 ];
 
-const featuredReviews=[
-  {name:'A•••••• G.',service:'Website redesign',text:'The new website finally feels like the quality of our business. The process was clear from start to finish.'},
-  {name:'M•••••• S.',service:'SEO + local growth',text:'We knew what was being worked on, why it mattered, and what came next.'},
-  {name:'R•••••• K.',service:'Website + growth',text:'The site is faster, cleaner, and customers understand what to do immediately.'},
-  {name:'D•••••• M.',service:'Paid growth',text:'The biggest difference was clarity. We stopped guessing and could finally see what was working.'},
-  {name:'S•••••• A.',service:'Website',text:'The new site looks substantially more professional and is much easier to use on a phone.'},
-  {name:'J•••••• T.',service:'SEO',text:'Simple communication, clear priorities, and no confusing reports.'},
-];
+const showSampleReviews = import.meta.env.DEV || import.meta.env.VITE_SHOW_SAMPLE_REVIEWS === 'true';
+const verifiedReviews = [];
+const generatedReviews = showSampleReviews ? sampleReviewFixtures : verifiedReviews;
+const featuredReviews = generatedReviews.filter(r=>r.text.split(/\s+/).length<122).slice(0,6);
 
-const reviewPhrases=[
-  'The website finally looks like the business we actually run.',
-  'Everything was explained clearly and the project stayed organized.',
-  'Our mobile site is dramatically easier to use now.',
-  'The new pages make it obvious what customers should do next.',
-  'We stopped guessing about SEO and started working from a real plan.',
-  'The communication was straightforward and the work felt intentional.',
-  'The redesign gave us a much more credible first impression.',
-  'Our website is faster, cleaner, and much easier to understand.',
-  'The process was simple from the audit through launch.',
-  'We finally have reporting we can actually understand.',
-  'They focused on the important problems instead of sending a giant task list.',
-  'The new structure makes our services much easier to find.',
-  'It feels custom instead of like another template.',
-  'The project moved quickly without feeling rushed.',
-  'We now have a website we are comfortable sending customers to.',
-  'The audit showed us problems we had never noticed.',
-  'Our call-to-action flow is much stronger now.',
-  'The work was polished and the handoff was easy.',
-  'The difference in mobile performance was immediately noticeable.',
-  'Clear work, clear updates, and a much better finished product.'
-];
-const services=['Website','SEO','Website + growth','Local visibility','Paid growth'];
-const generatedReviews=Array.from({length:200},(_,i)=>({
-  id:i+1,
-  name:`${String.fromCharCode(65+(i%20))}•••••• ${String.fromCharCode(65+((i*7)%20))}.`,
-  service:services[i%services.length],
-  text:reviewPhrases[i%reviewPhrases.length],
-  date:new Date(2026,6-(i%6),Math.max(1,28-(i%25))).toLocaleDateString('en-US',{month:'short',year:'numeric'})
-}));
 
 function go(path){ window.location.href=path; }
 function scoreTone(score){if(score<40)return ['critical','Critical'];if(score<65)return ['warning','Needs improvement'];if(score<85)return ['healthy','Healthy'];return ['excellent','Excellent'];}
+
+const SITE_URL = import.meta.env.VITE_SITE_URL || (typeof window!=='undefined' ? window.location.origin : 'https://lggrowthstudio.com');
+function usePageSeo({title='LG Growth Studio',description='LG Growth Studio builds websites, search visibility and growth systems for businesses that want to be easier to find, trust and choose.',image='/assets/growth-engine.webp',noindex=false,schema=null,keywords=[]}={}){
+  useEffect(()=>{
+    const upsert=(selector,attrs)=>{let el=document.head.querySelector(selector);if(!el){el=document.createElement('meta');document.head.appendChild(el)}Object.entries(attrs).forEach(([k,v])=>el.setAttribute(k,v));return el};
+    document.title=title;
+    upsert('meta[name="description"]',{name:'description',content:description});
+    upsert('meta[name="robots"]',{name:'robots',content:noindex?'noindex,nofollow':'index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1'});
+    upsert('meta[property="og:title"]',{property:'og:title',content:title});
+    upsert('meta[property="og:description"]',{property:'og:description',content:description});
+    upsert('meta[property="og:type"]',{property:'og:type',content:schema?'article':'website'});
+    upsert('meta[property="og:image"]',{property:'og:image',content:image.startsWith('http')?image:`${SITE_URL}${image}`});
+    upsert('meta[name="twitter:card"]',{name:'twitter:card',content:'summary_large_image'});
+    if(keywords.length) upsert('meta[name="keywords"]',{name:'keywords',content:keywords.join(', ')});
+    let canonical=document.head.querySelector('link[rel="canonical"]');if(!canonical){canonical=document.createElement('link');canonical.rel='canonical';document.head.appendChild(canonical)}
+    canonical.href=`${SITE_URL}${window.location.pathname}`;
+    document.querySelectorAll('script[data-lg-schema]').forEach(x=>x.remove());
+    if(schema){const script=document.createElement('script');script.type='application/ld+json';script.dataset.lgSchema='1';script.text=JSON.stringify(schema);document.head.appendChild(script)}
+    return()=>{};
+  },[title,description,image,noindex,JSON.stringify(schema),keywords.join('|')]);
+}
 
 function SiteHeader({dark=false}){
   const[menuOpen,setMenuOpen]=useState(false);
@@ -71,10 +60,11 @@ function SiteHeader({dark=false}){
   useEffect(()=>{document.body.style.overflow=menuOpen?'hidden':'';return()=>{document.body.style.overflow=''}},[menuOpen]);
   return <header className={dark?'solid-header':''}>
     <a className="brand" href="/"><img src="/lg-growth-studio-logo.png" alt="LG Growth Studio"/></a>
-    <nav><a className={navClass('/contact')} href="/contact">Contact</a><a className={navClass('/audit')} href="/audit">Audit</a><a className={navClass('/process')} href="/process">Process</a><a className={navClass('/reviews')} href="/reviews">Reviews</a><a className={navClass('/pricing')} href="/pricing">Pricing</a></nav>
+    <nav><a className={navClass('/contact')} href="/contact">Contact</a><a className={navClass('/audit')} href="/audit">Audit</a><a className={navClass('/process')} href="/process">Process</a><a className={navClass('/reviews')} href="/reviews">Reviews</a><a className={navClass('/pricing')} href="/pricing">Pricing</a><a className={current.startsWith('/articles')?'current':''} href="/articles">Articles</a></nav>
     <a className={`top-cta ${navClass('/build-website')}`} href="/build-website">Start</a>
     <button className="menu-toggle" aria-expanded={menuOpen} aria-label={menuOpen?'Close menu':'Open menu'} onClick={()=>setMenuOpen(v=>!v)}><span>{menuOpen?'Close':'Menu'}</span><i/><i/></button>
-    <div className={`mobile-menu ${menuOpen?'open':''}`}><a className={navClass('/contact')} href="/contact"><span>01</span>Contact</a><a className={navClass('/audit')} href="/audit"><span>02</span>Audit</a><a className={navClass('/process')} href="/process"><span>03</span>Process</a><a className={navClass('/reviews')} href="/reviews"><span>04</span>Reviews</a><a className={navClass('/pricing')} href="/pricing"><span>05</span>Pricing</a><a className={navClass('/build-website')} href="/build-website"><span>06</span>Start a project</a></div>
+    <div className={`mobile-menu ${menuOpen?'open':''}`}><a className={navClass('/contact')} href="/contact"><span>01</span>Contact</a><a className={navClass('/audit')} href="/audit"><span>02</span>Audit</a><a className={navClass('/process')} href="/process"><span>03</span>Process</a><a className={navClass('/reviews')} href="/reviews"><span>04</span>Reviews</a><a className={navClass('/pricing')} href="/pricing"><span>05</span>Pricing</a><a className={current.startsWith('/articles')?'current':''} href="/articles"><span>06</span>Articles</a><a className={navClass('/build-website')} href="/build-website"><span>07</span>Start a project</a></div>
+    <div className="mobile-dock" aria-label="Quick navigation"><a className={navClass('/audit')} href="/audit"><span>◎</span>Audit</a><a className={current.startsWith('/articles')?'current':''} href="/articles"><span>▤</span>Read</a><a className={navClass('/pricing')} href="/pricing"><span>$</span>Pricing</a><a className={navClass('/build-website')} href="/build-website"><span>＋</span>Start</a></div>
   </header>
 }
 
@@ -360,6 +350,7 @@ function InfiniteReviewMenu(){
     const target=cards[Math.max(0,Math.min(cards.length-1,nearestIndex+dir))];if(!target)return;
     el.scrollTo({left:target.offsetLeft-(el.clientWidth-target.clientWidth)/2,behavior:'smooth'});
   };
+  if(!items.length)return <div className="review-verification-empty dark"><div className="eyebrow">Verified feedback</div><h3>Client feedback will appear here after verification.</h3><p>LG Growth Studio does not publish invented testimonials as customer reviews.</p></div>;
   return <div className="infinite-review-menu spatial-reviews native-swipe-reviews" aria-label="Featured client feedback">
     <div className="review-hud"><span>SELECTED FEEDBACK</span><i/><span ref={numberRef}>01 / {String(items.length).padStart(2,'0')}</span></div>
     <button className="review-nav prev" aria-label="Previous review" onClick={()=>nudge(-1)}>←</button>
@@ -375,65 +366,49 @@ function InfiniteReviewMenu(){
 }
 
 function BuiltDifferently(){
-  const ref=useRef(null);
-  const[active,setActive]=useState(0);
-  const stages=[
-    {label:'Website',kicker:'THE FOUNDATION',title:'Make the offer obvious.',body:'The website earns the first impression, explains the offer and gives every campaign somewhere useful to land.'},
-    {label:'Search',kicker:'DISCOVERY',title:'Be present when intent already exists.',body:'Search structure connects services, locations and useful answers so the business can appear for more than its name.'},
-    {label:'Content',kicker:'PROOF',title:'Give people a reason to believe.',body:'Pages, case studies, reviews and useful resources turn attention into confidence before the first conversation.'},
-    {label:'Paid Growth',kicker:'DEMAND',title:'Put the right offer in front of the right people.',body:'Paid media creates controlled reach, then landing pages and tracking show which messages deserve more budget.'},
-    {label:'Automation',kicker:'FOLLOW-UP',title:'Keep momentum after the click.',body:'Forms, CRM routing and automation reduce dropped leads and keep the next action moving without adding friction.'}
+  const ref=useRef(null);const cards=useRef([]);const paths=useRef([]);const[active,setActive]=useState(0);
+  const modules=[
+    {label:'Website',kicker:'CONVERT',title:'Turn attention into a clear next step.',body:'The website carries the offer, proof, speed and interaction quality. Everything else sends people here.'},
+    {label:'Search',kicker:'DISCOVER',title:'Meet demand that already exists.',body:'Technical structure, service pages and useful research create more ways for qualified customers to find the business.'},
+    {label:'Content',kicker:'EXPLAIN',title:'Make expertise visible before the sales call.',body:'Research, case evidence and decision content answer the questions people ask while they are still deciding who to trust.'},
+    {label:'Paid Growth',kicker:'AMPLIFY',title:'Buy reach without buying confusion.',body:'Paid media works when the message, landing page and tracking agree on the audience and the action.'},
+    {label:'Automation',kicker:'FOLLOW THROUGH',title:'Keep the next action moving.',body:'Routing, CRM context and follow-up reduce the leads lost between a click and an actual conversation.'}
   ];
   useEffect(()=>{
-    const el=ref.current;if(!el)return;
-    let raf=0;
-    const update=()=>{
-      raf=0;
-      const r=el.getBoundingClientRect();
-      const travel=Math.max(1,r.height-innerHeight);
-      const p=Math.max(0,Math.min(1,-r.top/travel));
-      el.style.setProperty('--relay-p',String(p));
-      const next=Math.min(stages.length-1,Math.floor(Math.min(.999,p)*stages.length));
-      setActive(v=>v===next?v:next);
+    const el=ref.current;if(!el)return;let raf=0;
+    const update=()=>{raf=0;const r=el.getBoundingClientRect();const travel=Math.max(1,r.height-innerHeight);const p=Math.max(0,Math.min(1,-r.top/travel));el.style.setProperty('--engine-p',String(p));
+      const idx=Math.min(modules.length-1,Math.floor(Math.min(.999,p)*modules.length));setActive(v=>v===idx?v:idx);
+      const phase=(p*modules.length)-idx;
+      cards.current.forEach((card,i)=>{if(!card)return;const delta=i-idx;const angle=(i/modules.length)*Math.PI*2-Math.PI/2+p*.9;const radius=Math.max(190,Math.min(340,innerWidth*.19));const x=Math.cos(angle)*radius;const y=Math.sin(angle)*radius*.62;const focus=Math.max(0,1-Math.abs(delta));const z=(focus*210)-Math.abs(delta)*42;const scale=.84+focus*.2;card.style.transform=`translate3d(${x}px,${y}px,${z}px) rotateY(${x/55}deg) scale(${scale})`;card.style.opacity=String(.34+focus*.66);card.style.filter=focus?`blur(0px)`:`blur(${Math.min(2.2,Math.abs(delta)*.7)}px)`});
+      paths.current.forEach((path,i)=>{if(!path)return;path.style.strokeDashoffset=String(1-Math.max(0,Math.min(1,p*modules.length-i)))});
     };
-    const onScroll=()=>{if(!raf)raf=requestAnimationFrame(update)};
-    update();
-    addEventListener('scroll',onScroll,{passive:true});
-    addEventListener('resize',onScroll,{passive:true});
-    return()=>{cancelAnimationFrame(raf);removeEventListener('scroll',onScroll);removeEventListener('resize',onScroll)};
+    const onScroll=()=>{if(!raf)raf=requestAnimationFrame(update)};update();addEventListener('scroll',onScroll,{passive:true});addEventListener('resize',onScroll,{passive:true});return()=>{cancelAnimationFrame(raf);removeEventListener('scroll',onScroll);removeEventListener('resize',onScroll)};
   },[]);
-  const current=stages[active];
-  return <section ref={ref} className="system-relay white" aria-label="Connected growth system">
-    <div className="system-relay-sticky">
-      <div className="system-relay-head">
-        <div><div className="eyebrow">The growth system</div><h2>Nothing works <em>alone.</em></h2></div>
-        <p>A website can look great and still underperform. Search can create traffic and still waste it. The advantage comes from making the pieces reinforce each other.</p>
+  const current=modules[active];
+  return <section ref={ref} className="growth-engine-section black" aria-label="Connected growth engine">
+    <div className="growth-engine-sticky">
+      <div className="engine-copy">
+        <div className="eyebrow">Nothing works alone</div>
+        <h2>One signal.<br/><em>Five systems.</em></h2>
+        <div className="engine-active-copy" key={current.label}><span>{current.kicker} · 0{active+1}</span><h3>{current.title}</h3><p>{current.body}</p></div>
+        <a href="/process">See how the process works →</a>
       </div>
-      <div className="relay-stage">
-        <div className="relay-index">0{active+1}</div>
-        <div className="relay-copy" key={current.label}>
-          <span>{current.kicker}</span>
-          <h3>{current.title}</h3>
-          <p>{current.body}</p>
+      <div className="engine-scene" aria-hidden="true">
+        <div className="engine-floor"/>
+        <svg className="engine-lines" viewBox="0 0 1000 760" preserveAspectRatio="none">
+          {modules.map((m,i)=><path ref={el=>paths.current[i]=el} key={m.label} pathLength="1" d={`M 500 380 C ${i%2?780:220} ${110+i*105}, ${i%2?780:220} ${170+i*85}, 500 380`} />)}
+        </svg>
+        <div className="engine-reactor"><i/><i/><i/><b/></div>
+        <div className="engine-card-field">
+          {modules.map((m,i)=><article ref={el=>cards.current[i]=el} className={`engine-module ${active===i?'active':''}`} key={m.label}><span>0{i+1}</span><strong>{m.label}</strong><small>{m.kicker}</small></article>)}
         </div>
-        <div className="relay-visual" aria-hidden="true">
-          <div className="relay-rail"><i/><b/></div>
-          <div className="relay-wave"><i/><i/><i/><i/><i/><i/></div>
-        </div>
+        <div className="engine-scan"/>
       </div>
-      <div className="relay-nav" aria-label="Growth system stages">
-        {stages.map((stage,i)=><button key={stage.label} className={active===i?'active':''} onClick={()=>{
-          const el=ref.current;if(!el)return;
-          const travel=Math.max(1,el.offsetHeight-innerHeight);
-          const start=window.scrollY+el.getBoundingClientRect().top;
-          const top=start+(i/(stages.length-1))*travel;
-          window.scrollTo({top,behavior:'smooth'});
-        }}><span>0{i+1}</span><strong>{stage.label}</strong></button>)}
-      </div>
-      <a className="relay-process-link" href="/process">See the full process →</a>
+      <div className="engine-stage-nav">{modules.map((m,i)=><button className={active===i?'active':''} key={m.label} onClick={()=>{const el=ref.current;if(!el)return;const travel=Math.max(1,el.offsetHeight-innerHeight);const top=scrollY+el.getBoundingClientRect().top+(i/(modules.length-1))*travel;scrollTo({top,behavior:'smooth'})}}><span>0{i+1}</span>{m.label}</button>)}</div>
     </div>
   </section>
 }
+
 function ClickSpark(){
   const canvas=useRef(null);const sparks=useRef([]);const raf=useRef(0);const running=useRef(false);
   useEffect(()=>{
@@ -473,7 +448,7 @@ function Results(){return <section id="results" className="section results black
     <div className="results-copy"><div className="eyebrow">Selected feedback</div><h2>The difference should <em>feel obvious.</em></h2><p>Cleaner pages. Clearer decisions. A stronger first impression.</p></div>
     <a className="results-link" href="/reviews">Read all reviews →</a>
   </div>
-  <InfiniteReviewMenu/>
+  {featuredReviews.length?<InfiniteReviewMenu/>:<div className="review-verification-empty dark"><div className="eyebrow">Verified feedback</div><h3>Client proof is being verified for publication.</h3><p>We do not publish invented testimonials as customer reviews.</p></div>}
 </section>}
 
 function Pricing(){
@@ -498,12 +473,14 @@ function Faq(){const q=[
 function FinalCTA(){return <section className="section final-cta final-cta-red red"><div className="eyebrow">Next step</div><h2>Ready when <em>you are.</em></h2><div className="final-actions"><a className="button dark" href="/build-website">Start your website</a><a className="button line dark-line" href="/audit">Run another audit</a><a className="button line dark-line" href="/contact">Schedule a strategy call</a></div></section>}
 
 function HomePage(){
+  usePageSeo({title:'LG Growth Studio | Web Design, SEO, Paid Growth & Automation',description:'LG Growth Studio builds high-performance websites, SEO systems, paid growth campaigns and automation for businesses that want clearer digital growth.',image:'/assets/growth-engine.webp'});
   const reduced=useReducedMotion();
   useEffect(()=>{if(reduced)return;const lenis=new Lenis({duration:.82,smoothWheel:true,wheelMultiplier:.92});let id;const raf=t=>{lenis.raf(t);id=requestAnimationFrame(raf)};id=requestAnimationFrame(raf);return()=>{cancelAnimationFrame(id);lenis.destroy()}},[reduced]);
-  return <><FuturisticShell/><ActivityPopups/><SiteHeader/><main><HeroStory/><Transformation/><WebsiteAutopsy/><Process/><Results/><BuiltDifferently/><Pricing/><Faq/><FinalCTA/></main><Footer/></>
+  return <><FuturisticShell/><ActivityPopups/><SiteHeader/><main><HeroStory/><Transformation/><WebsiteAutopsy/><Process/><Results/><BuiltDifferently/><ArticlesPreview/><Pricing/><Faq/><FinalCTA/></main><Footer/></>
 }
 
 function AuditPage(){
+  usePageSeo({title:'Free Website Audit | LG Growth Studio',description:'Analyze website performance, SEO, mobile experience, content depth and technical health with the LG Growth Studio website audit.'});
   const initial=new URLSearchParams(window.location.search).get('url')||'';
   const[url,setUrl]=useState(initial);const[status,setStatus]=useState('idle');const[step,setStep]=useState(0);const[result,setResult]=useState(null);const[error,setError]=useState('');const[assist,setAssist]=useState(false);
   useEffect(()=>{if(status==='idle')return;const seen=sessionStorage.getItem('lg-audit-assist');if(seen)return;const t=setTimeout(()=>{setAssist(true);sessionStorage.setItem('lg-audit-assist','1')},15000);return()=>clearTimeout(t)},[status]);
@@ -569,11 +546,12 @@ function AuditResults({result,tone}){
 }
 
 function ReviewsPage(){
-  const params=new URLSearchParams(window.location.search);const requested=Math.max(1,Number(params.get('page'))||1);const perPage=20;const pages=Math.ceil(generatedReviews.length/perPage);const page=Math.min(requested,pages);const start=(page-1)*perPage;const list=generatedReviews.slice(start,start+perPage);
+  usePageSeo({title:'Client Reviews | LG Growth Studio',description:'Read verified client feedback about website design, SEO, local growth and digital strategy from LG Growth Studio.'});
+  const params=new URLSearchParams(window.location.search);const requested=Math.max(1,Number(params.get('page'))||1);const perPage=20;const pages=Math.max(1,Math.ceil(generatedReviews.length/perPage));const page=Math.min(requested,pages);const start=(page-1)*perPage;const list=generatedReviews.slice(start,start+perPage);
   return <><FuturisticShell/><ActivityPopups/><SiteHeader dark/><main className="reviews-page">
     <section className="reviews-hero black"><div className="reviews-hero-copy"><div className="eyebrow">Client feedback</div><h1>The work should<br/><em>speak for itself.</em></h1></div><InfiniteReviewMenu/></section>
     <section className="review-page-head white"><div><div className="eyebrow">More feedback</div><h2>What changed<br/>after the work.</h2></div><p>Clarity, speed, search structure and a better experience for the people landing on the site.</p></section>
-    <section className="review-page-grid white">{list.map(r=><article key={r.id}><div className="stars">★★★★★</div><p>“{r.text}”</p><footer><div><strong>{r.name}</strong><small>{r.service}</small></div><span>{r.date}</span></footer></article>)}</section>
+    <section className="review-page-grid white">{!list.length&&<div className="review-verification-empty"><div className="eyebrow">Verified feedback</div><h2>Real client reviews will appear here after verification.</h2><p>Development builds can enable sample review fixtures with VITE_SHOW_SAMPLE_REVIEWS=true. Production does not publish invented testimonials.</p></div>}{list.map(r=><article key={r.id}><div className="stars">★★★★★</div><p>“{r.text}”</p><footer><div><strong>{r.name}</strong><small>{r.service}</small></div><span>{r.date}</span></footer></article>)}</section>
     <nav className="pagination" aria-label="Review pages">{page>1&&<a href={`/reviews?page=${page-1}`}>← Previous</a>}<span>Page {page} of {pages}</span>{page<pages&&<a href={`/reviews?page=${page+1}`}>Next →</a>}</nav>
   </main><Footer/></>
 }
@@ -621,6 +599,7 @@ function BuilderLivePreview({choices,accent='#ef101d'}){
 }
 
 function BuildWebsitePage(){
+  usePageSeo({title:'Design Your Website | LG Growth Studio',description:'Build a custom website direction with visual style, motion, color, layout and feature choices, then send the project brief to LG Growth Studio.'});
   const[step,setStep]=useState(0);const[choices,setChoices]=useState({});const[done,setDone]=useState(false);const[accent,setAccent]=useState('#ef101d');const screen=buildScreens[step];
   const selected=choices[step];
   const choose=v=>{if(screen.multi){setChoices(x=>{const current=Array.isArray(x[step])?x[step]:[];return {...x,[step]:current.includes(v)?current.filter(a=>a!==v):[...current,v]}})}else setChoices(x=>({...x,[step]:v}))};
@@ -645,6 +624,7 @@ function BuildWebsitePage(){
 }
 
 function ContactPage(){
+  usePageSeo({title:'Contact LG Growth Studio',description:'Talk with LG Growth Studio about a new website, SEO, paid advertising, automation or a second opinion on your current digital strategy.'});
   const planParam=new URLSearchParams(window.location.search).get('plan');
   const planName=planParam?planParam.replace(/[-_]+/g,' ').replace(/\b\w/g,c=>c.toUpperCase()):'';
   const[form,setForm]=useState({name:'',email:'',phone:'',company:'',website:'',need:planParam?'Website + growth':'Website',details:planParam?`I'm interested in the ${planName} plan. Please tell me the next step.`:'',company_url:''});
@@ -656,6 +636,7 @@ function ContactPage(){
 }
 
 function ProcessPage(){
+  usePageSeo({title:'Our Process | LG Growth Studio',description:'See how LG Growth Studio diagnoses digital bottlenecks, prioritizes work, builds the solution and improves performance over time.'});
   return <><FuturisticShell/><ActivityPopups/><SiteHeader dark/><main className="process-page standalone-page">
     <section className="standalone-hero black"><div className="eyebrow">How the work moves</div><h1>From problem to <em>progress.</em></h1><p>We diagnose what is actually slowing the business down, choose the highest-impact work, build it properly, then keep improving what proves useful.</p></section>
     <Process/>
@@ -665,6 +646,7 @@ function ProcessPage(){
 }
 
 function PricingPage(){
+  usePageSeo({title:'Pricing | LG Growth Studio',description:'Website project and ongoing growth pricing for web design, SEO, paid advertising and optimization from LG Growth Studio.'});
   return <><FuturisticShell/><ActivityPopups/><SiteHeader dark/><main className="pricing-page standalone-page">
     <section className="standalone-hero black"><div className="eyebrow">Pricing</div><h1>Clear scope. <em>No mystery.</em></h1><p>Start with a website project or ongoing growth support. Open each plan to see what it is for, what is included and where the next step goes.</p></section>
     <Pricing/>
@@ -673,7 +655,29 @@ function PricingPage(){
   </main><Footer/></>;
 }
 
-function Footer(){return <footer className="site-footer-simple"><img src="/lg-growth-studio-logo.png" alt="LG Growth Studio"/><span>Performance Marketing · Web Design · SEO · Paid Advertising · AI Automation</span><div><a href="/contact">Contact</a><a href="/audit">Audit</a><a href="/process">Process</a><a href="/reviews">Reviews</a><a href="/pricing">Pricing</a></div></footer>}
+function ArticlesPreview(){
+  const picks=articles.slice(0,3);
+  return <section className="articles-preview white"><div className="articles-preview-head"><div><div className="eyebrow">Research library</div><h2>Useful enough to <em>bookmark.</em></h2></div><a href="/articles">Read all articles →</a></div><div className="articles-preview-grid">{picks.map((a,i)=><a className="article-preview-card" href={`/articles/${a.slug}`} key={a.slug}><picture><source media="(max-width:720px)" srcSet={a.image.replace('.webp','-800.webp')}/><img src={a.image} alt={a.imageAlt} loading="lazy"/></picture><div><span>{a.category} · {a.readingTime}</span><h3>{a.title}</h3><p>{a.dek}</p><b>Read research →</b></div></a>)}</div></section>
+}
+
+function ArticlesPage(){
+  usePageSeo({title:'Research Articles on Web Design, SEO & Growth | LG Growth Studio',description:'Long-form research from LG Growth Studio on website design, technical SEO, Core Web Vitals, AI search, accessibility, local SEO, security and growth.',image:articles[0].image,keywords:['SEO articles','web design research','growth marketing research','technical SEO']});
+  return <><FuturisticShell/><SiteHeader dark/><main className="articles-page"><section className="articles-hero black"><div className="eyebrow">LG Research Library</div><h1>Less noise.<br/><em>More useful answers.</em></h1><p>Original long-form research on websites, search, performance, accessibility, security and growth—written for people who need to make decisions, not impress an algorithm.</p><div className="article-topic-strip"><span>Web Design</span><span>SEO</span><span>Performance</span><span>AI Search</span><span>Growth</span></div></section><section className="article-index white">{articles.map((a,i)=><a className={`article-index-card ${i===0?'featured':''}`} href={`/articles/${a.slug}`} key={a.slug}><picture><source media="(max-width:720px)" srcSet={a.image.replace('.webp','-800.webp')}/><img src={a.image} alt={a.imageAlt} loading={i<2?'eager':'lazy'}/></picture><div><span>{String(i+1).padStart(2,'0')} · {a.category}</span><h2>{a.title}</h2><p>{a.dek}</p><footer><b>{a.readingTime}</b><em>Read article →</em></footer></div></a>)}</section></main><Footer/></>
+}
+
+function ArticlePage({article}){
+  const related=articles.filter(a=>a.slug!==article.slug).slice(0,3);
+  const schema={"@context":"https://schema.org","@graph":[{"@type":"Article","headline":article.title,"description":article.meta,"image":`${SITE_URL}${article.image}`,"datePublished":article.datePublished,"dateModified":article.datePublished,"author":{"@type":"Organization","name":"LG Growth Studio"},"publisher":{"@type":"Organization","name":"LG Growth Studio","url":SITE_URL},"mainEntityOfPage":`${SITE_URL}/articles/${article.slug}`,"keywords":[article.primaryKeyword,...article.keywords].join(', ')},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":SITE_URL},{"@type":"ListItem","position":2,"name":"Articles","item":`${SITE_URL}/articles`},{"@type":"ListItem","position":3,"name":article.title,"item":`${SITE_URL}/articles/${article.slug}`}]},{"@type":"FAQPage","mainEntity":article.faq.map(([q,a])=>({"@type":"Question","name":q,"acceptedAnswer":{"@type":"Answer","text":a}}))}]};
+  usePageSeo({title:`${article.shortTitle} | LG Growth Studio Research`,description:article.meta,image:article.image,schema,keywords:[article.primaryKeyword,...article.keywords]});
+  return <><SiteHeader dark/><main className="article-page"><article><header className="article-hero black"><a className="article-back" href="/articles">← Research library</a><div className="article-meta-top"><span>{article.category}</span><span>{article.readingTime}</span><time dateTime={article.datePublished}>Aug 8, 2026</time></div><h1>{article.title}</h1><p>{article.dek}</p><picture><source media="(max-width:720px)" srcSet={article.image.replace('.webp','-800.webp')}/><img src={article.image} alt={article.imageAlt}/></picture></header><div className="article-layout white"><aside className="article-toc"><span>In this article</span>{article.sections.map((s,i)=><a href={`#section-${i+1}`} key={s.heading}>{String(i+1).padStart(2,'0')} {s.heading}</a>)}</aside><div className="article-content"><p className="article-lede">{article.dek}</p>{article.sections.map((section,i)=><section id={`section-${i+1}`} key={section.heading}><span className="article-section-number">{String(i+1).padStart(2,'0')}</span><h2>{section.heading}</h2>{section.paragraphs.map((p,j)=><p key={j}>{p}</p>)}</section>)}<section className="article-faq"><div className="eyebrow">Questions</div><h2>Frequently asked</h2>{article.faq.map(([q,a])=><details key={q}><summary>{q}<span>+</span></summary><p>{a}</p></details>)}</section><section className="article-sources"><div className="eyebrow">Research sources</div><h2>References</h2><ol>{article.sources.map(src=><li key={src.url}><a href={src.url} target="_blank" rel="noreferrer">{src.label} ↗</a></li>)}</ol><p>Sources are provided for factual claims and further reading. Analysis and recommendations are original to LG Growth Studio.</p></section><aside className="article-conversion"><span>Apply the research</span><h2>See what this means for your website.</h2><p>Run the audit for a practical starting point, or send us the site if you want a human review of the highest-impact changes.</p><div><a className="button red" href="/audit">Run website audit</a><a className="button dark" href="/contact">Contact us</a></div></aside></div></div></article><section className="article-related black"><div className="eyebrow">Keep reading</div><h2>Related research</h2><div>{related.map(a=><a href={`/articles/${a.slug}`} key={a.slug}><span>{a.category}</span><h3>{a.shortTitle}</h3><b>Read →</b></a>)}</div></section></main><Footer/></>
+}
+
+function NotFoundPage(){
+  usePageSeo({title:'404 — Page Not Found | LG Growth Studio',description:'The page you requested could not be found.',noindex:true});
+  return <><SiteHeader dark/><main className="not-found-page black"><div className="nf-grid"/><div className="nf-orbit nf-a"/><div className="nf-orbit nf-b"/><div className="nf-route"><i/><i/><i/><i/><b/></div><section><span>404 · ROUTE LOST</span><h1>This page fell<br/><em>off the map.</em></h1><p>The address may have changed, the link may be old, or the page never existed.</p><div><a className="button red" href="/">Return home</a><a className="button line light" href="/articles">Read articles</a><a className="button line light" href="/audit">Run an audit</a></div></section></main></>
+}
+
+function Footer(){return <footer className="site-footer-simple"><img src="/lg-growth-studio-logo.png" alt="LG Growth Studio"/><span>Performance Marketing · Web Design · SEO · Paid Advertising · AI Automation</span><div><a href="/contact">Contact</a><a href="/audit">Audit</a><a href="/process">Process</a><a href="/reviews">Reviews</a><a href="/pricing">Pricing</a><a href="/articles">Articles</a></div></footer>}
 
 export default function App(){
   const path=window.location.pathname.replace(/\/+$/,'')||'/';
@@ -683,5 +687,8 @@ export default function App(){
   if(path==='/process')return <ProcessPage/>;
   if(path==='/pricing')return <PricingPage/>;
   if(path==='/build-website')return <BuildWebsitePage/>;
-  return <HomePage/>;
+  if(path==='/articles')return <ArticlesPage/>;
+  if(path.startsWith('/articles/')){const article=articleBySlug(path.split('/').pop());return article?<ArticlePage article={article}/>:<NotFoundPage/>;}
+  if(path==='/')return <HomePage/>;
+  return <NotFoundPage/>;
 }

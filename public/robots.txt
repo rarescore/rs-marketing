@@ -1,4 +1,5 @@
 User-agent: *
 Allow: /
 Disallow: /api/
-Sitemap: https://rsmarketing.com/sitemap.xml
+
+Sitemap: https://lggrowthstudio.com/sitemap.xml
