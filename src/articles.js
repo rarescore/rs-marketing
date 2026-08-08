@@ -9,7 +9,7 @@ export const articles = [
     meta:'Research shows people form visual impressions of websites almost instantly. Learn what that means for credibility, hierarchy, conversion and redesign decisions.',
     dek:'A famous usability study found that people can form stable judgments of a webpage’s visual appeal in about 50 milliseconds. The useful lesson is not “make it pretty.” It is to engineer the first screen so clarity, credibility and intent arrive before doubt.',
     image:'/article-images/first-impression.webp',
-    imageAlt:'Editorial visualization of a premium website interface being evaluated at high speed',
+    imageAlt:'Abstract premium website interface with red attention rings illustrating rapid first-impression judgment',
     datePublished:'2026-08-08',
     readingTime:'12 min read',
     sections:[
@@ -69,7 +69,7 @@ export const articles = [
     meta:'Publishing more content is not an SEO strategy. Learn how information architecture, internal links, service pages and people-first content create durable search visibility.',
     dek:'The fastest way to create a bloated website is to treat SEO as a publishing quota. Durable organic growth comes from a clear map of services, problems, locations, evidence and useful supporting content that search engines and people can both navigate.',
     image:'/article-images/seo-architecture.webp',
-    imageAlt:'Layered information architecture visualization showing connected search topics and website pages',
+    imageAlt:'Structured website architecture map with connected page groups showing clear SEO information hierarchy',
     datePublished:'2026-08-08', readingTime:'13 min read',
     sections:[
       {heading:'The content-volume fallacy',paragraphs:[
@@ -127,7 +127,7 @@ export const articles = [
     keywords:['LCP optimization','INP optimization','CLS','website speed SEO','website performance conversion'],
     meta:'A practical guide to Core Web Vitals, LCP, INP and CLS—and why performance failures make premium websites feel broken before users can appreciate the design.',
     dek:'Speed is not a separate technical score that developers worry about after launch. It is part of the product. Core Web Vitals turn three human experiences—waiting, responding and shifting—into measurable signals.',
-    image:'/article-images/core-web-vitals.webp', imageAlt:'High-performance digital interface represented by a glowing data engine', datePublished:'2026-08-08', readingTime:'12 min read',
+    image:'/article-images/core-web-vitals.webp', imageAlt:'Red performance gauge and interface diagnostics representing Core Web Vitals and website speed', datePublished:'2026-08-08', readingTime:'12 min read',
     sections:[
       {heading:'Core Web Vitals measure three different forms of frustration',paragraphs:[
         `Google’s Core Web Vitals currently focus on Largest Contentful Paint, Interaction to Next Paint and Cumulative Layout Shift. The recommended “good” thresholds are an LCP of 2.5 seconds or less, an INP under 200 milliseconds and a CLS of 0.1 or less, evaluated at the 75th percentile of real visits. Those numbers can sound abstract until they are translated back into behavior.`,
@@ -184,7 +184,7 @@ export const articles = [
     keywords:['AI Overviews SEO','AI Mode SEO','generative search optimization','SEO for AI search','Google AI Overviews'],
     meta:'Google says AI Overviews and AI Mode do not require a secret new optimization playbook. Learn what actually matters for AI search visibility and durable SEO.',
     dek:'AI Overviews and AI Mode changed how people explore complicated questions, but Google’s own guidance is unusually clear: there is no special schema, AI file or secret optimization requirement. The fundamentals became more important, not obsolete.',
-    image:'/article-images/ai-search.webp', imageAlt:'Abstract AI search interface on a luminous development workstation', datePublished:'2026-08-08', readingTime:'13 min read',
+    image:'/article-images/ai-search.webp', imageAlt:'Dark search interface with connected red signals illustrating AI search and modern SEO discovery', datePublished:'2026-08-08', readingTime:'13 min read',
     sections:[
       {heading:'The market invented a new acronym faster than Google invented new requirements',paragraphs:[
         `Whenever a major search interface changes, a new consulting category appears. “Generative engine optimization,” “answer engine optimization” and similar labels can be useful shorthand for discussing how content is discovered inside AI-assisted experiences. The danger comes when the label is used to imply a hidden technical checklist that bypasses normal search fundamentals.`,
@@ -241,7 +241,7 @@ export const articles = [
     keywords:['mobile-first indexing','responsive web design','mobile SEO','mobile conversion optimization','mobile UX'],
     meta:'Google uses the mobile version of your site for indexing. Learn how mobile-first design changes SEO, conversion, content hierarchy, forms and performance.',
     dek:'Responsive CSS is not enough. Google indexes the mobile version of your content, and customers increasingly experience the business through a narrow screen, variable network and touch interface. Mobile needs its own information choreography.',
-    image:'/article-images/mobile-first.webp', imageAlt:'Modern smartphone displaying a responsive business interface on a desk', datePublished:'2026-08-08', readingTime:'12 min read',
+    image:'/article-images/mobile-first.webp', imageAlt:'Premium mobile interface on a vivid red field illustrating mobile-first website design', datePublished:'2026-08-08', readingTime:'12 min read',
     sections:[
       {heading:'Mobile-first indexing made the phone version authoritative',paragraphs:[
         `Google’s mobile-first indexing documentation is unambiguous: Google primarily uses the mobile version of a site’s content for indexing and ranking. Responsive design is recommended because it serves the same HTML and URL while adapting presentation to screen size. The strategic implication is larger than a technical crawler setting. If important content disappears on mobile, that is not simply a design compromise; it may also reduce what search systems can reliably understand.`,
@@ -298,7 +298,7 @@ export const articles = [
     keywords:['WCAG 2.2','accessible website design','web accessibility audit','inclusive web design','accessibility SEO'],
     meta:'WebAIM found detectable WCAG failures on most major homepages. Learn why accessibility improves usability, resilience and the quality of modern website design.',
     dek:'Accessibility is often treated as a legal appendix or an automated score. In practice, it is a design discipline that exposes weak contrast, unlabeled forms, inaccessible interactions and structural mistakes that also frustrate users without disabilities.',
-    image:'/article-images/accessibility.webp', imageAlt:'Inclusive digital collaboration represented by hands interacting with a laptop interface', datePublished:'2026-08-08', readingTime:'13 min read',
+    image:'/article-images/accessibility.webp', imageAlt:'High-contrast interface and focus indicators illustrating accessible web design and usability', datePublished:'2026-08-08', readingTime:'13 min read',
     sections:[
       {heading:'The web is still failing basic accessibility at enormous scale',paragraphs:[
         `The WebAIM Million provides one of the clearest quantitative snapshots of web accessibility. In its 2025 analysis of one million popular homepages, WebAIM detected more than 50 million accessibility errors—about 51 per page on average—and 94.8 percent of homepages had detectable WCAG 2 failures. Automated testing cannot detect every accessibility problem, so the absence of an error is not proof of conformance. The study therefore describes a floor, not a complete diagnosis.`,
@@ -355,7 +355,7 @@ export const articles = [
     keywords:['website security SEO','hacked site recovery','Search Console security issues','malware website','SEO spam hack'],
     meta:'A hacked website can create spam pages, malware warnings and search losses. Learn how security, Search Console, cleanup and SEO recovery fit together.',
     dek:'Security failures are not isolated IT events. Attackers can inject pages, links, scripts and redirects that change what customers and search engines see. Recovery requires cleaning the compromise, closing the entry point and rebuilding search trust.',
-    image:'/article-images/hacked-site.webp', imageAlt:'Cybersecurity-focused development workstation with warning-style red illumination', datePublished:'2026-08-08', readingTime:'14 min read',
+    image:'/article-images/hacked-site.webp', imageAlt:'Security shield and recovery signal protecting a compromised website environment', datePublished:'2026-08-08', readingTime:'14 min read',
     sections:[
       {heading:'A website hack can create an invisible second website',paragraphs:[
         `Business owners often imagine a hack as a defaced homepage. Many compromises are quieter. Attackers may inject thousands of spam pages, create hidden links, add malicious JavaScript, redirect only mobile visitors or show different content to search crawlers. The public homepage can look normal while the domain accumulates content the owner never published.`,
@@ -413,7 +413,7 @@ export const articles = [
     keywords:['Google Business Profile optimization','local search ranking','local business website','local SEO reviews','service area SEO'],
     meta:'Google says local results depend mainly on relevance, distance and prominence. Learn how websites, Business Profiles, reviews and operations create local growth.',
     dek:'Local visibility is often sold as a list of profile tweaks. Google describes a more grounded system: relevance, distance and prominence. Your website, reviews, business information and real-world reputation all help determine whether the business makes sense for the search.',
-    image:'/article-images/local-seo.webp', imageAlt:'Connected local business storefronts visualizing local search relevance and prominence', datePublished:'2026-08-08', readingTime:'12 min read',
+    image:'/article-images/local-seo.webp', imageAlt:'Dark geographic network with location signals illustrating local SEO relevance and prominence', datePublished:'2026-08-08', readingTime:'12 min read',
     sections:[
       {heading:'Google’s local ranking framework is simpler than most sales pitches',paragraphs:[
         `Google’s Business Profile guidance says local results are mainly based on relevance, distance and prominence. Relevance describes how well a business matches the search. Distance reflects proximity to the searcher or inferred location. Prominence reflects how well-known the business is, with signals that can include links, reviews and other information.`,
@@ -469,7 +469,7 @@ export const articles = [
     keywords:['conversion optimization','qualified website traffic','lead generation funnel','growth marketing metrics','website conversion rate'],
     meta:'Traffic without intent or conversion can waste budget. Learn how to measure qualified demand, friction, lead handling and revenue instead of chasing sessions.',
     dek:'A traffic chart can rise while the business gets worse leads, slower follow-up and lower margins. Growth is a chain of probabilities. The useful question is not how many people arrived, but how many qualified people reached a clear decision and what happened next.',
-    image:'/article-images/qualified-growth.webp', imageAlt:'Business operator analyzing a growth funnel and qualified customer actions', datePublished:'2026-08-08', readingTime:'13 min read',
+    image:'/article-images/qualified-growth.webp', imageAlt:'Traffic funnel filtering many visits into a focused qualified growth signal', datePublished:'2026-08-08', readingTime:'13 min read',
     sections:[
       {heading:'Traffic is an input, not an outcome',paragraphs:[
         `Pageviews are easy to celebrate because they move quickly and appear objective. But traffic mixes many intents: existing customers, job seekers, researchers, bots, students, competitors, low-intent readers and high-intent buyers. A campaign can double sessions while reducing the percentage of visitors who can actually purchase.`,
@@ -526,7 +526,7 @@ export const articles = [
     keywords:['schema markup SEO','JSON-LD','rich results','technical SEO schema','Article structured data'],
     meta:'Structured data is not a ranking shortcut. Learn what schema markup actually does, when rich results are possible, and how to implement JSON-LD without creating false signals.',
     dek:'Schema markup is useful because it makes explicit relationships that already exist on the page. It can help search engines understand eligible content and support richer search experiences. It cannot manufacture authority, expertise or rankings that the visible page has not earned.',
-    image:'/article-images/structured-data.webp', imageAlt:'Technical structured-data graph visualized as connected schema nodes', datePublished:'2026-08-08', readingTime:'12 min read',
+    image:'/article-images/structured-data.webp', imageAlt:'Connected content cards and data relationships illustrating structured data and schema markup', datePublished:'2026-08-08', readingTime:'12 min read',
     sections:[
       {heading:'Structured data is a vocabulary, not a ranking spell',paragraphs:[
         `Structured data translates page information into a machine-readable vocabulary. Using schema.org terms, a site can explicitly identify an Organization, Article, BreadcrumbList, Product, LocalBusiness and many other entity types. Google supports certain structured-data types for search features and recommends JSON-LD for many implementations.`,
@@ -583,7 +583,7 @@ export const articles = [
     keywords:['website redesign checklist','repair or rebuild website','website modernization','technical debt website','website audit'],
     meta:'Should you redesign your website or keep patching it? Use a practical framework covering performance, security, mobile UX, SEO, accessibility and maintainability.',
     dek:'A redesign is not justified because a site is five years old. It is justified when the system accumulates enough structural debt that fixing one problem repeatedly creates another. This framework separates cosmetic discomfort from genuine rebuild signals.',
-    image:'/article-images/redesign-decision.webp', imageAlt:'Website system being reconstructed from layered interface components', datePublished:'2026-08-08', readingTime:'13 min read',
+    image:'/article-images/redesign-decision.webp', imageAlt:'Side-by-side damaged and rebuilt website interfaces illustrating the decision to repair or redesign', datePublished:'2026-08-08', readingTime:'13 min read',
     sections:[
       {heading:'Website age is a weak metric by itself',paragraphs:[
         `A website does not expire on a calendar. A six-year-old static site with a small codebase, strong content and consistent maintenance can outperform a one-year-old site loaded with unnecessary plugins and oversized media. “Your website is old” is therefore a weak sales argument.`,

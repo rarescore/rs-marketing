@@ -58,7 +58,7 @@ export default function AccordionGallery({items,defaultIndex=2}){
       >
         <div className="plan-number">0{i+1}</div>
         {item.recommended&&<span className="recommended">Recommended</span>}
-        <span className="plan-collapsed-label">{item.label}</span>
+        <span className="plan-collapsed-label">{item.shortLabel||item.label}</span>
         <div id={`plan-detail-${i}`} className="plan-copy" aria-hidden={!selected}>
           {item.eyebrow&&<span className="plan-eyebrow">{item.eyebrow}</span>}
           <p>{item.label}</p>
