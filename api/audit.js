@@ -117,6 +117,7 @@ export default async function handler(req,res){
     }
     const weight={high:0,medium:1,low:2};
     const issues=[...perfIssues,...htmlResult.issues].sort((a,b)=>weight[a.severity]-weight[b.severity]).slice(0,12);
-    return res.status(200).json({url:finalUrl,score,categories,issues,metrics:lighthouse?.metrics||null,checks:htmlResult.checks,source:lighthouse?'Google PageSpeed Insights + LG technical analysis':'LG technical analysis',summary:`Real public-page analysis completed in ${((Date.now()-started)/1000).toFixed(1)} seconds${lighthouse?' using Google Lighthouse mobile data':''}.`});
+    const weights=lighthouse?{Performance:.28,SEO:.22,Accessibility:.12,'Best practices':.10,Technical:.16,Trust:.07,Media:.05}:{Technical:.55,Trust:.25,Media:.20};
+    return res.status(200).json({url:finalUrl,score,categories,weights,issues,metrics:lighthouse?.metrics||null,checks:htmlResult.checks,source:lighthouse?'Google PageSpeed Insights + LG technical analysis':'LG technical analysis',summary:`Real public-page analysis completed in ${((Date.now()-started)/1000).toFixed(1)} seconds${lighthouse?' using Google Lighthouse mobile data':''}.`});
   }catch(error){return res.status(422).json({error:error.message||'We could not audit that website.'})}
 }
