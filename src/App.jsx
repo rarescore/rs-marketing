@@ -169,26 +169,45 @@ function Process(){
 
 function ReviewRail(){return <div className="review-rail" aria-label="Review layout preview"><div className="review-track">{[...featuredReviews,...featuredReviews].map((r,i)=><article key={`${r.name}-${i}`}><div className="stars">★★★★★</div><p>“{r.text}”</p><strong>{r.name}</strong><small>{r.service}</small></article>)}</div></div>}
 
-function ReviewOrbit(){
-  const orbitReviews=featuredReviews.slice(0,8);
-  return <div className="review-orbit" aria-label="Interactive featured review showcase">
-    <div className="review-orbit-core"><span>CLIENT<br/>PROOF</span></div>
-    <div className="review-orbit-ring">{orbitReviews.map((r,i)=><article className="review-orbit-card" style={{'--i':i}} key={`${r.name}-${i}`}><div className="stars">★★★★★</div><p>“{r.text}”</p><strong>{r.name}</strong><small>{r.service}</small></article>)}</div>
+function InfiniteReviewMenu(){
+  const items=[...featuredReviews,...featuredReviews];
+  const wrap=useRef(null);const rot=useRef(0);const target=useRef(0);const dragging=useRef(false);const lastX=useRef(0);const velocity=useRef(.035);const raf=useRef(0);const [,paint]=useState(0);
+  useEffect(()=>{
+    const tick=()=>{if(!dragging.current){target.current+=velocity.current;velocity.current*=.992;if(Math.abs(velocity.current)<.018)velocity.current=.018}rot.current+=(target.current-rot.current)*.085;paint(v=>(v+1)%100000);raf.current=requestAnimationFrame(tick)};
+    raf.current=requestAnimationFrame(tick);return()=>cancelAnimationFrame(raf.current)
+  },[]);
+  const onDown=e=>{dragging.current=true;lastX.current=e.clientX;velocity.current=0;e.currentTarget.setPointerCapture?.(e.pointerId)};
+  const onMove=e=>{if(!dragging.current)return;const dx=e.clientX-lastX.current;lastX.current=e.clientX;target.current+=dx*.16;velocity.current=dx*.025};
+  const onUp=()=>{dragging.current=false};
+  const onWheel=e=>{target.current+=e.deltaY*.025;velocity.current=e.deltaY*.004};
+  const count=items.length;const step=360/count;
+  return <div className="infinite-review-menu" ref={wrap} onPointerDown={onDown} onPointerMove={onMove} onPointerUp={onUp} onPointerCancel={onUp} onWheel={onWheel} aria-label="Drag through featured reviews">
+    <div className="review-hud"><span>DRAG / SCROLL</span><i/><span>FEATURED REVIEWS</span></div>
+    <div className="review-cylinder">
+      {items.map((r,i)=>{const a=(i*step+rot.current)%360;const rad=a*Math.PI/180;const depth=(Math.cos(rad)+1)/2;const x=Math.sin(rad)*460;const z=Math.cos(rad)*360;const opacity=.18+depth*.82;const scale=.72+depth*.28;return <article className="infinite-review-card" key={`${r.name}-${i}`} style={{transform:`translate3d(calc(-50% + ${x}px),-50%,${z}px) rotateY(${-a}deg) scale(${scale})`,opacity,zIndex:Math.round(depth*100)}}>
+        <div className="review-card-top"><span className="stars">★★★★★</span><small>{String(i%featuredReviews.length+1).padStart(2,'0')}</small></div><p>“{r.text}”</p><footer><div><strong>{r.name}</strong><small>{r.service}</small></div><a href="/reviews">Read more ↗</a></footer>
+      </article>})}
+    </div>
+    <div className="review-center-mark" aria-hidden="true"><i/><span>CLIENT<br/>PROOF</span><i/></div>
   </div>
 }
 
 function BuiltDifferently(){return <section className="built-different" aria-label="LG capabilities showcase"><div className="built-stage"><div className="built-grid"/><span className="built-word">Web Design</span><span className="built-word">SEO</span><span className="built-word">Paid Growth</span><span className="built-word">AI Automation</span><span className="built-word">Development</span><div className="built-core"><div className="eyebrow">Built differently</div><h2>Make it<br/><em>felt.</em></h2></div></div></section>}
 
-function FuturisticShell(){
+function ClickSpark(){
+  const canvas=useRef(null);const sparks=useRef([]);const raf=useRef(0);
   useEffect(()=>{
-    const move=e=>{document.documentElement.style.setProperty('--mx',`${e.clientX}px`);document.documentElement.style.setProperty('--my',`${e.clientY}px`)};
-    const over=e=>{if(e.target.closest('a,button,input,summary,[role=button]'))document.body.classList.add('cursor-hot')};
-    const out=e=>{if(e.target.closest('a,button,input,summary,[role=button]'))document.body.classList.remove('cursor-hot')};
-    addEventListener('pointermove',move,{passive:true});document.addEventListener('pointerover',over);document.addEventListener('pointerout',out);
-    return()=>{removeEventListener('pointermove',move);document.removeEventListener('pointerover',over);document.removeEventListener('pointerout',out)};
+    const c=canvas.current,ctx=c.getContext('2d');
+    const resize=()=>{const d=Math.min(devicePixelRatio||1,2);c.width=innerWidth*d;c.height=innerHeight*d;c.style.width=`${innerWidth}px`;c.style.height=`${innerHeight}px`;ctx.setTransform(d,0,0,d,0,0)};resize();addEventListener('resize',resize);
+    const click=e=>{const count=8;for(let i=0;i<count;i++){const a=i/count*Math.PI*2; sparks.current.push({x:e.clientX,y:e.clientY,a,born:performance.now(),len:7+Math.random()*7,speed:42+Math.random()*34})}};
+    addEventListener('pointerdown',click,{passive:true});
+    const draw=t=>{ctx.clearRect(0,0,innerWidth,innerHeight);sparks.current=sparks.current.filter(s=>t-s.born<420);ctx.lineCap='round';ctx.lineWidth=1.6;ctx.strokeStyle='#ff1a28';for(const s of sparks.current){const p=(t-s.born)/420;const d=s.speed*p;const fade=1-p;const x=s.x+Math.cos(s.a)*d,y=s.y+Math.sin(s.a)*d;ctx.globalAlpha=fade;ctx.beginPath();ctx.moveTo(x-Math.cos(s.a)*s.len*.5,y-Math.sin(s.a)*s.len*.5);ctx.lineTo(x+Math.cos(s.a)*s.len*.5,y+Math.sin(s.a)*s.len*.5);ctx.stroke()}ctx.globalAlpha=1;raf.current=requestAnimationFrame(draw)};raf.current=requestAnimationFrame(draw);
+    return()=>{cancelAnimationFrame(raf.current);removeEventListener('resize',resize);removeEventListener('pointerdown',click)}
   },[]);
-  return <div className="future-cursor" aria-hidden="true"/>;
+  return <canvas ref={canvas} className="click-spark-canvas" aria-hidden="true"/>;
 }
+
+function FuturisticShell(){return <ClickSpark/>}
 
 const activityItems=[
   {icon:'↗',title:'A•••••• Plumbing ran a website audit',meta:'Los Angeles · recent',demo:true},
@@ -204,7 +223,7 @@ function ActivityPopups(){
 
 function Results(){return <section id="results" className="section results black">
   <div className="results-heading"><div><div className="eyebrow">Review experience</div><h2>Proof should be easy to find.</h2><p className="section-intro">Featured feedback here. The full review library gets its own page.</p></div><div className="review-score"><strong>200</strong><span>review slots</span><small>Development content — replace with verified client reviews before launch.</small></div></div>
-  <ReviewOrbit/>
+  <InfiniteReviewMenu/>
   <a className="button line light" href="/reviews">Open the full review page</a>
 </section>}
 
@@ -299,7 +318,7 @@ function AuditResults({result,tone}){
 
 function ReviewsPage(){
   const params=new URLSearchParams(window.location.search);const requested=Math.max(1,Number(params.get('page'))||1);const perPage=20;const pages=Math.ceil(generatedReviews.length/perPage);const page=Math.min(requested,pages);const start=(page-1)*perPage;const list=generatedReviews.slice(start,start+perPage);
-  return <><FuturisticShell/><ActivityPopups/><SiteHeader dark/><main className="reviews-page"><section className="reviews-hero black"><div className="eyebrow">Review experience preview</div><h1>200 review slots.<br/><em>20 at a time.</em></h1><p>This page is wired for 200 reviews with clean pagination. The current text is sample development content and must be replaced with verified customer reviews before the site is published.</p><ReviewOrbit/></section><section className="review-feature white"><div><span className="stars">★★★★★</span><blockquote>“Your strongest verified customer story belongs here — larger, calmer, and easy to read.”</blockquote></div><small>Featured review position</small></section><section className="review-page-grid white">{list.map(r=><article key={r.id}><div className="stars">★★★★★</div><p>“{r.text}”</p><footer><div><strong>{r.name}</strong><small>{r.service}</small></div><span>{r.date}</span></footer></article>)}</section><nav className="pagination" aria-label="Review pages">{page>1&&<a href={`/reviews?page=${page-1}`}>← Previous</a>}<span>Page {page} of {pages}</span>{page<pages&&<a href={`/reviews?page=${page+1}`}>Next →</a>}</nav></main><Footer/></>
+  return <><FuturisticShell/><ActivityPopups/><SiteHeader dark/><main className="reviews-page"><section className="reviews-hero black"><div className="eyebrow">Review experience preview</div><h1>200 review slots.<br/><em>20 at a time.</em></h1><p>This page is wired for 200 reviews with clean pagination. The current text is sample development content and must be replaced with verified customer reviews before the site is published.</p><InfiniteReviewMenu/></section><section className="review-feature white"><div><span className="stars">★★★★★</span><blockquote>“Your strongest verified customer story belongs here — larger, calmer, and easy to read.”</blockquote></div><small>Featured review position</small></section><section className="review-page-grid white">{list.map(r=><article key={r.id}><div className="stars">★★★★★</div><p>“{r.text}”</p><footer><div><strong>{r.name}</strong><small>{r.service}</small></div><span>{r.date}</span></footer></article>)}</section><nav className="pagination" aria-label="Review pages">{page>1&&<a href={`/reviews?page=${page-1}`}>← Previous</a>}<span>Page {page} of {pages}</span>{page<pages&&<a href={`/reviews?page=${page+1}`}>Next →</a>}</nav></main><Footer/></>
 }
 
 const buildScreens=[
