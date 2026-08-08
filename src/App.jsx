@@ -66,15 +66,15 @@ function scoreTone(score){if(score<40)return ['critical','Critical'];if(score<65
 
 function SiteHeader({dark=false}){
   const[menuOpen,setMenuOpen]=useState(false);
-  const path=window.location.pathname.replace(/\/+$/,'')||'/';
-  const links=[['/contact','Contact'],['/audit','Audit'],['/process','Process'],['/reviews','Reviews'],['/pricing','Pricing']];
+  const current=typeof window!=='undefined'?(window.location.pathname.replace(/\/+$/,'')||'/'):'/';
+  const navClass=href=>current===href?'current':'';
   useEffect(()=>{document.body.style.overflow=menuOpen?'hidden':'';return()=>{document.body.style.overflow=''}},[menuOpen]);
   return <header className={dark?'solid-header':''}>
     <a className="brand" href="/"><img src="/lg-growth-studio-logo.png" alt="LG Growth Studio"/></a>
-    <nav>{links.map(([href,label])=><a key={href} href={href} className={path===href?'active':''} aria-current={path===href?'page':undefined}>{label}</a>)}</nav>
-    <a className="top-cta" href="/build-website">Start</a>
+    <nav><a className={navClass('/contact')} href="/contact">Contact</a><a className={navClass('/audit')} href="/audit">Audit</a><a className={navClass('/process')} href="/process">Process</a><a className={navClass('/reviews')} href="/reviews">Reviews</a><a className={navClass('/pricing')} href="/pricing">Pricing</a></nav>
+    <a className={`top-cta ${navClass('/build-website')}`} href="/build-website">Start</a>
     <button className="menu-toggle" aria-expanded={menuOpen} aria-label={menuOpen?'Close menu':'Open menu'} onClick={()=>setMenuOpen(v=>!v)}><span>{menuOpen?'Close':'Menu'}</span><i/><i/></button>
-    <div className={`mobile-menu ${menuOpen?'open':''}`}>{links.map(([href,label],i)=><a key={href} href={href} className={path===href?'active':''}><span>0{i+1}</span>{label}</a>)}<a href="/build-website"><span>06</span>Start a project</a></div>
+    <div className={`mobile-menu ${menuOpen?'open':''}`}><a className={navClass('/contact')} href="/contact"><span>01</span>Contact</a><a className={navClass('/audit')} href="/audit"><span>02</span>Audit</a><a className={navClass('/process')} href="/process"><span>03</span>Process</a><a className={navClass('/reviews')} href="/reviews"><span>04</span>Reviews</a><a className={navClass('/pricing')} href="/pricing"><span>05</span>Pricing</a><a className={navClass('/build-website')} href="/build-website"><span>06</span>Start a project</a></div>
   </header>
 }
 
@@ -376,63 +376,64 @@ function InfiniteReviewMenu(){
 
 function BuiltDifferently(){
   const ref=useRef(null);
-  const pathRef=useRef(null);
-  const signalRef=useRef(null);
   const[active,setActive]=useState(0);
   const stages=[
-    ['Website','Make the offer clear','The page gives people a fast, credible reason to stay.'],
-    ['Search','Create discovery','Structure, service pages and local signals give Google something useful to understand.'],
-    ['Content','Build proof','Useful answers, examples and proof reduce hesitation before the call.'],
-    ['Paid Growth','Create demand','Ads send the right traffic into pages built to convert it.'],
-    ['Automation','Keep momentum','Follow-up, tracking and reporting stop good leads from disappearing.']
+    {label:'Website',kicker:'THE FOUNDATION',title:'Make the offer obvious.',body:'The website earns the first impression, explains the offer and gives every campaign somewhere useful to land.'},
+    {label:'Search',kicker:'DISCOVERY',title:'Be present when intent already exists.',body:'Search structure connects services, locations and useful answers so the business can appear for more than its name.'},
+    {label:'Content',kicker:'PROOF',title:'Give people a reason to believe.',body:'Pages, case studies, reviews and useful resources turn attention into confidence before the first conversation.'},
+    {label:'Paid Growth',kicker:'DEMAND',title:'Put the right offer in front of the right people.',body:'Paid media creates controlled reach, then landing pages and tracking show which messages deserve more budget.'},
+    {label:'Automation',kicker:'FOLLOW-UP',title:'Keep momentum after the click.',body:'Forms, CRM routing and automation reduce dropped leads and keep the next action moving without adding friction.'}
   ];
   useEffect(()=>{
-    const el=ref.current,path=pathRef.current,signal=signalRef.current;if(!el||!path||!signal)return;
-    let raf=0;const len=path.getTotalLength();path.style.strokeDasharray=String(len);path.style.strokeDashoffset=String(len);
+    const el=ref.current;if(!el)return;
+    let raf=0;
     const update=()=>{
       raf=0;
       const r=el.getBoundingClientRect();
       const travel=Math.max(1,r.height-innerHeight);
       const p=Math.max(0,Math.min(1,-r.top/travel));
-      const drawn=len*p;
-      path.style.strokeDashoffset=String(len-drawn);
-      const point=path.getPointAtLength(drawn);
-      signal.setAttribute('cx',String(point.x));signal.setAttribute('cy',String(point.y));
-      el.style.setProperty('--system-p',String(p));
+      el.style.setProperty('--relay-p',String(p));
       const next=Math.min(stages.length-1,Math.floor(Math.min(.999,p)*stages.length));
       setActive(v=>v===next?v:next);
     };
     const onScroll=()=>{if(!raf)raf=requestAnimationFrame(update)};
-    update();addEventListener('scroll',onScroll,{passive:true});addEventListener('resize',onScroll,{passive:true});
+    update();
+    addEventListener('scroll',onScroll,{passive:true});
+    addEventListener('resize',onScroll,{passive:true});
     return()=>{cancelAnimationFrame(raf);removeEventListener('scroll',onScroll);removeEventListener('resize',onScroll)};
   },[]);
-  return <section ref={ref} className="system-story" aria-label="Connected growth system">
-    <div className="system-story-sticky">
-      <div className="system-story-copy">
-        <div className="eyebrow">Connected growth</div>
-        <h2>Nothing works <em>alone.</em></h2>
-        <p>A website can look great and still underperform. The strongest systems connect discovery, proof, conversion and follow-up so each part makes the next one stronger.</p>
-        <a href="/process" className="system-story-link">See the full process →</a>
+  const current=stages[active];
+  return <section ref={ref} className="system-relay white" aria-label="Connected growth system">
+    <div className="system-relay-sticky">
+      <div className="system-relay-head">
+        <div><div className="eyebrow">The growth system</div><h2>Nothing works <em>alone.</em></h2></div>
+        <p>A website can look great and still underperform. Search can create traffic and still waste it. The advantage comes from making the pieces reinforce each other.</p>
       </div>
-      <div className="system-story-board">
-        <div className="system-story-board-top"><span>LIVE SIGNAL MAP</span><b>0{active+1} / 05</b></div>
-        <svg className="system-story-map" viewBox="0 0 1000 620" role="img" aria-label="Five connected marketing stages">
-          <path className="system-story-base" d="M130 120 H500 C620 120 670 175 670 255 V320 C670 392 725 430 820 430 H885 M885 430 C920 430 935 455 920 485 C905 515 865 525 820 525 H500 C365 525 315 470 315 375 V315 C315 235 265 205 165 205 H130"/>
-          <path ref={pathRef} className="system-story-live" d="M130 120 H500 C620 120 670 175 670 255 V320 C670 392 725 430 820 430 H885 M885 430 C920 430 935 455 920 485 C905 515 865 525 820 525 H500 C365 525 315 470 315 375 V315 C315 235 265 205 165 205 H130"/>
-          <circle ref={signalRef} className="system-story-signal" cx="130" cy="120" r="8"/>
-        </svg>
-        <div className="system-story-nodes">
-          {stages.map(([title],i)=><div className={`system-story-node node-${i} ${active===i?'active':''}`} key={title}><span>0{i+1}</span><strong>{title}</strong></div>)}
+      <div className="relay-stage">
+        <div className="relay-index">0{active+1}</div>
+        <div className="relay-copy" key={current.label}>
+          <span>{current.kicker}</span>
+          <h3>{current.title}</h3>
+          <p>{current.body}</p>
         </div>
-        <div className="system-story-focus" key={active}>
-          <span>0{active+1}</span>
-          <div><strong>{stages[active][1]}</strong><p>{stages[active][2]}</p></div>
+        <div className="relay-visual" aria-hidden="true">
+          <div className="relay-rail"><i/><b/></div>
+          <div className="relay-wave"><i/><i/><i/><i/><i/><i/></div>
         </div>
       </div>
+      <div className="relay-nav" aria-label="Growth system stages">
+        {stages.map((stage,i)=><button key={stage.label} className={active===i?'active':''} onClick={()=>{
+          const el=ref.current;if(!el)return;
+          const travel=Math.max(1,el.offsetHeight-innerHeight);
+          const start=window.scrollY+el.getBoundingClientRect().top;
+          const top=start+(i/(stages.length-1))*travel;
+          window.scrollTo({top,behavior:'smooth'});
+        }}><span>0{i+1}</span><strong>{stage.label}</strong></button>)}
+      </div>
+      <a className="relay-process-link" href="/process">See the full process →</a>
     </div>
   </section>
 }
-
 function ClickSpark(){
   const canvas=useRef(null);const sparks=useRef([]);const raf=useRef(0);const running=useRef(false);
   useEffect(()=>{
