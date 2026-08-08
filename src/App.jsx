@@ -66,13 +66,15 @@ function scoreTone(score){if(score<40)return ['critical','Critical'];if(score<65
 
 function SiteHeader({dark=false}){
   const[menuOpen,setMenuOpen]=useState(false);
+  const path=window.location.pathname.replace(/\/+$/,'')||'/';
+  const links=[['/contact','Contact'],['/audit','Audit'],['/process','Process'],['/reviews','Reviews'],['/pricing','Pricing']];
   useEffect(()=>{document.body.style.overflow=menuOpen?'hidden':'';return()=>{document.body.style.overflow=''}},[menuOpen]);
   return <header className={dark?'solid-header':''}>
     <a className="brand" href="/"><img src="/lg-growth-studio-logo.png" alt="LG Growth Studio"/></a>
-    <nav><a href="/contact">Contact</a><a href="/audit">Audit</a><a href="/process">Process</a><a href="/reviews">Reviews</a><a href="/pricing">Pricing</a></nav>
+    <nav>{links.map(([href,label])=><a key={href} href={href} className={path===href?'active':''} aria-current={path===href?'page':undefined}>{label}</a>)}</nav>
     <a className="top-cta" href="/build-website">Start</a>
     <button className="menu-toggle" aria-expanded={menuOpen} aria-label={menuOpen?'Close menu':'Open menu'} onClick={()=>setMenuOpen(v=>!v)}><span>{menuOpen?'Close':'Menu'}</span><i/><i/></button>
-    <div className={`mobile-menu ${menuOpen?'open':''}`}><a href="/contact"><span>01</span>Contact</a><a href="/audit"><span>02</span>Audit</a><a href="/process"><span>03</span>Process</a><a href="/reviews"><span>04</span>Reviews</a><a href="/pricing"><span>05</span>Pricing</a><a href="/build-website"><span>06</span>Start a project</a></div>
+    <div className={`mobile-menu ${menuOpen?'open':''}`}>{links.map(([href,label],i)=><a key={href} href={href} className={path===href?'active':''}><span>0{i+1}</span>{label}</a>)}<a href="/build-website"><span>06</span>Start a project</a></div>
   </header>
 }
 
@@ -374,25 +376,59 @@ function InfiniteReviewMenu(){
 
 function BuiltDifferently(){
   const ref=useRef(null);
+  const pathRef=useRef(null);
+  const signalRef=useRef(null);
+  const[active,setActive]=useState(0);
+  const stages=[
+    ['Website','Make the offer clear','The page gives people a fast, credible reason to stay.'],
+    ['Search','Create discovery','Structure, service pages and local signals give Google something useful to understand.'],
+    ['Content','Build proof','Useful answers, examples and proof reduce hesitation before the call.'],
+    ['Paid Growth','Create demand','Ads send the right traffic into pages built to convert it.'],
+    ['Automation','Keep momentum','Follow-up, tracking and reporting stop good leads from disappearing.']
+  ];
   useEffect(()=>{
-    const el=ref.current;if(!el)return;
-    const move=e=>{const r=el.getBoundingClientRect();const x=(e.clientX-r.left)/r.width-.5;const y=(e.clientY-r.top)/r.height-.5;el.style.setProperty('--sys-x',`${50+x*9}%`);el.style.setProperty('--sys-y',`${50+y*9}%`);el.style.setProperty('--sys-rx',`${-y*3.5}deg`);el.style.setProperty('--sys-ry',`${x*4.5}deg`)};
-    const leave=()=>{el.style.setProperty('--sys-x','50%');el.style.setProperty('--sys-y','50%');el.style.setProperty('--sys-rx','0deg');el.style.setProperty('--sys-ry','0deg')};
-    const io=new IntersectionObserver(([entry])=>el.classList.toggle('in-view',entry.isIntersecting),{threshold:.28});io.observe(el);el.addEventListener('pointermove',move);el.addEventListener('pointerleave',leave);
-    return()=>{io.disconnect();el.removeEventListener('pointermove',move);el.removeEventListener('pointerleave',leave)};
+    const el=ref.current,path=pathRef.current,signal=signalRef.current;if(!el||!path||!signal)return;
+    let raf=0;const len=path.getTotalLength();path.style.strokeDasharray=String(len);path.style.strokeDashoffset=String(len);
+    const update=()=>{
+      raf=0;
+      const r=el.getBoundingClientRect();
+      const travel=Math.max(1,r.height-innerHeight);
+      const p=Math.max(0,Math.min(1,-r.top/travel));
+      const drawn=len*p;
+      path.style.strokeDashoffset=String(len-drawn);
+      const point=path.getPointAtLength(drawn);
+      signal.setAttribute('cx',String(point.x));signal.setAttribute('cy',String(point.y));
+      el.style.setProperty('--system-p',String(p));
+      const next=Math.min(stages.length-1,Math.floor(Math.min(.999,p)*stages.length));
+      setActive(v=>v===next?v:next);
+    };
+    const onScroll=()=>{if(!raf)raf=requestAnimationFrame(update)};
+    update();addEventListener('scroll',onScroll,{passive:true});addEventListener('resize',onScroll,{passive:true});
+    return()=>{cancelAnimationFrame(raf);removeEventListener('scroll',onScroll);removeEventListener('resize',onScroll)};
   },[]);
-  const nodes=[['Website','site'],['Search','search'],['Paid Growth','ads'],['Content','content'],['Automation','automation']];
-  return <section ref={ref} className="built-different system-section system-section-v2" aria-label="Connected growth system">
-    <div className="system-glow"/>
-    <div className="system-v2-head">
-      <div><div className="eyebrow">Built as one system</div><h2>Nothing works <em>alone.</em></h2></div>
-      <p>A strong website makes the offer clear. Search creates discovery. Paid media creates demand. Content builds proof. Automation keeps the follow-up moving.</p>
-    </div>
-    <div className="system-kicker"><span>CONNECTED GROWTH</span><i/><span>05 WORKING PARTS</span></div>
-    <div className="system-stage system-stage-v2">
-      <svg className="system-lines system-lines-v2" viewBox="0 0 1000 620" preserveAspectRatio="none" aria-hidden="true"><path d="M500 310 L180 130"/><path d="M500 310 L820 120"/><path d="M500 310 L875 400"/><path d="M500 310 L500 565"/><path d="M500 310 L125 420"/><circle cx="500" cy="310" r="200"/><circle cx="500" cy="310" r="274"/></svg>
-      <div className="system-center-pulse" aria-hidden="true"><i/><i/><i/></div>
-      {nodes.map(([label,key],i)=><div className={`system-node node-${key}`} key={key}><span>0{i+1}</span><strong>{label}</strong><small>{['Convert attention','Build discovery','Capture demand','Create proof','Remove friction'][i]}</small></div>)}
+  return <section ref={ref} className="system-story" aria-label="Connected growth system">
+    <div className="system-story-sticky">
+      <div className="system-story-copy">
+        <div className="eyebrow">Connected growth</div>
+        <h2>Nothing works <em>alone.</em></h2>
+        <p>A website can look great and still underperform. The strongest systems connect discovery, proof, conversion and follow-up so each part makes the next one stronger.</p>
+        <a href="/process" className="system-story-link">See the full process →</a>
+      </div>
+      <div className="system-story-board">
+        <div className="system-story-board-top"><span>LIVE SIGNAL MAP</span><b>0{active+1} / 05</b></div>
+        <svg className="system-story-map" viewBox="0 0 1000 620" role="img" aria-label="Five connected marketing stages">
+          <path className="system-story-base" d="M130 120 H500 C620 120 670 175 670 255 V320 C670 392 725 430 820 430 H885 M885 430 C920 430 935 455 920 485 C905 515 865 525 820 525 H500 C365 525 315 470 315 375 V315 C315 235 265 205 165 205 H130"/>
+          <path ref={pathRef} className="system-story-live" d="M130 120 H500 C620 120 670 175 670 255 V320 C670 392 725 430 820 430 H885 M885 430 C920 430 935 455 920 485 C905 515 865 525 820 525 H500 C365 525 315 470 315 375 V315 C315 235 265 205 165 205 H130"/>
+          <circle ref={signalRef} className="system-story-signal" cx="130" cy="120" r="8"/>
+        </svg>
+        <div className="system-story-nodes">
+          {stages.map(([title],i)=><div className={`system-story-node node-${i} ${active===i?'active':''}`} key={title}><span>0{i+1}</span><strong>{title}</strong></div>)}
+        </div>
+        <div className="system-story-focus" key={active}>
+          <span>0{active+1}</span>
+          <div><strong>{stages[active][1]}</strong><p>{stages[active][2]}</p></div>
+        </div>
+      </div>
     </div>
   </section>
 }
