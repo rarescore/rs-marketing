@@ -66,11 +66,12 @@ function scoreTone(score){if(score<40)return ['critical','Critical'];if(score<65
 
 function SiteHeader({dark=false}){
   const[menuOpen,setMenuOpen]=useState(false);
+  useEffect(()=>{document.body.style.overflow=menuOpen?'hidden':'';return()=>{document.body.style.overflow=''}},[menuOpen]);
   return <header className={dark?'solid-header':''}>
     <a className="brand" href="/"><img src="/lg-growth-studio-logo.png" alt="LG Growth Studio"/></a>
     <nav><a href="/contact">Contact</a><a href="/audit">Audit</a><a href="/#process">Process</a><a href="/reviews">Reviews</a><a href="/#pricing">Pricing</a></nav>
     <a className="top-cta" href="/build-website">Start</a>
-    <button className="menu-toggle" aria-expanded={menuOpen} aria-label="Open menu" onClick={()=>setMenuOpen(v=>!v)}><span>{menuOpen?'Close':'Menu'}</span><i/><i/></button>
+    <button className="menu-toggle" aria-expanded={menuOpen} aria-label={menuOpen?'Close menu':'Open menu'} onClick={()=>setMenuOpen(v=>!v)}><span>{menuOpen?'Close':'Menu'}</span><i/><i/></button>
     <div className={`mobile-menu ${menuOpen?'open':''}`}><a href="/contact"><span>01</span>Contact</a><a href="/audit"><span>02</span>Audit</a><a href="/#process"><span>03</span>Process</a><a href="/reviews"><span>04</span>Reviews</a><a href="/#pricing"><span>05</span>Pricing</a><a href="/build-website"><span>06</span>Start a project</a></div>
   </header>
 }
@@ -205,36 +206,68 @@ function ReviewRail(){return <div className="review-rail" aria-label="Review lay
 
 function InfiniteReviewMenu(){
   const items=featuredReviews;
-  const cards=useRef([]);const numberRef=useRef(null);
-  const rot=useRef(0);const target=useRef(0);const dragging=useRef(false);const lastX=useRef(0);const velocity=useRef(0);const raf=useRef(0);const active=useRef(0);
-  const step=(Math.PI*2)/items.length;
+  const track=useRef(null);const numberRef=useRef(null);const raf=useRef(0);const resetting=useRef(false);
+  const repeated=useMemo(()=>[...items,...items,...items], [items]);
   useEffect(()=>{
-    const norm=a=>Math.atan2(Math.sin(a),Math.cos(a));
-    const render=()=>{
-      let closest=0,best=99;
-      cards.current.forEach((el,i)=>{if(!el)return;const a=norm(i*step+rot.current);const front=(Math.cos(a)+1)/2;const x=Math.sin(a)*Math.min(520,innerWidth*.36);const z=(Math.cos(a)-1)*260;const y=Math.abs(Math.sin(a))*22;const scale=.7+front*.3;const blur=(1-front)*4.2;el.style.transform=`translate3d(calc(-50% + ${x}px),calc(-50% + ${y}px),${z}px) rotateY(${-Math.sin(a)*24}deg) scale(${scale})`;el.style.opacity=String(.14+front*.86);el.style.filter=`blur(${blur}px)`;el.style.zIndex=String(Math.round(front*100));el.style.pointerEvents=front>.82?'auto':'none';const dist=Math.abs(a);if(dist<best){best=dist;closest=i}});
-      if(closest!==active.current){active.current=closest;if(numberRef.current)numberRef.current.textContent=`${String(closest+1).padStart(2,'0')} / ${String(items.length).padStart(2,'0')}`}
+    const el=track.current;if(!el)return;
+    const cards=[...el.querySelectorAll('.infinite-review-card')];
+    if(!cards.length)return;
+    const group=items.length;
+    const centerCard=(index,behavior='auto')=>{
+      const card=cards[index];if(!card)return;
+      const left=card.offsetLeft-(el.clientWidth-card.clientWidth)/2;
+      el.scrollTo({left,behavior});
     };
-    const tick=()=>{if(!dragging.current){target.current+=velocity.current;velocity.current*=.91;if(Math.abs(velocity.current)<.0025){velocity.current=0;target.current=Math.round(target.current/step)*step}}rot.current+=(target.current-rot.current)*.11;render();raf.current=requestAnimationFrame(tick)};
-    raf.current=requestAnimationFrame(tick);return()=>cancelAnimationFrame(raf.current);
-  },[step,items.length]);
-  const down=e=>{dragging.current=true;velocity.current=0;lastX.current=e.clientX;e.currentTarget.setPointerCapture?.(e.pointerId)};
-  const move=e=>{if(!dragging.current)return;const dx=e.clientX-lastX.current;lastX.current=e.clientX;target.current+=dx*.0062;velocity.current=dx*.00105};
-  const up=()=>{dragging.current=false;target.current=Math.round((target.current+velocity.current*7)/step)*step};
-  const nudge=dir=>{velocity.current=0;target.current=Math.round(target.current/step)*step+dir*step};
-  return <div className="infinite-review-menu spatial-reviews" onPointerDown={down} onPointerMove={move} onPointerUp={up} onPointerCancel={up} aria-label="Drag through featured reviews">
-    <div className="review-hud"><span>DRAG TO EXPLORE</span><i/><span ref={numberRef}>01 / {String(items.length).padStart(2,'0')}</span></div>
-    <button className="review-nav prev" aria-label="Previous review" onClick={e=>{e.stopPropagation();nudge(1)}}>←</button>
-    <button className="review-nav next" aria-label="Next review" onClick={e=>{e.stopPropagation();nudge(-1)}}>→</button>
-    <div className="review-focus-line" aria-hidden="true"/>
-    <div className="review-cylinder">
-      {items.map((r,i)=><article ref={el=>cards.current[i]=el} className="infinite-review-card" key={`${r.name}-${i}`}>
-        <div className="review-card-top"><span className="stars">★★★★★</span><small>{String(i+1).padStart(2,'0')}</small></div>
+    const render=()=>{
+      raf.current=0;
+      const viewCenter=el.scrollLeft+el.clientWidth/2;
+      let closest=group,best=Infinity;
+      cards.forEach((card,i)=>{
+        const cardCenter=card.offsetLeft+card.clientWidth/2;
+        const d=(cardCenter-viewCenter)/Math.max(320,el.clientWidth*.52);
+        const ad=Math.min(1.6,Math.abs(d));
+        const scale=1-Math.min(.14,ad*.095);
+        const ry=Math.max(-14,Math.min(14,-d*10));
+        const y=Math.min(18,ad*13);
+        card.style.transform=`translate3d(0,${y}px,0) rotateY(${ry}deg) scale(${scale})`;
+        card.style.opacity=String(Math.max(.38,1-ad*.34));
+        card.classList.toggle('is-focused',ad<.25);
+        if(ad<best){best=ad;closest=i}
+      });
+      if(numberRef.current){const logical=((closest%group)+group)%group;numberRef.current.textContent=`${String(logical+1).padStart(2,'0')} / ${String(group).padStart(2,'0')}`}
+      if(!resetting.current){
+        const groupWidth=cards[group].offsetLeft-cards[0].offsetLeft;
+        if(groupWidth>0){
+          if(el.scrollLeft<groupWidth*.45){resetting.current=true;el.scrollLeft+=groupWidth;resetting.current=false}
+          else if(el.scrollLeft>groupWidth*1.55){resetting.current=true;el.scrollLeft-=groupWidth;resetting.current=false}
+        }
+      }
+    };
+    const request=()=>{if(!raf.current)raf.current=requestAnimationFrame(render)};
+    const onResize=()=>{centerCard(group);request()};
+    requestAnimationFrame(()=>{centerCard(group);request()});
+    el.addEventListener('scroll',request,{passive:true});
+    addEventListener('resize',onResize,{passive:true});
+    return()=>{cancelAnimationFrame(raf.current);el.removeEventListener('scroll',request);removeEventListener('resize',onResize)};
+  },[items]);
+  const nudge=dir=>{
+    const el=track.current;if(!el)return;
+    const card=el.querySelector('.infinite-review-card');
+    const gap=parseFloat(getComputedStyle(el).columnGap||getComputedStyle(el).gap||'22')||22;
+    const amount=(card?.getBoundingClientRect().width||320)+gap;
+    el.scrollBy({left:dir*amount,behavior:'smooth'});
+  };
+  return <div className="infinite-review-menu spatial-reviews native-swipe-reviews" aria-label="Swipe through featured reviews">
+    <div className="review-hud"><span>SWIPE · DRAG · SCROLL</span><i/><span ref={numberRef}>01 / {String(items.length).padStart(2,'0')}</span></div>
+    <button className="review-nav prev" aria-label="Previous review" onClick={()=>nudge(-1)}>←</button>
+    <button className="review-nav next" aria-label="Next review" onClick={()=>nudge(1)}>→</button>
+    <div ref={track} className="review-native-track">
+      {repeated.map((r,i)=><article className="infinite-review-card" key={`${r.name}-${i}`}>
+        <div className="review-card-top"><span className="stars">★★★★★</span><small>{String((i%items.length)+1).padStart(2,'0')}</small></div>
         <p>“{r.text}”</p>
         <footer><div><strong>{r.name}</strong><small>{r.service}</small></div><a href="/reviews">Open reviews ↗</a></footer>
       </article>)}
     </div>
-    <div className="review-depth-label"><span>FOCUS</span><i/><span>DEPTH</span></div>
   </div>
 }
 
@@ -261,13 +294,20 @@ function BuiltDifferently(){
 }
 
 function ClickSpark(){
-  const canvas=useRef(null);const sparks=useRef([]);const raf=useRef(0);
+  const canvas=useRef(null);const sparks=useRef([]);const raf=useRef(0);const running=useRef(false);
   useEffect(()=>{
     const c=canvas.current,ctx=c.getContext('2d');
-    const resize=()=>{const d=Math.min(devicePixelRatio||1,2);c.width=innerWidth*d;c.height=innerHeight*d;c.style.width=`${innerWidth}px`;c.style.height=`${innerHeight}px`;ctx.setTransform(d,0,0,d,0,0)};resize();addEventListener('resize',resize);
-    const click=e=>{const count=8;for(let i=0;i<count;i++){const a=i/count*Math.PI*2; sparks.current.push({x:e.clientX,y:e.clientY,a,born:performance.now(),len:7+Math.random()*7,speed:42+Math.random()*34})}};
-    addEventListener('pointerdown',click,{passive:true});
-    const draw=t=>{ctx.clearRect(0,0,innerWidth,innerHeight);sparks.current=sparks.current.filter(s=>t-s.born<420);ctx.lineCap='round';ctx.lineWidth=1.6;ctx.strokeStyle='#ff1a28';for(const s of sparks.current){const p=(t-s.born)/420;const d=s.speed*p;const fade=1-p;const x=s.x+Math.cos(s.a)*d,y=s.y+Math.sin(s.a)*d;ctx.globalAlpha=fade;ctx.beginPath();ctx.moveTo(x-Math.cos(s.a)*s.len*.5,y-Math.sin(s.a)*s.len*.5);ctx.lineTo(x+Math.cos(s.a)*s.len*.5,y+Math.sin(s.a)*s.len*.5);ctx.stroke()}ctx.globalAlpha=1;raf.current=requestAnimationFrame(draw)};raf.current=requestAnimationFrame(draw);
+    const resize=()=>{const d=Math.min(devicePixelRatio||1,2);c.width=innerWidth*d;c.height=innerHeight*d;c.style.width=`${innerWidth}px`;c.style.height=`${innerHeight}px`;ctx.setTransform(d,0,0,d,0,0)};
+    const draw=t=>{
+      ctx.clearRect(0,0,innerWidth,innerHeight);
+      sparks.current=sparks.current.filter(s=>t-s.born<420);
+      ctx.lineCap='round';ctx.lineWidth=1.6;ctx.strokeStyle='#ff1a28';
+      for(const s of sparks.current){const p=(t-s.born)/420;const d=s.speed*p;const fade=1-p;const x=s.x+Math.cos(s.a)*d,y=s.y+Math.sin(s.a)*d;ctx.globalAlpha=fade;ctx.beginPath();ctx.moveTo(x-Math.cos(s.a)*s.len*.5,y-Math.sin(s.a)*s.len*.5);ctx.lineTo(x+Math.cos(s.a)*s.len*.5,y+Math.sin(s.a)*s.len*.5);ctx.stroke()}
+      ctx.globalAlpha=1;
+      if(sparks.current.length){raf.current=requestAnimationFrame(draw)}else{running.current=false;raf.current=0}
+    };
+    const click=e=>{const count=8;for(let i=0;i<count;i++){const a=i/count*Math.PI*2;sparks.current.push({x:e.clientX,y:e.clientY,a,born:performance.now(),len:7+Math.random()*7,speed:42+Math.random()*34})}if(!running.current){running.current=true;raf.current=requestAnimationFrame(draw)}};
+    resize();addEventListener('resize',resize,{passive:true});addEventListener('pointerdown',click,{passive:true});
     return()=>{cancelAnimationFrame(raf.current);removeEventListener('resize',resize);removeEventListener('pointerdown',click)}
   },[]);
   return <canvas ref={canvas} className="click-spark-canvas" aria-hidden="true"/>;
@@ -385,8 +425,8 @@ function AuditResults({result,tone}){
 function ReviewsPage(){
   const params=new URLSearchParams(window.location.search);const requested=Math.max(1,Number(params.get('page'))||1);const perPage=20;const pages=Math.ceil(generatedReviews.length/perPage);const page=Math.min(requested,pages);const start=(page-1)*perPage;const list=generatedReviews.slice(start,start+perPage);
   return <><FuturisticShell/><ActivityPopups/><SiteHeader dark/><main className="reviews-page">
-    <section className="reviews-hero black"><div className="eyebrow">Client feedback</div><h1>What changed after the work.</h1><p>Better first impressions. Clearer pages. Stronger search foundations. Easier decisions for the people landing on the site.</p><InfiniteReviewMenu/></section>
-    <section className="review-page-head white"><div><div className="eyebrow">More feedback</div><h2>Read at your own pace.</h2></div><p>Twenty reviews per page, with the full story kept readable instead of buried inside an animation.</p></section>
+    <section className="reviews-hero black"><div className="reviews-hero-copy"><div className="eyebrow">Client feedback</div><h1>Proof should be<br/><em>easy to explore.</em></h1><p>Swipe through a few highlighted reactions, then keep reading below without fighting the interface.</p></div><InfiniteReviewMenu/></section>
+    <section className="review-page-head white"><div><div className="eyebrow">More feedback</div><h2>Real stories.<br/>Clean reading.</h2></div><p>Twenty at a time, formatted for readability on desktop and mobile.</p></section>
     <section className="review-page-grid white">{list.map(r=><article key={r.id}><div className="stars">★★★★★</div><p>“{r.text}”</p><footer><div><strong>{r.name}</strong><small>{r.service}</small></div><span>{r.date}</span></footer></article>)}</section>
     <nav className="pagination" aria-label="Review pages">{page>1&&<a href={`/reviews?page=${page-1}`}>← Previous</a>}<span>Page {page} of {pages}</span>{page<pages&&<a href={`/reviews?page=${page+1}`}>Next →</a>}</nav>
   </main><Footer/></>
@@ -424,7 +464,9 @@ function BuildWebsitePage(){
 }
 
 function ContactPage(){
-  const[form,setForm]=useState({name:'',email:'',phone:'',company:'',website:'',need:'Website',details:'',company_url:''});
+  const planParam=new URLSearchParams(window.location.search).get('plan');
+  const planName=planParam?planParam.replace(/[-_]+/g,' ').replace(/\b\w/g,c=>c.toUpperCase()):'';
+  const[form,setForm]=useState({name:'',email:'',phone:'',company:'',website:'',need:planParam?'Website + growth':'Website',details:planParam?`I'm interested in the ${planName} plan. Please tell me the next step.`:'',company_url:''});
   const[status,setStatus]=useState('idle');const[error,setError]=useState('');
   const progress=['name','email','company','details'].filter(k=>String(form[k]||'').trim()).length;
   const set=(key,value)=>setForm(v=>({...v,[key]:value}));
