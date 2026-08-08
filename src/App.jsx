@@ -65,10 +65,13 @@ function go(path){ window.location.href=path; }
 function scoreTone(score){if(score<40)return ['critical','Critical'];if(score<65)return ['warning','Needs improvement'];if(score<85)return ['healthy','Healthy'];return ['excellent','Excellent'];}
 
 function SiteHeader({dark=false}){
+  const[menuOpen,setMenuOpen]=useState(false);
   return <header className={dark?'solid-header':''}>
     <a className="brand" href="/"><img src="/lg-growth-studio-logo.png" alt="LG Growth Studio"/></a>
-    <nav><a href="/audit">Audit</a><a href="/#process">Process</a><a href="/reviews">Reviews</a><a href="/#pricing">Pricing</a></nav>
+    <nav><a href="/contact">Contact</a><a href="/audit">Audit</a><a href="/#process">Process</a><a href="/reviews">Reviews</a><a href="/#pricing">Pricing</a></nav>
     <a className="top-cta" href="/build-website">Start</a>
+    <button className="menu-toggle" aria-expanded={menuOpen} aria-label="Open menu" onClick={()=>setMenuOpen(v=>!v)}><span>{menuOpen?'Close':'Menu'}</span><i/><i/></button>
+    <div className={`mobile-menu ${menuOpen?'open':''}`}><a href="/contact"><span>01</span>Contact</a><a href="/audit"><span>02</span>Audit</a><a href="/#process"><span>03</span>Process</a><a href="/reviews"><span>04</span>Reviews</a><a href="/#pricing"><span>05</span>Pricing</a><a href="/build-website"><span>06</span>Start a project</a></div>
   </header>
 }
 
@@ -118,20 +121,65 @@ function WebsiteMock({after=false}){
 
 function Transformation(){
   const ref=useRef(null);
+  const[phase,setPhase]=useState(0);
   useEffect(()=>{
-    const update=()=>{const el=ref.current;if(!el)return;const r=el.getBoundingClientRect();const p=Math.max(0,Math.min(1,(window.innerHeight*.8-r.top)/(r.height+window.innerHeight*.35)));el.style.setProperty('--transform-progress',String(p))};
-    update();addEventListener('scroll',update,{passive:true});addEventListener('resize',update,{passive:true});return()=>{removeEventListener('scroll',update);removeEventListener('resize',update)};
+    let ticking=false;
+    const update=()=>{
+      ticking=false;
+      const el=ref.current;if(!el)return;
+      const r=el.getBoundingClientRect();
+      const total=Math.max(1,r.height-window.innerHeight*.45);
+      const p=Math.max(0,Math.min(1,(window.innerHeight*.72-r.top)/total));
+      const ease=p*p*(3-2*p);
+      el.style.setProperty('--rebuild',String(ease));
+      el.style.setProperty('--scene-ry',`${-14+ease*14}deg`);
+      el.style.setProperty('--scene-rx',`${7-ease*7}deg`);
+      el.style.setProperty('--scan-x',`${Math.max(-18,Math.min(118,(p-.18)*165))}%`);
+      el.style.setProperty('--old-opacity',String(Math.max(0,1-p*1.55)));
+      el.style.setProperty('--new-opacity',String(Math.max(.12,Math.min(1,(p-.28)*1.75))));
+      el.style.setProperty('--z-nav',`${(1-ease)*175}px`);
+      el.style.setProperty('--z-hero',`${(1-ease)*125}px`);
+      el.style.setProperty('--z-proof',`${(1-ease)*78}px`);
+      el.style.setProperty('--z-cta',`${(1-ease)*220}px`);
+      el.style.setProperty('--y-nav',`${(1-ease)*-58}px`);
+      el.style.setProperty('--y-hero',`${(1-ease)*18}px`);
+      el.style.setProperty('--y-proof',`${(1-ease)*68}px`);
+      el.style.setProperty('--y-cta',`${(1-ease)*112}px`);
+      const next=p<.28?0:p<.58?1:p<.82?2:3;
+      setPhase(v=>v===next?v:next);
+    };
+    const onScroll=()=>{if(!ticking){ticking=true;requestAnimationFrame(update)}};
+    update();addEventListener('scroll',onScroll,{passive:true});addEventListener('resize',onScroll,{passive:true});
+    return()=>{removeEventListener('scroll',onScroll);removeEventListener('resize',onScroll)};
   },[]);
-  return <section ref={ref} className="section transformation black">
-    <div className="eyebrow">Before → rebuilt</div>
-    <ScrollReveal dark>Watch the structure change.</ScrollReveal>
-    <p className="section-intro">Not a color swap. Hierarchy, clarity, conversion and search structure rebuilt as one system.</p>
-    <div className="transformation-stage">
-      <div className="transformation-column"><span className="transform-label">Current state</span><WebsiteMock/></div>
-      <div className="transform-arrow" aria-hidden="true"><i/><b>→</b></div>
-      <div className="transformation-column"><span className="transform-label">Rebuilt experience</span><WebsiteMock after/></div>
+  const phases=[
+    ['01','Strip the noise','Remove the competing messages and weak hierarchy.'],
+    ['02','Rebuild the structure','Put the offer, proof and next action where people expect them.'],
+    ['03','Connect search + conversion','Give Google clearer pages and customers clearer reasons to act.'],
+    ['04','Lock the system','Everything settles into one fast, intentional experience.']
+  ];
+  return <section ref={ref} className="section transformation black award-rebuild">
+    <div className="rebuild-copy">
+      <div className="eyebrow">Live rebuild</div>
+      <ScrollReveal dark>A website should feel engineered.</ScrollReveal>
+      <p className="section-intro">Scroll through the rebuild. We separate the pieces, fix the hierarchy, then lock them back together as one system.</p>
+      <div className="rebuild-phases">{phases.map(([n,t,d],i)=><article className={phase===i?'active':''} key={n}><span>{n}</span><div><strong>{t}</strong><p>{d}</p></div></article>)}</div>
     </div>
-    <div className="transformation-proof"><span>Hierarchy</span><span>CTA placement</span><span>Mobile clarity</span><span>Trust</span><span>SEO structure</span></div>
+    <div className="rebuild-visual" aria-label="Interactive website rebuild demonstration">
+      <div className="rebuild-orbit orbit-a"/><div className="rebuild-orbit orbit-b"/>
+      <div className="rebuild-browser-3d">
+        <div className="rebuild-chrome"><i/><i/><i/><span>yourbusiness.com</span><b>LIVE</b></div>
+        <div className="rebuild-surface">
+          <div className="old-ghost"><span>WELCOME TO OUR WEBSITE</span><h3>Quality. Service. Solutions.</h3><p>Generic copy. Too many choices. Nothing feels urgent or specific.</p><button>LEARN MORE</button></div>
+          <div className="rebuild-layer layer-nav"><b>YOUR BUSINESS</b><span>Services</span><span>Reviews</span><span>Areas</span><button>GET A QUOTE</button></div>
+          <div className="rebuild-layer layer-hero"><small>LOCAL SERVICE · LOS ANGELES</small><h3>The service you need.<br/><em>The next step is clear.</em></h3><p>One useful sentence that explains what you do, where you do it, and why the visitor should keep going.</p></div>
+          <div className="rebuild-layer layer-proof"><span>★★★★★ 4.9</span><span>Licensed & insured</span><span>Same-day response</span></div>
+          <div className="rebuild-layer layer-cta"><button>REQUEST A QUOTE</button><small>Clear action. No guessing.</small></div>
+          <div className="rebuild-scan"/>
+        </div>
+      </div>
+      <div className="rebuild-status"><span>STRUCTURE</span><i/><span>CLARITY</span><i/><span>CONVERSION</span><i/><span>SEARCH</span></div>
+    </div>
   </section>
 }
 
@@ -157,39 +205,60 @@ function ReviewRail(){return <div className="review-rail" aria-label="Review lay
 
 function InfiniteReviewMenu(){
   const items=featuredReviews;
-  const wrap=useRef(null);
-  const cards=useRef([]);
-  const rot=useRef(0);
-  const target=useRef(0);
-  const dragging=useRef(false);
-  const lastX=useRef(0);
-  const velocity=useRef(.018);
-  const raf=useRef(0);
+  const cards=useRef([]);const numberRef=useRef(null);
+  const rot=useRef(0);const target=useRef(0);const dragging=useRef(false);const lastX=useRef(0);const velocity=useRef(0);const raf=useRef(0);const active=useRef(0);
+  const step=(Math.PI*2)/items.length;
   useEffect(()=>{
+    const norm=a=>Math.atan2(Math.sin(a),Math.cos(a));
     const render=()=>{
-      const count=items.length; const step=(Math.PI*2)/count;
-      cards.current.forEach((el,i)=>{if(!el)return;const a=i*step+rot.current;const depth=(Math.cos(a)+1)/2;const x=Math.sin(a)*Math.min(430,innerWidth*.33);const z=Math.cos(a)*290;const scale=.78+depth*.22;el.style.transform=`translate3d(calc(-50% + ${x}px),-50%,${z}px) rotateY(${-a}rad) scale(${scale})`;el.style.opacity=String(.24+depth*.76);el.style.zIndex=String(Math.round(depth*100));});
+      let closest=0,best=99;
+      cards.current.forEach((el,i)=>{if(!el)return;const a=norm(i*step+rot.current);const front=(Math.cos(a)+1)/2;const x=Math.sin(a)*Math.min(520,innerWidth*.36);const z=(Math.cos(a)-1)*260;const y=Math.abs(Math.sin(a))*22;const scale=.7+front*.3;const blur=(1-front)*4.2;el.style.transform=`translate3d(calc(-50% + ${x}px),calc(-50% + ${y}px),${z}px) rotateY(${-Math.sin(a)*24}deg) scale(${scale})`;el.style.opacity=String(.14+front*.86);el.style.filter=`blur(${blur}px)`;el.style.zIndex=String(Math.round(front*100));el.style.pointerEvents=front>.82?'auto':'none';const dist=Math.abs(a);if(dist<best){best=dist;closest=i}});
+      if(closest!==active.current){active.current=closest;if(numberRef.current)numberRef.current.textContent=`${String(closest+1).padStart(2,'0')} / ${String(items.length).padStart(2,'0')}`}
     };
-    const tick=()=>{if(!dragging.current){target.current+=velocity.current;velocity.current*=.994;if(Math.abs(velocity.current)<.008)velocity.current=.008}rot.current+=(target.current-rot.current)*.075;render();raf.current=requestAnimationFrame(tick)};
+    const tick=()=>{if(!dragging.current){target.current+=velocity.current;velocity.current*=.91;if(Math.abs(velocity.current)<.0025){velocity.current=0;target.current=Math.round(target.current/step)*step}}rot.current+=(target.current-rot.current)*.11;render();raf.current=requestAnimationFrame(tick)};
     raf.current=requestAnimationFrame(tick);return()=>cancelAnimationFrame(raf.current);
-  },[]);
-  const onDown=e=>{dragging.current=true;lastX.current=e.clientX;velocity.current=0;e.currentTarget.setPointerCapture?.(e.pointerId)};
-  const onMove=e=>{if(!dragging.current)return;const dx=e.clientX-lastX.current;lastX.current=e.clientX;target.current+=dx*.007;velocity.current=dx*.0009};
-  const onUp=()=>{dragging.current=false};
-  const onWheel=e=>{target.current+=e.deltaY*.0018;velocity.current=e.deltaY*.00015};
-  return <div className="infinite-review-menu" ref={wrap} onPointerDown={onDown} onPointerMove={onMove} onPointerUp={onUp} onPointerCancel={onUp} onWheel={onWheel} aria-label="Drag through featured reviews">
-    <div className="review-hud"><span>DRAG / SCROLL</span><i/><span>CLIENT FEEDBACK</span></div>
+  },[step,items.length]);
+  const down=e=>{dragging.current=true;velocity.current=0;lastX.current=e.clientX;e.currentTarget.setPointerCapture?.(e.pointerId)};
+  const move=e=>{if(!dragging.current)return;const dx=e.clientX-lastX.current;lastX.current=e.clientX;target.current+=dx*.0062;velocity.current=dx*.00105};
+  const up=()=>{dragging.current=false;target.current=Math.round((target.current+velocity.current*7)/step)*step};
+  const nudge=dir=>{velocity.current=0;target.current=Math.round(target.current/step)*step+dir*step};
+  return <div className="infinite-review-menu spatial-reviews" onPointerDown={down} onPointerMove={move} onPointerUp={up} onPointerCancel={up} aria-label="Drag through featured reviews">
+    <div className="review-hud"><span>DRAG TO EXPLORE</span><i/><span ref={numberRef}>01 / {String(items.length).padStart(2,'0')}</span></div>
+    <button className="review-nav prev" aria-label="Previous review" onClick={e=>{e.stopPropagation();nudge(1)}}>←</button>
+    <button className="review-nav next" aria-label="Next review" onClick={e=>{e.stopPropagation();nudge(-1)}}>→</button>
+    <div className="review-focus-line" aria-hidden="true"/>
     <div className="review-cylinder">
       {items.map((r,i)=><article ref={el=>cards.current[i]=el} className="infinite-review-card" key={`${r.name}-${i}`}>
         <div className="review-card-top"><span className="stars">★★★★★</span><small>{String(i+1).padStart(2,'0')}</small></div>
         <p>“{r.text}”</p>
-        <footer><div><strong>{r.name}</strong><small>{r.service}</small></div><a href="/reviews">Read more ↗</a></footer>
+        <footer><div><strong>{r.name}</strong><small>{r.service}</small></div><a href="/reviews">Open reviews ↗</a></footer>
       </article>)}
     </div>
+    <div className="review-depth-label"><span>FOCUS</span><i/><span>DEPTH</span></div>
   </div>
 }
 
-function BuiltDifferently(){return <section className="built-different" aria-label="LG capabilities showcase"><div className="built-stage"><div className="built-grid"/><span className="built-word">Web Design</span><span className="built-word">SEO</span><span className="built-word">Paid Growth</span><span className="built-word">AI Automation</span><span className="built-word">Development</span><div className="built-core"><div className="eyebrow">Built differently</div><h2>Make it<br/><em>felt.</em></h2></div></div></section>}
+function BuiltDifferently(){
+  const ref=useRef(null);
+  useEffect(()=>{
+    const el=ref.current;if(!el)return;
+    const move=e=>{const r=el.getBoundingClientRect();const x=(e.clientX-r.left)/r.width-.5;const y=(e.clientY-r.top)/r.height-.5;el.style.setProperty('--sys-x',`${50+x*9}%`);el.style.setProperty('--sys-y',`${50+y*9}%`);el.style.setProperty('--sys-rx',`${-y*3.5}deg`);el.style.setProperty('--sys-ry',`${x*4.5}deg`)};
+    const leave=()=>{el.style.setProperty('--sys-x','50%');el.style.setProperty('--sys-y','50%');el.style.setProperty('--sys-rx','0deg');el.style.setProperty('--sys-ry','0deg')};
+    const io=new IntersectionObserver(([entry])=>el.classList.toggle('in-view',entry.isIntersecting),{threshold:.28});io.observe(el);el.addEventListener('pointermove',move);el.addEventListener('pointerleave',leave);
+    return()=>{io.disconnect();el.removeEventListener('pointermove',move);el.removeEventListener('pointerleave',leave)};
+  },[]);
+  const nodes=[['Website','site'],['Search','search'],['Paid Growth','ads'],['Content','content'],['Automation','automation']];
+  return <section ref={ref} className="built-different system-section" aria-label="LG connected growth system">
+    <div className="system-glow"/>
+    <div className="system-kicker"><span>THE SYSTEM</span><i/><span>LG / 05 SIGNALS</span></div>
+    <div className="system-stage">
+      <svg className="system-lines" viewBox="0 0 1000 700" preserveAspectRatio="none" aria-hidden="true"><path d="M500 350 L190 170"/><path d="M500 350 L805 145"/><path d="M500 350 L865 435"/><path d="M500 350 L500 620"/><path d="M500 350 L145 480"/><circle cx="500" cy="350" r="208"/><circle cx="500" cy="350" r="292"/></svg>
+      {nodes.map(([label,key],i)=><div className={`system-node node-${key}`} key={key}><span>0{i+1}</span><strong>{label}</strong><small>{['Convert attention','Build discovery','Capture demand','Create proof','Remove friction'][i]}</small></div>)}
+      <div className="system-core"><img src="/lg-growth-studio-logo.png" alt=""/><span>ONE CONNECTED SYSTEM</span></div>
+      <div className="system-copy"><div className="eyebrow">Built differently</div><h2>Nothing works<br/><em>alone.</em></h2><p>The page, the search result, the ad, the proof and the follow-up should feel like one idea—not five vendors.</p></div>
+    </div>
+  </section>
+}
 
 function ClickSpark(){
   const canvas=useRef(null);const sparks=useRef([]);const raf=useRef(0);
@@ -270,7 +339,7 @@ function AuditPage(){
   const progress=((step+1)/scanSteps.length)*100;
   return <><FuturisticShell/><ActivityPopups/><SiteHeader dark/><main className="audit-page">
     {status==='idle'&&<section className="audit-page-start"><div className="eyebrow">LG Website Analyzer</div><h1>Find out what is<br/><em>holding the site back.</em></h1><p>We inspect performance, technical SEO, content, mobile usability, trust signals and website modernity. Then we translate the findings into what matters first.</p><form onSubmit={e=>{e.preventDefault();runAudit()}}><input value={url} onChange={e=>setUrl(e.target.value)} placeholder="yourwebsite.com"/><button>Analyze website</button></form><small>No email required. Public information only.</small>{error&&<p className="form-error">{error}</p>}</section>}
-    {status==='scanning'&&<section className="audit-scanning"><div className="scan-progress"><i style={{width:`${progress}%`}}/></div><div className="eyebrow">Analyzing {url.replace(/^https?:\/\//,'')}</div><h1>{scanSteps[step]}<span className="scan-dots">…</span></h1><p className="scan-count">{String(step+1).padStart(2,'0')} / {String(scanSteps.length).padStart(2,'0')}</p><div className="scan-history">{scanSteps.slice(0,step).slice(-4).map(s=><span key={s}>✓ {s}</span>)}</div></section>}
+    {status==='scanning'&&<section className="audit-scanning award-scanner"><div className="scan-progress"><i style={{width:`${progress}%`}}/></div><div className="scanner-grid"><div className="scanner-copy"><div className="eyebrow">Analyzing {url.replace(/^https?:\/\//,'')}</div><h1>{scanSteps[step]}<span className="scan-dots">…</span></h1><p className="scan-count">{String(step+1).padStart(2,'0')} / {String(scanSteps.length).padStart(2,'0')}</p><div className="scan-history">{scanSteps.slice(0,step).slice(-4).map(s=><span key={s}>✓ {s}</span>)}</div></div><div className="holo-scanner" aria-hidden="true"><div className="holo-ring r1"/><div className="holo-ring r2"/><div className="holo-ring r3"/><div className="holo-browser"><div className="holo-chrome"><i/><i/><i/></div><div className="holo-content"><b/><span/><span/><span/><em/></div><div className="holo-sweep"/></div><div className="holo-readout"><span>SEO</span><b>{Math.min(99,42+step*4)}</b><span>PERF</span><b>{Math.min(99,38+step*5)}</b></div></div></div></section>}
     {status==='done'&&result&&<AuditResults result={result} tone={tone}/>} 
   </main>{assist&&<div className="audit-assist"><button className="audit-assist-close" aria-label="Close" onClick={()=>setAssist(false)}>×</button><small>Human review</small><strong>Want us to read this with you?</strong><p>Send the audit to LG and we’ll tell you which findings matter first — and which ones can wait.</p><div className="audit-assist-actions"><button className="button red" onClick={()=>{setAssist(false);document.querySelector('.audit-next')?.scrollIntoView({behavior:'smooth'})}}>Send this audit to LG</button><button className="button line light" onClick={()=>setAssist(false)}>Keep exploring</button></div></div>}<Footer/></>
 }
@@ -354,10 +423,20 @@ function BuildWebsitePage(){
   return <><FuturisticShell/><ActivityPopups/><SiteHeader dark/><main className="builder-page"><section className="builder-shell">{!done?<><div className="builder-progress"><span>0{step+1}</span><i><b style={{width:`${((step+1)/buildScreens.length)*100}%`}}/></i><span>0{buildScreens.length}</span></div><div className="eyebrow">Professional website configurator</div><h1>{screen.title}</h1><div className={`builder-options visual-options ${screen.multi?'multi':''}`}>{screen.options.map(v=><button key={v} className={(Array.isArray(selected)?selected.includes(v):selected===v)?'selected':''} onClick={()=>choose(v)}><OptionPreview type={screen.type} label={v}/><div><b>{v}</b><span>{screen.multi?'Select':'Choose'} →</span></div></button>)}</div><div className="builder-nav">{step>0?<button onClick={()=>setStep(step-1)}>← Back</button>:<span/>}{screen.multi&&canContinue&&<button className="button red" onClick={()=>setDone(true)}>Build my website plan</button>}</div></>:<div className="builder-complete"><div className="eyebrow">Your website direction</div><h1>Clear enough to build from.</h1><div className="builder-summary-grid">{buildScreens.map((s,i)=><article key={s.title}><span>{s.title}</span><b>{printable(choices[i])}</b></article>)}</div><div className="estimate"><span>Estimated starting investment</span><strong>From $1,500</strong><small>Final price depends on pages, integrations, content and animation scope.</small></div><div className="builder-final-actions"><a className="button red" href={mail}>Submit my website plan</a><button className="button dark" onClick={reserve}>Reserve project — $250</button></div><small>The $250 reservation is intended to be applied to the agreed project total after scope is confirmed. Stripe checkout activates when STRIPE_PRICE_DEPOSIT is configured; otherwise the button opens an email reservation.</small></div>}</section></main><Footer/></>
 }
 
-function Footer(){return <footer className="site-footer-simple"><img src="/lg-growth-studio-logo.png" alt="LG Growth Studio"/><span>Performance Marketing · Web Design · SEO · Paid Advertising · AI Automation</span><div><a href="/audit">Audit</a><a href="/reviews">Reviews</a><a href="/#pricing">Pricing</a></div></footer>}
+function ContactPage(){
+  const[form,setForm]=useState({name:'',email:'',phone:'',company:'',website:'',need:'Website',details:'',company_url:''});
+  const[status,setStatus]=useState('idle');const[error,setError]=useState('');
+  const progress=['name','email','company','details'].filter(k=>String(form[k]||'').trim()).length;
+  const set=(key,value)=>setForm(v=>({...v,[key]:value}));
+  const submit=async e=>{e.preventDefault();setStatus('sending');setError('');try{const r=await fetch('/api/contact',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({...form,source:'LG Growth Studio contact page'})});const d=await r.json();if(!r.ok)throw new Error(d.error||'Could not send your message.');if(d.needsSetup){location.href=`mailto:hello.rarescore@gmail.com?subject=${encodeURIComponent('LG Growth Studio project inquiry — '+form.company)}&body=${encodeURIComponent(`${form.name}\n${form.email}\n${form.phone}\n${form.website}\n${form.need}\n\n${form.details}`)}`;setStatus('idle');return}setStatus('sent')}catch(e){setError(e.message||'Could not send your message.');setStatus('idle')}};
+  return <><FuturisticShell/><ActivityPopups/><SiteHeader dark/><main className="contact-page black"><section className="contact-hero"><div className="contact-copy"><div className="eyebrow">Contact LG Growth Studio</div><h1>Tell us what<br/>needs to <em>change.</em></h1><p>New website, stronger search, better ads, or simply a second opinion. Give us the problem. We’ll tell you what we would do first.</p><div className="contact-shortcuts"><a href="/audit">Run the audit ↗</a><a href="/build-website">Plan a website ↗</a><a href="mailto:hello.rarescore@gmail.com">Email directly ↗</a></div></div><div className="contact-console"><div className="console-top"><span>PROJECT SIGNAL</span><b>{progress}/4 READY</b></div><div className="console-map" aria-hidden="true"><i className={progress>0?'on':''}/><i className={progress>1?'on':''}/><i className={progress>2?'on':''}/><i className={progress>3?'on':''}/><span/></div>{status==='sent'?<div className="contact-sent"><span>✓</span><h2>Received.</h2><p>We have your project details. Expect a reply within one business day.</p><a className="button line light" href="/">Back to the site</a></div>:<form className="contact-form-award" onSubmit={submit}><input className="honeypot" tabIndex="-1" autoComplete="off" value={form.company_url} onChange={e=>set('company_url',e.target.value)}/><div className="contact-field-grid"><label><span>Your name *</span><input required value={form.name} onChange={e=>set('name',e.target.value)} placeholder="Name"/></label><label><span>Email *</span><input required type="email" value={form.email} onChange={e=>set('email',e.target.value)} placeholder="you@business.com"/></label><label><span>Business *</span><input required value={form.company} onChange={e=>set('company',e.target.value)} placeholder="Business name"/></label><label><span>Phone</span><input value={form.phone} onChange={e=>set('phone',e.target.value)} placeholder="(000) 000-0000"/></label></div><label><span>Current website</span><input value={form.website} onChange={e=>set('website',e.target.value)} placeholder="yourwebsite.com"/></label><label><span>What do you need?</span><select value={form.need} onChange={e=>set('need',e.target.value)}><option>Website</option><option>SEO / local growth</option><option>Paid advertising</option><option>Website + growth</option><option>Not sure yet</option></select></label><label><span>What would you like to improve? *</span><textarea required value={form.details} onChange={e=>set('details',e.target.value)} placeholder="Tell us what is not working, what you want to change, or what you want the business to achieve." rows="5"/></label><button className="contact-submit" disabled={status==='sending'}>{status==='sending'?'Sending…':'Send project signal'}<span>↗</span></button>{error&&<p className="form-error">{error}</p>}</form>}</div></section><section className="contact-bottom"><div><span>Prefer to start with proof?</span><strong>Run the website audit first.</strong></div><a href="/audit">Analyze my website →</a></section></main><Footer/></>
+}
+
+function Footer(){return <footer className="site-footer-simple"><img src="/lg-growth-studio-logo.png" alt="LG Growth Studio"/><span>Performance Marketing · Web Design · SEO · Paid Advertising · AI Automation</span><div><a href="/contact">Contact</a><a href="/audit">Audit</a><a href="/reviews">Reviews</a><a href="/#pricing">Pricing</a></div></footer>}
 
 export default function App(){
   const path=window.location.pathname.replace(/\/+$/,'')||'/';
+  if(path==='/contact')return <ContactPage/>;
   if(path==='/audit')return <AuditPage/>;
   if(path==='/reviews')return <ReviewsPage/>;
   if(path==='/build-website')return <BuildWebsitePage/>;
