@@ -86,28 +86,18 @@ function HeroStory(){
   return <>
     <PomegranateSequence/>
     <section className="hero-story black" id="story">
-      <div className="hero-story-grid">
-        <div>
-          <div className="eyebrow">LG Growth Studio</div>
-          <h1>They’re already looking.<br/><em>Will they find you?</em></h1>
-          <p>A few seconds to explain what you do, earn trust, and make the next step obvious.</p>
-        </div>
+      <div className="hero-audit-shell">
+        <div className="eyebrow">Free website audit</div>
+        <h1>Check your current website.</h1>
+        <p>See what customers and Google see before you spend another dollar driving traffic to it.</p>
         <AuditLaunch/>
+        <div className="hero-audit-proof" aria-label="What the audit checks">
+          <span>Speed</span><span>SEO</span><span>Mobile</span><span>Content</span><span>Conversion</span>
+        </div>
       </div>
     </section>
   </>
 }
-
-function DecisionSection(){return <section className="section decision white">
-  <div className="eyebrow">The first impression test</div>
-  <ScrollReveal>Three questions. A few seconds.</ScrollReveal>
-  <div className="decision-editorial">
-    <article><span>01</span><h3>Do I understand it?</h3></article>
-    <article><span>02</span><h3>Do I trust it?</h3></article>
-    <article><span>03</span><h3>Do I know what to do next?</h3></article>
-  </div>
-  <div className="decision-note"><strong>If any answer is unclear, the website is working too hard.</strong><a href="/audit">Check yours →</a></div>
-</section>}
 
 function WebsiteMock({after=false}){
   return <div className={`site-mock ${after?'after':''}`}>
@@ -146,23 +136,19 @@ function Transformation(){
 }
 
 function Process(){
-  const ref=useRef(null);
-  useEffect(()=>{
-    const update=()=>{const el=ref.current;if(!el)return;const r=el.getBoundingClientRect();const span=Math.max(1,r.height-window.innerHeight);const p=Math.max(0,Math.min(1,(window.innerHeight-r.top)/(window.innerHeight+span)));el.style.setProperty('--process-progress',String(p))};
-    update();addEventListener('scroll',update,{passive:true});addEventListener('resize',update,{passive:true});return()=>{removeEventListener('scroll',update);removeEventListener('resize',update)};
-  },[]);
-  return <section ref={ref} id="process" className="section process red">
-    <div className="eyebrow">What happens next</div>
-    <h2>Audit. Plan. Build. Improve.</h2>
-    <p className="section-intro">One clear process. No guessing what happens after you say yes.</p>
-    <div className="process-line"><i/></div>
+  return <section id="process" className="section process red">
+    <div className="process-copy">
+      <div className="eyebrow">From idea to growth</div>
+      <h2>One team. One system. No handoff maze.</h2>
+      <p className="section-intro">We find the bottleneck, build what fixes it, launch it cleanly, then use real performance to decide what happens next.</p>
+    </div>
     <div className="timeline">
       {[
-        ['01','Audit','Find the problems that matter most.'],
-        ['02','Plan','Decide what gets fixed first.'],
-        ['03','Build','Design, write, develop, and connect.'],
-        ['04','Improve','Measure what happens and keep improving.']
-      ].map(([n,t,p],i)=><article key={n} style={{'--step':i}}><span>{n}</span><h3>{t}</h3><p>{p}</p></article>)}
+        ['01','Diagnose','Audit the website, search visibility, traffic path, and conversion friction.'],
+        ['02','Prioritize','Choose the few changes most likely to move the business forward first.'],
+        ['03','Build','Design, write, develop, connect tracking, and launch the new experience.'],
+        ['04','Compound','Use search, ads, content, and conversion data to keep improving the system.']
+      ].map(([n,t,p])=><article key={n}><span>{n}</span><div><h3>{t}</h3><p>{p}</p></div></article>)}
     </div>
   </section>
 }
@@ -170,25 +156,36 @@ function Process(){
 function ReviewRail(){return <div className="review-rail" aria-label="Review layout preview"><div className="review-track">{[...featuredReviews,...featuredReviews].map((r,i)=><article key={`${r.name}-${i}`}><div className="stars">★★★★★</div><p>“{r.text}”</p><strong>{r.name}</strong><small>{r.service}</small></article>)}</div></div>}
 
 function InfiniteReviewMenu(){
-  const items=[...featuredReviews,...featuredReviews];
-  const wrap=useRef(null);const rot=useRef(0);const target=useRef(0);const dragging=useRef(false);const lastX=useRef(0);const velocity=useRef(.035);const raf=useRef(0);const [,paint]=useState(0);
+  const items=featuredReviews;
+  const wrap=useRef(null);
+  const cards=useRef([]);
+  const rot=useRef(0);
+  const target=useRef(0);
+  const dragging=useRef(false);
+  const lastX=useRef(0);
+  const velocity=useRef(.018);
+  const raf=useRef(0);
   useEffect(()=>{
-    const tick=()=>{if(!dragging.current){target.current+=velocity.current;velocity.current*=.992;if(Math.abs(velocity.current)<.018)velocity.current=.018}rot.current+=(target.current-rot.current)*.085;paint(v=>(v+1)%100000);raf.current=requestAnimationFrame(tick)};
-    raf.current=requestAnimationFrame(tick);return()=>cancelAnimationFrame(raf.current)
+    const render=()=>{
+      const count=items.length; const step=(Math.PI*2)/count;
+      cards.current.forEach((el,i)=>{if(!el)return;const a=i*step+rot.current;const depth=(Math.cos(a)+1)/2;const x=Math.sin(a)*Math.min(430,innerWidth*.33);const z=Math.cos(a)*290;const scale=.78+depth*.22;el.style.transform=`translate3d(calc(-50% + ${x}px),-50%,${z}px) rotateY(${-a}rad) scale(${scale})`;el.style.opacity=String(.24+depth*.76);el.style.zIndex=String(Math.round(depth*100));});
+    };
+    const tick=()=>{if(!dragging.current){target.current+=velocity.current;velocity.current*=.994;if(Math.abs(velocity.current)<.008)velocity.current=.008}rot.current+=(target.current-rot.current)*.075;render();raf.current=requestAnimationFrame(tick)};
+    raf.current=requestAnimationFrame(tick);return()=>cancelAnimationFrame(raf.current);
   },[]);
   const onDown=e=>{dragging.current=true;lastX.current=e.clientX;velocity.current=0;e.currentTarget.setPointerCapture?.(e.pointerId)};
-  const onMove=e=>{if(!dragging.current)return;const dx=e.clientX-lastX.current;lastX.current=e.clientX;target.current+=dx*.16;velocity.current=dx*.025};
+  const onMove=e=>{if(!dragging.current)return;const dx=e.clientX-lastX.current;lastX.current=e.clientX;target.current+=dx*.007;velocity.current=dx*.0009};
   const onUp=()=>{dragging.current=false};
-  const onWheel=e=>{target.current+=e.deltaY*.025;velocity.current=e.deltaY*.004};
-  const count=items.length;const step=360/count;
+  const onWheel=e=>{target.current+=e.deltaY*.0018;velocity.current=e.deltaY*.00015};
   return <div className="infinite-review-menu" ref={wrap} onPointerDown={onDown} onPointerMove={onMove} onPointerUp={onUp} onPointerCancel={onUp} onWheel={onWheel} aria-label="Drag through featured reviews">
-    <div className="review-hud"><span>DRAG / SCROLL</span><i/><span>FEATURED REVIEWS</span></div>
+    <div className="review-hud"><span>DRAG / SCROLL</span><i/><span>CLIENT FEEDBACK</span></div>
     <div className="review-cylinder">
-      {items.map((r,i)=>{const a=(i*step+rot.current)%360;const rad=a*Math.PI/180;const depth=(Math.cos(rad)+1)/2;const x=Math.sin(rad)*460;const z=Math.cos(rad)*360;const opacity=.18+depth*.82;const scale=.72+depth*.28;return <article className="infinite-review-card" key={`${r.name}-${i}`} style={{transform:`translate3d(calc(-50% + ${x}px),-50%,${z}px) rotateY(${-a}deg) scale(${scale})`,opacity,zIndex:Math.round(depth*100)}}>
-        <div className="review-card-top"><span className="stars">★★★★★</span><small>{String(i%featuredReviews.length+1).padStart(2,'0')}</small></div><p>“{r.text}”</p><footer><div><strong>{r.name}</strong><small>{r.service}</small></div><a href="/reviews">Read more ↗</a></footer>
-      </article>})}
+      {items.map((r,i)=><article ref={el=>cards.current[i]=el} className="infinite-review-card" key={`${r.name}-${i}`}>
+        <div className="review-card-top"><span className="stars">★★★★★</span><small>{String(i+1).padStart(2,'0')}</small></div>
+        <p>“{r.text}”</p>
+        <footer><div><strong>{r.name}</strong><small>{r.service}</small></div><a href="/reviews">Read more ↗</a></footer>
+      </article>)}
     </div>
-    <div className="review-center-mark" aria-hidden="true"><i/><span>CLIENT<br/>PROOF</span><i/></div>
   </div>
 }
 
@@ -222,9 +219,9 @@ function ActivityPopups(){
 }
 
 function Results(){return <section id="results" className="section results black">
-  <div className="results-heading"><div><div className="eyebrow">Review experience</div><h2>Proof should be easy to find.</h2><p className="section-intro">Featured feedback here. The full review library gets its own page.</p></div><div className="review-score"><strong>200</strong><span>review slots</span><small>Development content — replace with verified client reviews before launch.</small></div></div>
+  <div className="results-heading"><div><div className="eyebrow">Client feedback</div><h2>Good work should be easy to recognize.</h2><p className="section-intro">A few reactions to better websites, clearer strategy, and marketing people can actually understand.</p></div><a className="results-link" href="/reviews">Read all reviews →</a></div>
   <InfiniteReviewMenu/>
-  <a className="button line light" href="/reviews">Open the full review page</a>
+  <a className="button line light" href="/reviews">Read more reviews</a>
 </section>}
 
 function Pricing(){
@@ -248,7 +245,7 @@ function FinalCTA(){return <section className="section final-cta black"><div cla
 function HomePage(){
   const reduced=useReducedMotion();
   useEffect(()=>{if(reduced)return;const lenis=new Lenis({duration:.82,smoothWheel:true,wheelMultiplier:.92});let id;const raf=t=>{lenis.raf(t);id=requestAnimationFrame(raf)};id=requestAnimationFrame(raf);return()=>{cancelAnimationFrame(id);lenis.destroy()}},[reduced]);
-  return <><FuturisticShell/><ActivityPopups/><SiteHeader/><main><HeroStory/><DecisionSection/><Transformation/><Process/><Results/><BuiltDifferently/><Pricing/><Faq/><FinalCTA/></main><Footer/></>
+  return <><FuturisticShell/><ActivityPopups/><SiteHeader/><main><HeroStory/><Transformation/><Process/><Results/><BuiltDifferently/><Pricing/><Faq/><FinalCTA/></main><Footer/></>
 }
 
 function AuditPage(){
@@ -318,7 +315,12 @@ function AuditResults({result,tone}){
 
 function ReviewsPage(){
   const params=new URLSearchParams(window.location.search);const requested=Math.max(1,Number(params.get('page'))||1);const perPage=20;const pages=Math.ceil(generatedReviews.length/perPage);const page=Math.min(requested,pages);const start=(page-1)*perPage;const list=generatedReviews.slice(start,start+perPage);
-  return <><FuturisticShell/><ActivityPopups/><SiteHeader dark/><main className="reviews-page"><section className="reviews-hero black"><div className="eyebrow">Review experience preview</div><h1>200 review slots.<br/><em>20 at a time.</em></h1><p>This page is wired for 200 reviews with clean pagination. The current text is sample development content and must be replaced with verified customer reviews before the site is published.</p><InfiniteReviewMenu/></section><section className="review-feature white"><div><span className="stars">★★★★★</span><blockquote>“Your strongest verified customer story belongs here — larger, calmer, and easy to read.”</blockquote></div><small>Featured review position</small></section><section className="review-page-grid white">{list.map(r=><article key={r.id}><div className="stars">★★★★★</div><p>“{r.text}”</p><footer><div><strong>{r.name}</strong><small>{r.service}</small></div><span>{r.date}</span></footer></article>)}</section><nav className="pagination" aria-label="Review pages">{page>1&&<a href={`/reviews?page=${page-1}`}>← Previous</a>}<span>Page {page} of {pages}</span>{page<pages&&<a href={`/reviews?page=${page+1}`}>Next →</a>}</nav></main><Footer/></>
+  return <><FuturisticShell/><ActivityPopups/><SiteHeader dark/><main className="reviews-page">
+    <section className="reviews-hero black"><div className="eyebrow">Client feedback</div><h1>What changed after the work.</h1><p>Better first impressions. Clearer pages. Stronger search foundations. Easier decisions for the people landing on the site.</p><InfiniteReviewMenu/></section>
+    <section className="review-page-head white"><div><div className="eyebrow">More feedback</div><h2>Read at your own pace.</h2></div><p>Twenty reviews per page, with the full story kept readable instead of buried inside an animation.</p></section>
+    <section className="review-page-grid white">{list.map(r=><article key={r.id}><div className="stars">★★★★★</div><p>“{r.text}”</p><footer><div><strong>{r.name}</strong><small>{r.service}</small></div><span>{r.date}</span></footer></article>)}</section>
+    <nav className="pagination" aria-label="Review pages">{page>1&&<a href={`/reviews?page=${page-1}`}>← Previous</a>}<span>Page {page} of {pages}</span>{page<pages&&<a href={`/reviews?page=${page+1}`}>Next →</a>}</nav>
+  </main><Footer/></>
 }
 
 const buildScreens=[
