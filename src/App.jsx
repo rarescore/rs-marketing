@@ -482,7 +482,7 @@ function HomePage(){
 }
 
 function AuditPage(){
-  usePageSeo({title:'Free Website Audit | LG Growth Studio',description:'Analyze website performance, SEO, mobile experience, content depth and technical health with the LG Growth Studio website audit.'});
+  usePageSeo({title:'Free Website Audit | LG Growth Studio',description:'Analyze website performance, technical SEO, mobile experience, content depth, trust signals and website modernity with the LG Growth Studio website audit.'});
   const initial=new URLSearchParams(window.location.search).get('url')||'';
   const[url,setUrl]=useState(initial);const[status,setStatus]=useState('idle');const[step,setStep]=useState(0);const[result,setResult]=useState(null);const[error,setError]=useState('');const[assist,setAssist]=useState(false);
   useEffect(()=>{if(status==='idle')return;const seen=sessionStorage.getItem('lg-audit-assist');if(seen)return;const t=setTimeout(()=>{setAssist(true);sessionStorage.setItem('lg-audit-assist','1')},15000);return()=>clearTimeout(t)},[status]);
@@ -502,9 +502,53 @@ function AuditPage(){
   }
   const tone=result?scoreTone(result.score):['',''];
   const progress=((step+1)/scanSteps.length)*100;
-  return <><FuturisticShell/><ActivityPopups/><SiteHeader dark/><main className="audit-page">
-    {status==='idle'&&<section className="audit-page-start"><div className="eyebrow">LG Website Analyzer</div><h1>Find out what is<br/><em>holding the site back.</em></h1><p>We inspect performance, technical SEO, content, mobile usability, trust signals and website modernity. Then we translate the findings into what matters first.</p><form onSubmit={e=>{e.preventDefault();runAudit()}}><input value={url} onChange={e=>setUrl(e.target.value)} placeholder="yourwebsite.com"/><button>Analyze website</button></form><small>No email required. Public information only.</small>{error&&<p className="form-error">{error}</p>}</section>}
-    {status==='scanning'&&<section className="audit-scanning award-scanner"><div className="scan-progress"><i style={{width:`${progress}%`}}/></div><div className="scanner-grid"><div className="scanner-copy"><div className="eyebrow">Analyzing {url.replace(/^https?:\/\//,'')}</div><h1>{scanSteps[step]}<span className="scan-dots">…</span></h1><p className="scan-count">{String(step+1).padStart(2,'0')} / {String(scanSteps.length).padStart(2,'0')}</p><div className="scan-history">{scanSteps.slice(0,step).slice(-4).map(s=><span key={s}>✓ {s}</span>)}</div></div><div className="holo-scanner" aria-hidden="true"><div className="holo-ring r1"/><div className="holo-ring r2"/><div className="holo-ring r3"/><div className="holo-browser"><div className="holo-chrome"><i/><i/><i/></div><div className="holo-content"><b/><span/><span/><span/><em/></div><div className="holo-sweep"/></div><div className="holo-readout"><span>SEO</span><b>{Math.min(99,42+step*4)}</b><span>PERF</span><b>{Math.min(99,38+step*5)}</b></div></div></div></section>}
+  const checks=[
+    ['01','Performance','Speed, Core Web Vitals and loading behavior'],
+    ['02','Search','Titles, metadata, headings, crawl and index signals'],
+    ['03','Mobile','Viewport, responsive structure and phone usability'],
+    ['04','Content','Service clarity, depth, internal links and topical coverage'],
+    ['05','Trust','HTTPS, security headers, credibility and conversion signals'],
+    ['06','Modernity','Implementation clues that suggest repair vs. rebuild']
+  ];
+  return <><FuturisticShell/><ActivityPopups/><SiteHeader dark/><main className="audit-page audit-page-v2">
+    {status==='idle'&&<>
+      <section className="audit-entry-v2 black">
+        <div className="audit-entry-grid">
+          <div className="audit-entry-copy">
+            <div className="eyebrow">LG Website Analyzer · Free</div>
+            <h1>See the website<br/><em>the way Google does.</em></h1>
+            <p>Enter a public website. We inspect the technical foundation, search signals, mobile experience, content and trust layer—then turn it into a prioritized report.</p>
+            <form className="audit-command" onSubmit={e=>{e.preventDefault();runAudit()}}>
+              <label htmlFor="audit-url-v2">Website address</label>
+              <div><span>https://</span><input id="audit-url-v2" value={url} onChange={e=>setUrl(e.target.value.replace(/^https?:\/\//,''))} placeholder="yourwebsite.com" inputMode="url" autoComplete="url"/><button>Analyze <b>↗</b></button></div>
+              {error&&<p className="form-error">{error}</p>}
+              <small>No email. No password. Public information only.</small>
+            </form>
+            <div className="audit-entry-proof"><span><i/>Real public signals</span><span><i/>No invented ranking</span><span><i/>Repair vs. rebuild verdict</span></div>
+          </div>
+          <div className="audit-console" aria-hidden="true">
+            <div className="audit-console-top"><span>DIAGNOSTIC / READY</span><b>LG-01</b></div>
+            <div className="audit-console-stage">
+              <div className="audit-radar"><i/><i/><i/><b/></div>
+              <div className="audit-browser-ghost"><div><i/><i/><i/></div><b/><span/><span/><span/><em/></div>
+              <div className="audit-console-scan"/>
+            </div>
+            <div className="audit-console-readout"><span>PERFORMANCE <b>—</b></span><span>SEO <b>—</b></span><span>MOBILE <b>—</b></span><span>TRUST <b>—</b></span></div>
+            <p>Waiting for website input</p>
+          </div>
+        </div>
+      </section>
+      <section className="audit-checks white">
+        <div className="audit-checks-head"><div><div className="eyebrow">What gets inspected</div><h2>Six systems.<br/><em>One useful answer.</em></h2></div><p>We do not bury you in a generic checklist. The report separates urgent problems from high-impact improvements and lower-priority opportunities.</p></div>
+        <div className="audit-check-grid">{checks.map(([n,t,d])=><article key={n}><span>{n}</span><h3>{t}</h3><p>{d}</p><i>↗</i></article>)}</div>
+      </section>
+      <section className="audit-report-preview black">
+        <div className="audit-preview-copy"><div className="eyebrow">The output</div><h2>A report built for<br/><em>decisions, not screenshots.</em></h2><p>You get the score, what is hurting it, what should happen first, what can wait, and whether the existing site is worth repairing.</p><a className="button red" href="#audit-url-v2" onClick={e=>{e.preventDefault();document.getElementById('audit-url-v2')?.focus();window.scrollTo({top:0,behavior:'smooth'})}}>Run the audit</a></div>
+        <div className="audit-preview-stack" aria-hidden="true"><article><span>OVERALL</span><strong>—<small>/100</small></strong><p>Score appears only after a live scan.</p></article><article><span>PRIORITY</span><b>Must fix</b><b>High impact</b><b>Opportunity</b></article><article><span>VERDICT</span><strong>Repair<br/>or rebuild?</strong><p>Based on measured public signals.</p></article></div>
+      </section>
+      <section className="audit-method-v2 red"><div><div className="eyebrow">What this is not</div><h2>No fake certainty.</h2></div><div><p>We will not invent an exact Google position, website age, backlink profile or revenue impact when those facts are not available from the public page.</p><p>This free scan is a decision tool. A full SEO engagement can add Search Console, analytics, backlink, competitor and deeper crawl data.</p></div></section>
+    </>}
+    {status==='scanning'&&<section className="audit-scanning award-scanner audit-scanning-v2"><div className="scan-progress"><i style={{width:`${progress}%`}}/></div><div className="scanner-grid"><div className="scanner-copy"><div className="eyebrow">Live diagnostic · {url.replace(/^https?:\/\//,'')}</div><h1>{scanSteps[step]}<span className="scan-dots">…</span></h1><p className="scan-count">PASS {String(step+1).padStart(2,'0')} / {String(scanSteps.length).padStart(2,'0')}</p><div className="scan-history">{scanSteps.slice(0,step).slice(-5).map(s=><span key={s}>✓ {s}</span>)}</div></div><div className="holo-scanner" aria-hidden="true"><div className="holo-ring r1"/><div className="holo-ring r2"/><div className="holo-ring r3"/><div className="holo-browser"><div className="holo-chrome"><i/><i/><i/></div><div className="holo-content"><b/><span/><span/><span/><em/></div><div className="holo-sweep"/></div><div className="holo-readout"><span>SCAN</span><b>{Math.round(progress)}</b><span>PASS</span><b>{step+1}</b></div></div></div><div className="audit-scan-footer"><span>Do not close this tab</span><b>{Math.round(progress)}%</b></div></section>}
     {status==='done'&&result&&<AuditResults result={result} tone={tone}/>} 
   </main>{assist&&<div className="audit-assist"><button className="audit-assist-close" aria-label="Close" onClick={()=>setAssist(false)}>×</button><small>Human review</small><strong>Want us to read this with you?</strong><p>Send the audit to LG and we’ll tell you which findings matter first — and which ones can wait.</p><div className="audit-assist-actions"><button className="button red" onClick={()=>{setAssist(false);document.querySelector('.audit-next')?.scrollIntoView({behavior:'smooth'})}}>Send this audit to LG</button><button className="button line light" onClick={()=>setAssist(false)}>Keep exploring</button></div></div>}<Footer/></>
 }
@@ -548,7 +592,15 @@ function AuditResults({result,tone}){
 }
 
 function ReviewsPage(){
-  const params=new URLSearchParams(window.location.search);const requested=Math.max(1,Number(params.get('page'))||1);const perPage=20;const pages=Math.ceil(generatedReviews.length/perPage);const page=Math.min(requested,pages);const start=(page-1)*perPage;const list=generatedReviews.slice(start,start+perPage);
+  const shuffledReviews=useMemo(()=>{
+    const copy=[...generatedReviews];
+    let seed=Number(sessionStorage.getItem('lg-review-seed'));
+    if(!seed){seed=Math.floor(Math.random()*2147483646)+1;sessionStorage.setItem('lg-review-seed',String(seed));}
+    const rand=()=>{seed=(seed*48271)%2147483647;return seed/2147483647};
+    for(let i=copy.length-1;i>0;i--){const j=Math.floor(rand()*(i+1));[copy[i],copy[j]]=[copy[j],copy[i]];}
+    return copy;
+  },[]);
+  const params=new URLSearchParams(window.location.search);const requested=Math.max(1,Number(params.get('page'))||1);const perPage=20;const pages=Math.ceil(shuffledReviews.length/perPage);const page=Math.min(requested,pages);const start=(page-1)*perPage;const list=shuffledReviews.slice(start,start+perPage);
   return <><FuturisticShell/><ActivityPopups/><SiteHeader dark/><main className="reviews-page">
     <section className="reviews-hero black"><div className="reviews-hero-copy"><div className="eyebrow">Client feedback</div><h1>The work should<br/><em>speak for itself.</em></h1></div><InfiniteReviewMenu/></section>
     <section className="review-page-head white"><div><div className="eyebrow">More feedback</div><h2>What changed<br/>after the work.</h2></div><p>Clarity, speed, search structure and a better experience for the people landing on the site.</p></section>
