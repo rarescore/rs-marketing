@@ -80,9 +80,9 @@ export default function PomegranateSequence(){
     const section=sectionRef.current;
     const canvas=canvasRef.current;
     const ctx=canvas.getContext('2d',{alpha:false,desynchronized:true});
-    const mobile=matchMedia('(max-width:700px)').matches;
+    const mobile=matchMedia('(max-width:760px), (pointer:coarse)').matches;
     const particles=mobile?mobileParticles:desktopParticles;
-    let cssW=1,cssH=1,dpr=1,dead=false;
+    let cssW=1,cssH=1,dpr=1,dead=false,scrollRaf=0;
     let sprites=[];
     const playhead={progress:0};
 
@@ -114,7 +114,7 @@ export default function PomegranateSequence(){
         const perspective=.82+item.depth*.34;
         const size=item.baseSize*perspective*(1+Math.sin(local*Math.PI)*.035);
         const rotation=item.rotation+local*item.spin;
-        const img=sprites[item.sprite];
+        const img=sprites[item.sprite % Math.max(1,sprites.length)];
         if(!img)continue;
         ctx.save();
         ctx.translate(x*cssW,y*cssH);
@@ -129,7 +129,10 @@ export default function PomegranateSequence(){
 
 
     const loadSprites=async()=>{
-      const loaded=await Promise.all(Array.from({length:SPRITE_COUNT},(_,i)=>new Promise(resolve=>{
+      // Mobile only decodes half the sprite set. The visual remains varied while keeping
+      // memory/decode pressure much lower on iOS and mid-range Android devices.
+      const loadCount=mobile?6:SPRITE_COUNT;
+      const loaded=await Promise.all(Array.from({length:loadCount},(_,i)=>new Promise(resolve=>{
         const img=new Image();
         img.decoding='async';
         img.onload=()=>resolve(img);
@@ -145,28 +148,37 @@ export default function PomegranateSequence(){
     resize();
     loadSprites();
 
-    // GSAP's documented image-sequence pattern is a scroll-linked playhead. Here the
-    // playhead drives a lightweight real-time seed field instead of decoding 80–180
-    // full-screen bitmaps. That keeps scroll synchronized while eliminating decode jank.
-    const tween=gsap.to(playhead,{
-      progress:1,
-      ease:'none',
-      scrollTrigger:{
-        trigger:section,
-        start:'top top',
-        end:'bottom bottom',
-        scrub:.28,
-        invalidateOnRefresh:true,
-      },
-      onUpdate:()=>render(playhead.progress),
-    });
+    // On phones use native scroll + rAF rather than ScrollTrigger. Mobile Safari is
+    // much more reliable when the canvas follows the browser's own scroll pipeline.
+    let tween=null;
+    const updateFromNativeScroll=()=>{
+      scrollRaf=0;
+      const r=section.getBoundingClientRect();
+      const travel=Math.max(1,section.offsetHeight-window.innerHeight);
+      playhead.progress=clamp(-r.top/travel,0,1);
+      render(playhead.progress);
+    };
+    const onMobileScroll=()=>{if(!scrollRaf)scrollRaf=requestAnimationFrame(updateFromNativeScroll)};
+    if(mobile){
+      updateFromNativeScroll();
+      addEventListener('scroll',onMobileScroll,{passive:true});
+    }else{
+      // Desktop keeps GSAP's documented scroll-linked playhead for the cinematic scrub.
+      tween=gsap.to(playhead,{
+        progress:1,ease:'none',
+        scrollTrigger:{trigger:section,start:'top top',end:'bottom bottom',scrub:.28,invalidateOnRefresh:true},
+        onUpdate:()=>render(playhead.progress),
+      });
+    }
 
     addEventListener('resize',resize,{passive:true});
     return()=>{
       dead=true;
+      cancelAnimationFrame(scrollRaf);
       removeEventListener('resize',resize);
-      tween.scrollTrigger?.kill();
-      tween.kill();
+      removeEventListener('scroll',onMobileScroll);
+      tween?.scrollTrigger?.kill();
+      tween?.kill();
     };
   },[reduced,desktopParticles,mobileParticles]);
 

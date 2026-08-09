@@ -477,7 +477,7 @@ function FinalCTA(){return <section className="section final-cta final-cta-red r
 function HomePage(){
   usePageSeo({title:'LG Growth Studio | Web Design, SEO, Paid Growth & Automation',description:'LG Growth Studio builds high-performance websites, SEO systems, paid growth campaigns and automation for businesses that want clearer digital growth.',image:'/assets/growth-engine.webp'});
   const reduced=useReducedMotion();
-  useEffect(()=>{if(reduced)return;const lenis=new Lenis({duration:.82,smoothWheel:true,wheelMultiplier:.92});let id;const raf=t=>{lenis.raf(t);id=requestAnimationFrame(raf)};id=requestAnimationFrame(raf);return()=>{cancelAnimationFrame(id);lenis.destroy()}},[reduced]);
+  useEffect(()=>{if(reduced||matchMedia('(max-width:900px), (pointer:coarse)').matches)return;const lenis=new Lenis({duration:.82,smoothWheel:true,wheelMultiplier:.92});let id;const raf=t=>{lenis.raf(t);id=requestAnimationFrame(raf)};id=requestAnimationFrame(raf);return()=>{cancelAnimationFrame(id);lenis.destroy()}},[reduced]);
   return <><FuturisticShell/><ActivityPopups/><SiteHeader/><main><HeroStory/><Transformation/><WebsiteAutopsy/><Process/><Results/><BuiltDifferently/><ArticlesPreview/><Pricing/><Faq/><FinalCTA/></main><Footer/></>
 }
 

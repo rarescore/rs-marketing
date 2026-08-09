@@ -1119,3 +1119,131 @@ header nav a.current:after{transform:scaleX(1)!important}
 @media(max-width:1000px){.audit-entry-grid{grid-template-columns:1fr}.audit-console{height:520px;min-height:0}.audit-checks-head,.audit-report-preview,.audit-method-v2{grid-template-columns:1fr}.audit-check-grid{grid-template-columns:1fr 1fr}.audit-report-preview{gap:7vh}.audit-method-v2>div:last-child{align-self:start}}
 @media(max-width:600px){.audit-page-v2{padding-top:68px;padding-bottom:72px}.audit-entry-v2{min-height:calc(100svh - 68px);padding:8vh 6vw 6vh}.audit-entry-copy h1{font-size:clamp(52px,15vw,78px)}.audit-entry-copy>p{font-size:16px}.audit-command>div{grid-template-columns:1fr}.audit-command>div>span{display:none}.audit-command input{padding:17px}.audit-command button{min-height:54px}.audit-entry-proof{display:grid;grid-template-columns:1fr}.audit-console{height:400px}.audit-console-readout{grid-template-columns:1fr 1fr}.audit-console-readout span:nth-child(-n+2){border-bottom:1px solid #252525}.audit-console-stage{bottom:132px}.audit-checks{padding:9vh 6vw}.audit-checks-head{gap:2vh;margin-bottom:5vh}.audit-checks h2{font-size:clamp(48px,14vw,72px)}.audit-check-grid{grid-template-columns:1fr}.audit-check-grid article{min-height:210px}.audit-check-grid h3{margin-top:35px}.audit-report-preview{padding:9vh 6vw}.audit-preview-stack{grid-template-columns:1fr}.audit-preview-stack article:first-child{grid-row:auto;min-height:300px}.audit-preview-stack article:first-child>strong{margin:50px 0}.audit-method-v2{padding:8vh 6vw;gap:4vh}.audit-method-v2>div:last-child{grid-template-columns:1fr;gap:20px}.audit-scanning-v2{padding:7vh 6vw 13vh}.audit-scanning-v2 .scanner-grid{min-height:calc(100svh - 170px)}.audit-scan-footer{left:6vw;right:6vw;bottom:92px}}
 @media(prefers-reduced-motion:reduce){.audit-radar b,.audit-console-scan{animation:none}}
+
+/* === MOBILE PERFORMANCE + LAYOUT REBUILD — Aug 2026 =====================
+   Mobile is deliberately a different composition, not a squeezed desktop.
+   Principles: native scrolling, compositor-only motion, predictable svh sizing,
+   no hover-only affordances, no expensive blur/3D while the page is moving. */
+@media (max-width: 760px), (pointer: coarse) {
+  html,body,#root{width:100%;max-width:100%;overflow-x:clip}
+  html{-webkit-text-size-adjust:100%;text-size-adjust:100%;scroll-behavior:auto}
+  body{touch-action:pan-y;background:#fff}
+  *{min-width:0}
+  img,video,canvas,svg{max-width:100%}
+  button,a,input,textarea,select{font:inherit}
+  button,a{touch-action:manipulation}
+  input,textarea,select{font-size:16px!important} /* prevents iOS focus zoom */
+  .click-spark-canvas{display:none!important}
+  .activity-stack{display:none!important}
+
+  /* Header behaves like a native app bar. */
+  header{height:64px!important;min-height:64px!important;padding:0 max(16px,env(safe-area-inset-right)) 0 max(16px,env(safe-area-inset-left))!important;background:rgba(255,255,255,.96)!important;backdrop-filter:none!important;border-bottom:1px solid rgba(0,0,0,.08)}
+  header.solid-header{background:rgba(7,7,8,.98)!important;border-color:#222!important}
+  .brand img{width:138px!important;height:auto!important}
+  .top-cta{display:none!important}
+  .menu-toggle{min-width:52px;min-height:44px;justify-content:flex-end}
+  .mobile-menu{padding-left:20px!important;padding-right:20px!important;overflow-y:auto;-webkit-overflow-scrolling:touch}
+  .mobile-menu a{font-size:clamp(34px,10vw,52px)!important;padding:10px 0!important}
+
+  /* Hero: reliable native-scroll canvas, poster remains as fallback until decoded. */
+  .sequence{height:155svh!important;min-height:155svh!important;background:#fff!important}
+  .sequence-sticky{top:0!important;height:100svh!important;min-height:100svh!important}
+  .sequence-poster img{object-position:center top!important}
+  .sequence canvas{width:100%!important;height:100%!important;filter:none!important}
+  .sequence-copy{left:20px!important;right:20px!important;top:auto!important;bottom:calc(104px + env(safe-area-inset-bottom))!important;transform:none!important;text-align:left!important;align-items:flex-start!important}
+  .sequence-copy:before{inset:-44px -24px!important;background:radial-gradient(ellipse at 24% 58%,rgba(255,255,255,.96),rgba(255,255,255,.74) 48%,transparent 76%)!important}
+  .sequence-copy strong{font-size:clamp(50px,15vw,78px)!important;line-height:.88!important;letter-spacing:-.065em!important;max-width:92vw!important}
+  .sequence-copy span,.sequence-copy small{font-size:9px!important}
+
+  /* Homepage audit chapter */
+  .hero-story{min-height:100svh!important;height:auto!important;padding:calc(64px + 7vh) 20px calc(94px + env(safe-area-inset-bottom))!important;display:flex!important;align-items:center!important}
+  .hero-audit-shell{width:100%!important;max-width:none!important}
+  .hero-audit-shell h1{font-size:clamp(48px,14vw,74px)!important;line-height:.9!important;letter-spacing:-.065em!important}
+  .hero-audit-shell>p{font-size:16px!important;line-height:1.55!important;max-width:34em!important}
+  .audit-launch>div{display:grid!important;grid-template-columns:1fr!important;gap:8px!important;background:transparent!important}
+  .audit-launch input{width:100%!important;min-height:54px!important;padding:15px 16px!important;border:1px solid #333!important;background:#111!important;color:#fff!important}
+  .audit-launch button{width:100%!important;min-height:54px!important}
+  .hero-audit-proof{gap:6px!important}.hero-audit-proof span{font-size:7px!important;padding:8px 9px!important}
+
+  /* Desktop 3D chapters become lighter native mobile stories, while retaining movement. */
+  .award-rebuild{min-height:auto!important;height:auto!important;padding:10vh 20px!important;display:block!important}
+  .rebuild-copy{position:relative!important;top:auto!important;width:100%!important;max-width:none!important}
+  .rebuild-visual{position:relative!important;top:auto!important;width:100%!important;height:auto!important;min-height:470px!important;margin-top:6vh!important;perspective:none!important}
+  .rebuild-browser-3d{transform:none!important;width:100%!important;max-width:100%!important}
+  .rebuild-orbit{display:none!important}.rebuild-layer{transform:none!important;filter:none!important}
+  .rebuild-phases{display:grid!important;grid-template-columns:1fr 1fr!important;gap:8px!important}.rebuild-phases article{min-height:112px!important;padding:14px!important}
+
+  .website-autopsy{height:auto!important;min-height:100svh!important;padding:9vh 20px!important;overflow:hidden!important}
+  .autopsy-sticky{position:relative!important;top:auto!important;height:auto!important;min-height:0!important;display:block!important;padding:0!important}
+  .autopsy-copy{width:100%!important;max-width:none!important}.autopsy-copy h2{font-size:clamp(46px,13vw,70px)!important}
+  .autopsy-stage{height:390px!important;margin-top:5vh!important;perspective:none!important}
+  .autopsy-frame{transform:scale(.84)!important;transform-origin:center!important}
+  .autopsy-layer{filter:none!important}
+  .website-autopsy:after{display:none!important}
+  .autopsy-steps{display:grid!important;grid-template-columns:1fr 1fr!important;gap:6px!important}.autopsy-steps article{min-height:105px!important}
+
+  .process-journey{height:auto!important;min-height:100svh!important;padding:10vh 20px!important}
+  .process-sticky{position:relative!important;top:auto!important;height:auto!important;min-height:0!important;padding:0!important;display:block!important}
+  .process-copy h2{font-size:clamp(48px,13vw,72px)!important}
+  .process-focus{min-height:300px!important;margin:6vh 0!important;position:relative!important}
+  .process-focus>div{padding-left:0!important;width:100%!important;position:relative!important;z-index:2}.process-focus h3{font-size:clamp(52px,16vw,80px)!important}
+  .process-ghost{font-size:52vw!important;opacity:.11!important}
+  .process-control{position:relative!important;bottom:auto!important}.process-labels{gap:4px!important}.process-labels span{font-size:8px!important}
+
+  .growth-engine-section{height:auto!important;min-height:100svh!important;padding:10vh 20px!important}
+  .growth-engine-sticky{position:relative!important;top:auto!important;height:auto!important;min-height:0!important;padding:0!important;display:block!important}
+  .engine-copy{display:block!important}.engine-copy h2{font-size:clamp(48px,14vw,72px)!important}
+  .engine-scene{height:360px!important;min-height:360px!important;margin:5vh 0!important;overflow:hidden!important;perspective:none!important}
+  .engine-card-field{transform:scale(.72)!important;transform-origin:center!important}
+  .engine-module{filter:none!important;box-shadow:none!important;backdrop-filter:none!important}
+  .engine-floor,.engine-scan{display:none!important}.engine-lines{opacity:.4!important}
+  .engine-stage-nav{position:relative!important;bottom:auto!important;margin-top:10px!important;border:1px solid #262629!important}
+
+  /* Reviews: one card per viewport, native swipe, no cropped copy. */
+  .results{padding:9vh 0!important;min-height:100svh!important}.results-heading{padding:0 20px!important;display:block!important}.results-heading h2{font-size:clamp(46px,13vw,70px)!important}.results-link{display:inline-block!important;margin-top:18px!important}
+  .review-native-track{scroll-padding-inline:20px!important;padding:0 20px 18px!important;gap:10px!important;touch-action:pan-x!important;-webkit-overflow-scrolling:touch!important;overscroll-behavior-x:contain!important}
+  .infinite-review-card{flex:0 0 calc(100vw - 40px)!important;width:calc(100vw - 40px)!important;min-height:360px!important;padding:22px!important;transform:none!important;filter:none!important;opacity:1!important}
+  .review-nav{display:none!important}.review-hud{padding:0 20px!important}
+  .review-page-grid{display:block!important}.review-page-grid article{margin-bottom:8px!important;padding:22px 20px!important}.review-page-grid article p{font-size:16px!important;line-height:1.6!important}
+
+  /* Pricing turns into readable full-width tap cards. */
+  .pricing{padding:9vh 20px!important;min-height:100svh!important}.pricing-head{display:block!important}.pricing-head h2{font-size:clamp(48px,13vw,72px)!important}.pricing-head>p{margin-top:18px!important}
+  .pricing-accordion{display:block!important;height:auto!important;min-height:0!important}.pricing-accordion .plan-card{width:100%!important;min-width:0!important;height:auto!important;min-height:86px!important;margin-bottom:8px!important;overflow:hidden!important}.pricing-accordion .plan-card.active{min-height:530px!important}.pricing-accordion .plan-collapsed-label{position:static!important;display:block!important;transform:none!important;padding:30px 22px!important;font-size:13px!important;white-space:normal!important}.pricing-accordion .plan-card.active .plan-collapsed-label{display:none!important}
+
+  /* Articles: app-like editorial cards and readable article pages. */
+  .articles-preview,.article-index,.article-layout,.article-related{overflow:visible!important}
+  .article-preview-card,.article-index-card{transform:none!important}
+  .article-preview-card picture,.article-index-card picture{overflow:hidden!important}.article-preview-card img,.article-index-card img{width:100%!important;height:100%!important;object-fit:cover!important}
+  .article-hero-inner{display:block!important;padding-left:20px!important;padding-right:20px!important}.article-hero-media{display:block!important;width:calc(100% + 40px)!important;margin-left:-20px!important;margin-top:5vh!important;aspect-ratio:16/10!important;height:auto!important}.article-hero-media img{width:100%!important;height:100%!important;object-fit:cover!important}
+  .article-layout{padding-left:20px!important;padding-right:20px!important}.article-content{max-width:100%!important}
+
+  /* Dedicated audit: no squeezed desktop console. */
+  .audit-page-v2{padding-top:64px!important;padding-bottom:76px!important}
+  .audit-entry-v2{min-height:auto!important;padding:7vh 20px 9vh!important;overflow:visible!important}
+  .audit-entry-grid{display:block!important}.audit-entry-copy h1{font-size:clamp(48px,14vw,72px)!important;line-height:.88!important;margin-bottom:22px!important}.audit-entry-copy>p{font-size:16px!important;line-height:1.55!important}
+  .audit-command{margin-top:28px!important}.audit-command>div{display:grid!important;grid-template-columns:1fr!important;gap:8px!important;background:transparent!important;border:0!important}.audit-command input{background:#fff!important;min-height:54px!important;padding:15px 16px!important}.audit-command button{min-height:54px!important;width:100%!important}
+  .audit-entry-proof{display:grid!important;grid-template-columns:1fr 1fr!important;gap:6px!important}.audit-entry-proof span{padding:10px!important}
+  .audit-console{height:370px!important;min-height:370px!important;margin-top:6vh!important;width:100%!important;box-shadow:none!important}.audit-browser-ghost{width:72%!important;transform:none!important}.audit-radar{width:74%!important}.audit-console-readout{grid-template-columns:1fr 1fr!important}.audit-console-stage{bottom:130px!important}
+  .audit-checks,.audit-report-preview,.audit-method-v2{padding:9vh 20px!important}.audit-check-grid{display:block!important;border-left:0!important}.audit-check-grid article{min-height:0!important;padding:24px 0!important;border-right:0!important}.audit-check-grid h3{font-size:34px!important;margin:22px 0 10px!important}
+  .audit-preview-stack{display:block!important}.audit-preview-stack article{min-height:0!important;margin-bottom:8px!important}.audit-preview-stack article:first-child{min-height:260px!important}.audit-preview-stack article:first-child>strong{font-size:110px!important;margin:36px 0!important}
+  .audit-scanning-v2{padding:calc(64px + 5vh) 20px calc(92px + env(safe-area-inset-bottom))!important;min-height:100svh!important}.audit-scanning-v2 .scanner-grid{min-height:0!important;display:block!important}.holo-scanner{height:300px!important;margin-top:4vh!important;transform:none!important}.audit-scan-footer{position:fixed!important;left:20px!important;right:20px!important;bottom:calc(76px + env(safe-area-inset-bottom))!important;background:#050505!important;padding-bottom:8px!important;z-index:5!important}
+  .audit-report section{padding-left:20px!important;padding-right:20px!important}.audit-score-hero{min-height:100svh!important;display:flex!important;flex-direction:column!important;justify-content:center!important;gap:5vh!important}.score-orbit{width:220px!important;height:220px!important;align-self:center!important}.audit-sticky-nav{display:none!important}.audit-issue-band,.audit-verdict,.audit-modernity,.audit-seo,.audit-content-gaps,.audit-impact,.audit-do-nothing,.audit-strengths,.audit-next{padding-top:8vh!important;padding-bottom:8vh!important}.issue-list article{grid-template-columns:36px 1fr!important;gap:12px!important}.seo-columns,.content-gap-grid,.impact-list,.audit-actions{display:block!important}.seo-columns article,.content-gap-grid article,.impact-list article,.audit-actions a{margin-bottom:8px!important}.audit-next .button{width:100%!important}
+
+  /* Builder: options are compact tap rows; preview stays inside viewport. */
+  .builder-page-v2{padding-left:20px!important;padding-right:20px!important}.builder-shell-v2{width:100%!important}.builder-options button{min-height:112px!important}.builder-live{width:100%!important;min-height:0!important}.builder-browser{min-height:390px!important;transform:none!important}.builder-browser-hero{min-height:250px!important}.builder-browser-grid{grid-template-columns:1fr 1fr!important}.builder-browser-grid i:nth-child(3){display:none!important}
+
+  /* Footer / CTAs */
+  .final-actions,.site-footer-simple>div{display:grid!important;grid-template-columns:1fr!important;gap:8px!important}.final-actions .button{width:100%!important}.site-footer-simple{padding-left:20px!important;padding-right:20px!important;text-align:left!important}.site-footer-simple img{max-width:170px!important}
+}
+
+@media (max-width: 390px){
+  .sequence-copy strong{font-size:48px!important}
+  .rebuild-phases,.autopsy-steps{grid-template-columns:1fr!important}
+  .audit-entry-proof{grid-template-columns:1fr!important}
+  .mobile-dock{width:calc(100vw - 20px)!important}
+}
+
+@media (prefers-reduced-motion: reduce){
+  .sequence.is-ready .sequence-poster{opacity:1!important}.sequence canvas{display:none!important}
+  .audit-radar b,.audit-console-scan,.nf-orbit,.nf-route b{animation:none!important}
+}
