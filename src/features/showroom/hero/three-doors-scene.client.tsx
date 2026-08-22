@@ -86,162 +86,33 @@ function CameraRig() {
   return <PerspectiveCamera ref={camera} makeDefault position={[-1.15, 0.72, 6.72]} fov={40} near={0.1} far={50} />;
 }
 
-// Real Estate — warm oxidized bronze, dark oak/smoked timber jambs, limestone
-// threshold and plinths, warm architectural cove light. Proportions read
-// wider and more classical than the other two portals.
-function EstateArchitecture() {
+function PortalArchitecture({ accent }: { accent: string }) {
   return (
     <group>
-      <RoundedBox castShadow receiveShadow args={[2.92, 0.32, 0.94]} radius={0.05} position={[0, 2.2, 0]}>
-        <meshPhysicalMaterial color="#7c5a34" roughness={0.4} metalness={0.7} clearcoat={0.22} clearcoatRoughness={0.35} />
+      <RoundedBox castShadow receiveShadow args={[2.78, 0.34, 0.86]} radius={0.07} position={[0, 2.13, 0]}>
+        <meshPhysicalMaterial color="#24272c" roughness={0.27} metalness={0.62} clearcoat={0.24} />
       </RoundedBox>
-      <RoundedBox args={[2.62, 0.09, 0.86]} radius={0.02} position={[0, 2.01, 0.02]}>
-        <meshPhysicalMaterial color="#2c2018" roughness={0.6} metalness={0.05} />
-      </RoundedBox>
-      {[-1.3, 1.3].map((x) => (
-        <group key={x} position={[x, 0.04, 0]}>
-          <RoundedBox castShadow receiveShadow args={[0.42, 4.14, 0.94]} radius={0.04}>
-            <meshPhysicalMaterial color="#3c2c1d" roughness={0.52} metalness={0.04} clearcoat={0.08} />
+      {[-1.22, 1.22].map((x) => (
+        <group key={x} position={[x, 0.1, 0]}>
+          <RoundedBox castShadow receiveShadow args={[0.34, 4.26, 0.86]} radius={0.07}>
+            <meshPhysicalMaterial color="#202328" roughness={0.32} metalness={0.56} clearcoat={0.2} />
           </RoundedBox>
-          {[-0.09, 0.09].map((fx) => (
-            <mesh key={fx} position={[fx, 0, 0.475]}>
-              <boxGeometry args={[0.018, 3.9, 0.015]} />
-              <meshStandardMaterial color="#221810" roughness={0.62} />
-            </mesh>
-          ))}
-          <mesh position={[x < 0 ? 0.22 : -0.22, 0, 0.48]}>
-            <boxGeometry args={[0.03, 3.86, 0.035]} />
-            <meshPhysicalMaterial color="#b3854f" metalness={0.82} roughness={0.28} clearcoat={0.4} />
+          <mesh position={[x < 0 ? 0.19 : -0.19, 0, 0.43]}>
+            <boxGeometry args={[0.026, 3.76, 0.035]} />
+            <meshStandardMaterial color={accent} emissive={accent} emissiveIntensity={1.25} toneMapped={false} />
           </mesh>
-          <RoundedBox castShadow receiveShadow args={[0.52, 0.36, 1.02]} radius={0.03} position={[0, -2.04, 0.04]}>
-            <meshStandardMaterial color="#cfc7b5" roughness={0.8} />
-          </RoundedBox>
         </group>
       ))}
-      <RoundedBox castShadow receiveShadow args={[2.6, 0.16, 1.06]} radius={0.03} position={[0, -1.98, 0.1]}>
-        <meshStandardMaterial color="#cfc7b5" roughness={0.76} />
+      <RoundedBox castShadow receiveShadow args={[2.48, 0.18, 1]} radius={0.035} position={[0, -2.02, 0.08]}>
+        <meshPhysicalMaterial color="#171a1e" roughness={0.2} metalness={0.68} clearcoat={0.35} />
       </RoundedBox>
-      <mesh position={[0, -1.895, 0.6]}>
-        <boxGeometry args={[2.34, 0.03, 0.05]} />
-        <meshPhysicalMaterial color="#b3854f" metalness={0.85} roughness={0.24} clearcoat={0.4} />
-      </mesh>
-      <mesh position={[-1.52, 0.06, 0.3]} rotation={[0, Math.PI / 2, 0]}>
-        <planeGeometry args={[1, 4.1]} />
-        <meshStandardMaterial color="#251c14" roughness={0.9} side={THREE.DoubleSide} />
-      </mesh>
-      <mesh position={[1.52, 0.06, 0.3]} rotation={[0, -Math.PI / 2, 0]}>
-        <planeGeometry args={[1, 4.1]} />
-        <meshStandardMaterial color="#251c14" roughness={0.9} side={THREE.DoubleSide} />
+      <mesh position={[0, -1.91, 0.55]}>
+        <boxGeometry args={[2.32, 0.035, 0.36]} />
+        <meshStandardMaterial color={accent} emissive={accent} emissiveIntensity={0.7} toneMapped={false} />
       </mesh>
       <mesh position={[0, 0.1, -0.52]}>
-        <planeGeometry args={[2.4, 4]} />
-        <meshStandardMaterial color="#150f0a" roughness={0.92} side={THREE.DoubleSide} />
-      </mesh>
-    </group>
-  );
-}
-
-// Plumbing — dark technical enamel casing, brushed-steel jambs with rivets,
-// copper conduit run in view, precision blue task light, drainage-grate
-// threshold detail suggesting real mechanical depth behind the panel.
-function ServiceArchitecture() {
-  return (
-    <group>
-      <RoundedBox castShadow receiveShadow args={[2.74, 0.26, 0.88]} radius={0.03} position={[0, 2.14, 0]}>
-        <meshPhysicalMaterial color="#0f1f29" roughness={0.32} metalness={0.5} clearcoat={0.32} clearcoatRoughness={0.22} />
-      </RoundedBox>
-      {[-0.92, -0.52, -0.12, 0.28, 0.68].map((x) => (
-        <mesh key={x} position={[x, 2.14, 0.45]}>
-          <boxGeometry args={[0.26, 0.03, 0.012]} />
-          <meshStandardMaterial color="#3a4a52" metalness={0.7} roughness={0.4} />
-        </mesh>
-      ))}
-      {[-1.24, 1.24].map((x) => (
-        <group key={x} position={[x, 0.06, 0]}>
-          <RoundedBox castShadow receiveShadow args={[0.32, 4.22, 0.88]} radius={0.025}>
-            <meshPhysicalMaterial color="#8b96a0" roughness={0.36} metalness={0.82} clearcoat={0.14} />
-          </RoundedBox>
-          {[-1.6, -0.8, 0, 0.8, 1.6].map((y) => (
-            <mesh key={y} position={[x < 0 ? 0.17 : -0.17, y, 0.45]}>
-              <cylinderGeometry args={[0.02, 0.02, 0.04, 10]} />
-              <meshStandardMaterial color="#c8ced2" metalness={0.9} roughness={0.25} />
-            </mesh>
-          ))}
-          <mesh position={[x < 0 ? 0.23 : -0.23, 0, 0.5]}>
-            <cylinderGeometry args={[0.035, 0.035, 4, 16]} />
-            <meshPhysicalMaterial color="#b87748" roughness={0.22} metalness={0.88} clearcoat={0.3} />
-          </mesh>
-          {[-1.4, 0, 1.4].map((y) => (
-            <mesh key={y} rotation={[Math.PI / 2, 0, 0]} position={[x < 0 ? 0.23 : -0.23, y, 0.5]}>
-              <torusGeometry args={[0.06, 0.018, 8, 20]} />
-              <meshStandardMaterial color="#d8e0e4" metalness={0.85} roughness={0.3} />
-            </mesh>
-          ))}
-        </group>
-      ))}
-      <RoundedBox castShadow receiveShadow args={[2.46, 0.14, 1.02]} radius={0.02} position={[0, -2.0, 0.08]}>
-        <meshPhysicalMaterial color="#12222c" roughness={0.3} metalness={0.4} clearcoat={0.35} />
-      </RoundedBox>
-      {[-0.8, -0.4, 0, 0.4, 0.8].map((x) => (
-        <mesh key={x} position={[x, -1.925, 0.5]}>
-          <boxGeometry args={[0.03, 0.02, 0.3]} />
-          <meshStandardMaterial color="#3a4a52" metalness={0.6} roughness={0.5} />
-        </mesh>
-      ))}
-      <mesh position={[0, 0.1, -0.52]}>
-        <planeGeometry args={[2.24, 3.9]} />
-        <meshStandardMaterial color="#0a161d" roughness={0.88} side={THREE.DoubleSide} />
-      </mesh>
-    </group>
-  );
-}
-
-// Injury Law — ink-blackened metal frame, deep oxblood reveal insert with
-// brass hairline trim, an archival glass/vellum transom panel above the
-// header instead of a plain LED strip, calm restrained light.
-function LawArchitecture() {
-  return (
-    <group>
-      <RoundedBox castShadow receiveShadow args={[2.84, 0.3, 0.9]} radius={0.04} position={[0, 2.22, 0]}>
-        <meshPhysicalMaterial color="#14161c" roughness={0.35} metalness={0.58} clearcoat={0.42} clearcoatRoughness={0.26} />
-      </RoundedBox>
-      <mesh position={[0, 1.87, 0.42]}>
-        <planeGeometry args={[2.24, 0.34]} />
-        <meshPhysicalMaterial
-          color="#e9ddc4"
-          emissive="#e9ddc4"
-          emissiveIntensity={0.85}
-          transparent
-          opacity={0.7}
-          roughness={0.42}
-          transmission={0.18}
-          side={THREE.DoubleSide}
-        />
-      </mesh>
-      {[-1.28, 1.28].map((x) => (
-        <group key={x} position={[x, 0.02, 0]}>
-          <RoundedBox castShadow receiveShadow args={[0.36, 4.26, 0.9]} radius={0.035}>
-            <meshPhysicalMaterial color="#111319" roughness={0.3} metalness={0.6} clearcoat={0.36} />
-          </RoundedBox>
-          <RoundedBox args={[0.1, 3.8, 0.05]} radius={0.01} position={[x < 0 ? 0.2 : -0.2, 0, 0.44]}>
-            <meshStandardMaterial color="#5c2430" roughness={0.85} />
-          </RoundedBox>
-          <mesh position={[x < 0 ? 0.25 : -0.25, 0, 0.47]}>
-            <boxGeometry args={[0.015, 3.75, 0.02]} />
-            <meshPhysicalMaterial color="#8f6a3c" metalness={0.7} roughness={0.32} clearcoat={0.3} />
-          </mesh>
-        </group>
-      ))}
-      <RoundedBox castShadow receiveShadow args={[2.54, 0.16, 1.02]} radius={0.03} position={[0, -2.02, 0.08]}>
-        <meshPhysicalMaterial color="#14161c" roughness={0.28} metalness={0.55} clearcoat={0.42} />
-      </RoundedBox>
-      <mesh position={[0, -1.915, 0.58]}>
-        <boxGeometry args={[2.28, 0.024, 0.04]} />
-        <meshPhysicalMaterial color="#8f6a3c" metalness={0.75} roughness={0.28} clearcoat={0.3} />
-      </mesh>
-      <mesh position={[0, 0.08, -0.54]}>
-        <planeGeometry args={[2.34, 3.9]} />
-        <meshStandardMaterial color="#0d0f14" roughness={0.9} side={THREE.DoubleSide} />
+        <planeGeometry args={[2.16, 3.84]} />
+        <meshStandardMaterial color="#0d1014" roughness={0.92} side={THREE.DoubleSide} />
       </mesh>
     </group>
   );
@@ -261,80 +132,9 @@ function WorldRig({ industry, children }: { industry: IndustrySlug; children: Re
   return <group ref={group}>{children}</group>;
 }
 
-type HandleStyle = "lever" | "wheel" | "bar";
-
-// Each industry gets hardware that reads as a different trade rather than a
-// recolored copy: a lever set for the residential door, a valve wheel for
-// the service door, and a full architectural pull bar for the archive door.
-function DoorHandle({ style, accent }: { style: HandleStyle; accent: string }) {
-  if (style === "wheel") {
-    // A valve-wheel faces the visitor head-on (torus/spokes lie naturally in
-    // the XY plane, hole axis along Z), mounted on a standoff protruding
-    // from the door face — a shut-off wheel, not a recolored lever.
-    return (
-      <group position={[0.58, 0, 0.2]}>
-        <mesh position={[0, 0, 0.06]} rotation={[Math.PI / 2, 0, 0]}>
-          <cylinderGeometry args={[0.032, 0.032, 0.12, 16]} />
-          <meshPhysicalMaterial color="#8b96a0" metalness={0.85} roughness={0.24} />
-        </mesh>
-        <group position={[0, 0, 0.13]}>
-          <mesh>
-            <torusGeometry args={[0.16, 0.028, 12, 28]} />
-            <meshPhysicalMaterial color={accent} metalness={0.9} roughness={0.18} clearcoat={0.4} />
-          </mesh>
-          {[0, 1, 2, 3].map((i) => (
-            <mesh key={i} rotation={[0, 0, (Math.PI / 2) * i]}>
-              <boxGeometry args={[0.02, 0.28, 0.02]} />
-              <meshStandardMaterial color={accent} metalness={0.88} roughness={0.2} />
-            </mesh>
-          ))}
-        </group>
-      </group>
-    );
-  }
-  if (style === "bar") {
-    return (
-      <mesh position={[0.72, 0, 0.27]}>
-        <cylinderGeometry args={[0.028, 0.028, 1.7, 20]} />
-        <meshPhysicalMaterial color={accent} metalness={0.68} roughness={0.32} clearcoat={0.3} />
-      </mesh>
-    );
-  }
-  return (
-    <group>
-      <RoundedBox args={[0.13, 0.58, 0.09]} radius={0.035} position={[0.78, 0, 0.23]}>
-        <meshPhysicalMaterial color={accent} metalness={0.92} roughness={0.16} clearcoat={0.5} />
-      </RoundedBox>
-      <mesh position={[0.57, 0, 0.29]} rotation={[0, 0, Math.PI / 2]}>
-        <cylinderGeometry args={[0.045, 0.045, 0.42, 24]} />
-        <meshPhysicalMaterial color={accent} metalness={0.95} roughness={0.13} clearcoat={0.5} />
-      </mesh>
-    </group>
-  );
-}
-
-function DoorLeaf({
-  industry,
-  color,
-  accent,
-  handle,
-  roughness = 0.27,
-  metalness = 0.26,
-  hingeColor = "#777d83",
-  children,
-}: {
-  industry: IndustrySlug;
-  color: string;
-  accent: string;
-  handle: HandleStyle;
-  roughness?: number;
-  metalness?: number;
-  hingeColor?: string;
-  children?: ReactNode;
-}) {
+function DoorLeaf({ industry, color, accent, children }: { industry: IndustrySlug; color: string; accent: string; children?: ReactNode }) {
   const hinge = useRef<THREE.Group>(null);
   const material = useRef<THREE.MeshPhysicalMaterial>(null);
-  const restingClearcoat = 0.2 + roughness * -0.2 + metalness * 0.3;
   useFrame((_, delta) => {
     if (!hinge.current) return;
     const { progress, activeIndustry, transitionIndustry } = useHeroScroll.getState();
@@ -343,38 +143,36 @@ function DoorLeaf({
     const entering = transitionIndustry === industry;
     const target = entering ? -1.42 : active ? -0.94 * hub : -0.12 * hub;
     hinge.current.rotation.y = damp(hinge.current.rotation.y, target, delta, entering ? 7.2 : 5.6);
-    if (material.current)
-      material.current.clearcoat = damp(material.current.clearcoat, active ? restingClearcoat + 0.2 : restingClearcoat, delta, 4.5);
+    if (material.current) material.current.clearcoat = damp(material.current.clearcoat, active ? 0.48 : 0.28, delta, 4.5);
   });
 
   return (
     <group ref={hinge} position={[-1.075, 0.1, 0.24]}>
       <group position={[1.075, 0, 0]}>
         <RoundedBox castShadow receiveShadow args={[2.14, 3.84, 0.24]} radius={0.035} smoothness={5}>
-          <meshPhysicalMaterial
-            ref={material}
-            color={color}
-            roughness={roughness}
-            metalness={metalness}
-            clearcoat={restingClearcoat}
-            clearcoatRoughness={0.3}
-          />
+          <meshPhysicalMaterial ref={material} color={color} roughness={0.27} metalness={0.26} clearcoat={0.3} clearcoatRoughness={0.3} />
         </RoundedBox>
         <RoundedBox args={[1.76, 1.28, 0.075]} radius={0.025} position={[0, 0.86, 0.15]}>
-          <meshPhysicalMaterial color={color} roughness={roughness + 0.07} metalness={metalness * 0.7} clearcoat={0.2} />
+          <meshPhysicalMaterial color={color} roughness={0.34} metalness={0.18} clearcoat={0.2} />
         </RoundedBox>
         <RoundedBox args={[1.76, 1.5, 0.075]} radius={0.025} position={[0, -0.72, 0.15]}>
-          <meshPhysicalMaterial color={color} roughness={roughness + 0.07} metalness={metalness * 0.7} clearcoat={0.2} />
+          <meshPhysicalMaterial color={color} roughness={0.34} metalness={0.18} clearcoat={0.2} />
         </RoundedBox>
         <mesh position={[0, 0, 0.2]}>
           <boxGeometry args={[1.9, 0.018, 0.018]} />
           <meshStandardMaterial color={accent} metalness={0.8} roughness={0.2} />
         </mesh>
-        <DoorHandle style={handle} accent={accent} />
+        <RoundedBox args={[0.13, 0.58, 0.09]} radius={0.035} position={[0.78, 0, 0.23]}>
+          <meshPhysicalMaterial color={accent} metalness={0.92} roughness={0.16} clearcoat={0.5} />
+        </RoundedBox>
+        <mesh position={[0.57, 0, 0.29]} rotation={[0, 0, Math.PI / 2]}>
+          <cylinderGeometry args={[0.045, 0.045, 0.42, 24]} />
+          <meshPhysicalMaterial color={accent} metalness={0.95} roughness={0.13} clearcoat={0.5} />
+        </mesh>
         {[-1.5, 1.5].map((y) => (
           <mesh key={y} position={[-1.08, y, 0]}>
             <cylinderGeometry args={[0.055, 0.055, 0.27, 18]} />
-            <meshStandardMaterial color={hingeColor} metalness={0.85} roughness={0.22} />
+            <meshStandardMaterial color="#777d83" metalness={0.85} roughness={0.22} />
           </mesh>
         ))}
         {children}
@@ -461,55 +259,15 @@ function LawInterior() {
 }
 
 function EstatePortal() {
-  return (
-    <group position={[portalX["real-estate"], 0, -0.38]}>
-      <EstateArchitecture />
-      <EstateInterior />
-      <DoorLeaf industry="real-estate" color="#4a3527" accent="#c8a46d" handle="lever" roughness={0.5} metalness={0.06} hingeColor="#8a6a45">
-        {[-0.55, 0, 0.55].map((x) => (
-          <mesh key={x} position={[x, 0.8, 0.205]}>
-            <boxGeometry args={[0.022, 0.98, 0.018]} />
-            <meshStandardMaterial color="#c8a46d" metalness={0.74} roughness={0.25} />
-          </mesh>
-        ))}
-      </DoorLeaf>
-      <PortalLight industry="real-estate" color="#e6b56f" />
-    </group>
-  );
+  return <group position={[portalX["real-estate"], 0, -0.38]}><PortalArchitecture accent="#caa56b" /><EstateInterior /><DoorLeaf industry="real-estate" color="#4a3527" accent="#c8a46d">{[-0.55, 0, 0.55].map((x) => <mesh key={x} position={[x, 0.8, 0.205]}><boxGeometry args={[0.022, 0.98, 0.018]} /><meshStandardMaterial color="#c8a46d" metalness={0.74} roughness={0.25} /></mesh>)}</DoorLeaf><PortalLight industry="real-estate" color="#e6b56f" /></group>;
 }
 
 function ServicePortal() {
-  return (
-    <group position={[portalX.plumbing, 0, 0]}>
-      <ServiceArchitecture />
-      <ServiceInterior />
-      <DoorLeaf industry="plumbing" color="#17384d" accent="#b87748" handle="wheel" roughness={0.3} metalness={0.16} hingeColor="#9aa4ab">
-        <mesh position={[0, 0.84, 0.21]} rotation={[Math.PI / 2, 0, 0]}>
-          <torusGeometry args={[0.28, 0.035, 14, 38]} />
-          <meshStandardMaterial color="#b87748" roughness={0.2} metalness={0.9} />
-        </mesh>
-      </DoorLeaf>
-      <PortalLight industry="plumbing" color="#5f79ff" />
-    </group>
-  );
+  return <group position={[portalX.plumbing, 0, 0]}><PortalArchitecture accent="#6f8fff" /><ServiceInterior /><DoorLeaf industry="plumbing" color="#17384d" accent="#b87748"><mesh position={[0, 0.84, 0.21]} rotation={[Math.PI / 2, 0, 0]}><torusGeometry args={[0.28, 0.035, 14, 38]} /><meshStandardMaterial color="#b87748" roughness={0.2} metalness={0.9} /></mesh></DoorLeaf><PortalLight industry="plumbing" color="#5f79ff" /></group>;
 }
 
 function LawPortal() {
-  return (
-    <group position={[portalX["injury-law"], 0, -0.38]}>
-      <LawArchitecture />
-      <LawInterior />
-      <DoorLeaf industry="injury-law" color="#33252c" accent="#a86d7b" handle="bar" roughness={0.24} metalness={0.5} hingeColor="#2a2d33">
-        {[-0.42, -0.14, 0.16, 0.46].map((x, index) => (
-          <mesh key={x} position={[x, 0.84 + index * 0.035, 0.205]} rotation={[0, 0, -0.04 + index * 0.025]}>
-            <boxGeometry args={[0.026, 0.94, 0.018]} />
-            <meshStandardMaterial color={index % 2 ? "#d6c8b3" : "#a86d7b"} metalness={0.35} roughness={0.38} />
-          </mesh>
-        ))}
-      </DoorLeaf>
-      <PortalLight industry="injury-law" color="#b87988" />
-    </group>
-  );
+  return <group position={[portalX["injury-law"], 0, -0.38]}><PortalArchitecture accent="#b87988" /><LawInterior /><DoorLeaf industry="injury-law" color="#33252c" accent="#a86d7b">{[-0.42, -0.14, 0.16, 0.46].map((x, index) => <mesh key={x} position={[x, 0.84 + index * 0.035, 0.205]} rotation={[0, 0, -0.04 + index * 0.025]}><boxGeometry args={[0.026, 0.94, 0.018]} /><meshStandardMaterial color={index % 2 ? "#d6c8b3" : "#a86d7b"} metalness={0.35} roughness={0.38} /></mesh>)}</DoorLeaf><PortalLight industry="injury-law" color="#b87988" /></group>;
 }
 
 function Showroom() {
@@ -580,7 +338,7 @@ export function ThreeDoorsScene({ onFailure, onReady }: ThreeDoorsSceneProps) {
 
   return (
     <div ref={host} className="hero__canvas">
-      <Canvas shadows="soft" dpr={[1, fullQuality ? 1.45 : 1.2]} frameloop={visible ? "always" : "never"} camera={{ position: [-1.15, 0.72, 6.72], fov: 40, near: 0.1, far: 50 }} gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }} onCreated={({ gl }) => { gl.outputColorSpace = THREE.SRGBColorSpace; gl.toneMapping = THREE.ACESFilmicToneMapping; gl.toneMappingExposure = 0.82; }}>
+      <Canvas shadows dpr={[1, fullQuality ? 1.45 : 1.2]} frameloop={visible ? "always" : "never"} camera={{ position: [-1.15, 0.72, 6.72], fov: 40, near: 0.1, far: 50 }} gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }} onCreated={({ gl }) => { gl.outputColorSpace = THREE.SRGBColorSpace; gl.toneMapping = THREE.ACESFilmicToneMapping; gl.toneMappingExposure = 0.82; }}>
         <color attach="background" args={["#0b0e12"]} /><fog attach="fog" args={["#0b0e12", 8.4, 19]} /><ambientLight intensity={0.23} />
         <directionalLight castShadow shadow-mapSize-width={1024} shadow-mapSize-height={1024} position={[4, 6.5, 6]} intensity={2.7} color="#f3e8d5" /><directionalLight position={[-5, 2.5, 3]} intensity={0.9} color="#6479a9" />
         <Suspense fallback={null}><Showroom /><ShowroomEnvironment /></Suspense>

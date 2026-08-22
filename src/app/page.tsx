@@ -3,6 +3,7 @@ import { OnlevMarketing } from "@/features/onlev/marketing/onlev-marketing";
 import {
   OnlevOpening,
   ShowroomHero,
+  ShowroomCoda,
 } from "@/features/showroom/hero/showroom-hero";
 
 export default function Home() {
@@ -13,6 +14,7 @@ export default function Home() {
         <OnlevOpening />
         <OnlevMarketing />
         <ShowroomHero />
+        <ShowroomCoda />
       </main>
     </>
   );

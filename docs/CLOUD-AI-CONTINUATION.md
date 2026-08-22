@@ -91,3 +91,9 @@ pnpm build
 ```
 
 Do not call the work complete merely because it builds. The final decision is visual: the opening and Three Doors must look commissioned, physically believable, and specific to ONLEV rather than AI-generated decoration.
+
+
+Treat docs/CLOUD-AI-CONTINUATION.md as the implementation brief. Read the permanent /docs/ files first, inspect the existing project, preserve all completed demo websites, and focus only on improving the ONLEV opening and final Three Doors experience. Do not re-plan or replace working systems. Implement, visually test, fix issues, update CURRENT-STATE.md, and return the complete updated project as a ZIP.
+
+
+

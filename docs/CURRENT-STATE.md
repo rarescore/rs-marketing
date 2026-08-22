@@ -2,27 +2,18 @@
 
 Last updated: 2026-08-22
 
-Current phase: **Stage 2 in progress — Three Doors portal geometry/material upgrade (procedural, not commissioned assets)**
+Current phase: **ONLEV cinematic opening revision implemented and production checks passing**
 
-## Stage 2 — Portal architecture and material differentiation
+## ONLEV cinematic opening revision
 
-- Replaced the single shared `PortalArchitecture` component (one frame recolored three times) with three distinct architecture assemblies: `EstateArchitecture`, `ServiceArchitecture`, `LawArchitecture` in `three-doors-scene.client.tsx`. Each now has its own proportions, jamb/header/threshold profiles, and wall-return geometry rather than a shared shape with a swapped accent color.
-- Real Estate: oxidized-bronze header/reveal trim, fluted dark-oak jambs, limestone plinths and threshold with a bronze expansion strip.
-- Plumbing: dark technical-enamel header/threshold, brushed-steel jambs with visible rivets, a copper conduit run with pipe-union clamps along each jamb, a header vent grille, and threshold drainage-grate lines.
-- Injury Law: ink-blackened metal frame, an archival glass/vellum transom panel above the header (replacing the plain LED strip used elsewhere), oxblood reveal inserts with brass hairline trim.
-- Added per-industry door hardware: a lever set for Real Estate, a valve wheel for Plumbing, and a full vertical pull bar for Injury Law, replacing the shared plate-and-cylinder handle used on all three doors.
-- `DoorLeaf` now takes `handle`, `roughness`, `metalness`, and `hingeColor` so each door's finish matches its material story (matte low-metalness oak for Real Estate, semi-gloss enamel for Plumbing, higher-metalness blackened finish for Injury Law) instead of one fixed material for all three.
-- Interaction logic (hover/focus selection, hinge rotation, camera rig, world-interior mechanisms) was intentionally left untouched this pass — this was a geometry/material pass only, not the hover-physics or performance-tiering workstream.
-
-### Stage 2 verification
-
-- `pnpm typecheck`, `pnpm lint`, `pnpm test` (5/5), and `pnpm build` (87 routes) all pass after the change.
-- No new dependencies, textures, or image assets were added; the additional geometry is primitive meshes (box/cylinder/torus/plane), so first-load JS impact is expected to be negligible, but a direct before/after bundle-size comparison was not captured this pass.
-- Visual review in an actual browser (desktop/tablet/mobile breakpoints, hover/focus per door) has not been performed in this pass — verification here is limited to type/lint/test/build passing and code review of the geometry math.
-
-### Honest limitation carried forward
-
-- This remains procedural R3F geometry, not authored GLB/glTF assets with baked normal/roughness/AO maps. It is a meaningfully more detailed and differentiated version of the same technique, not the commissioned-asset fidelity the continuation note describes as the eventual target.
+- Replaced the flat CSS-only ONLEV opening composition with a capability-gated React Three Fiber monument. Independent frame, letterform, nickel, graphite, translucent system-layer, and warm-metal beam geometry now travels from an exploded architectural state into the resolved ONLEV mark.
+- The opening uses a reversible GSAP/ScrollTrigger master progression. Real object transforms, camera lateral travel, lighting response, shadows, material response, and selective bloom/vignette provide the motion; no still-image zoom, pan, parallax, generated slideshow, music, or mandatory intro is used.
+- Added three concise semantic narrative beats outside WebGL so the offer remains clear immediately and without the cinematic layer. The authored mobile and reduced-motion alternatives retain the same story without mounting WebGL or scroll-scrubbed depth motion.
+- Added a dedicated `?qa=cinematic` software-WebGL QA override for controlled testing without weakening normal capability checks.
+- Corrected mobile opening typography and progress treatment at 390px so the headline and actions do not clip.
+- The Three Doors remains late in the ONLEV journey but is no longer the absolute page ending. A short post-showroom coda gives visitors who do not match one of the three demonstrations a clear walkthrough route without weakening direct door selection.
+- Demo showroom controls now expose **Exit / Switch**, with explicit routes back to ONLEV, the Three Doors, and each other demo. Root hash resolution is stabilized for returns from demo routes.
+- TypeScript, ESLint, all five production-contract tests, and the Next.js Webpack production build pass. Desktop and 390px fallback compositions were rendered and inspected; the forced WebGL path mounted and rendered frames without application errors. Three.js emits its upstream `Clock` deprecation warning through the current R3F dependency, but no project console error was observed.
 
 ## Stage 1 — ONLEV order and Three Doors correction
 
@@ -30,7 +21,7 @@ Current phase: **Stage 2 in progress — Three Doors portal geometry/material up
 - Replaced early demo-entry actions on the root journey with links to the final showroom. Footer industry links now return to the final selection state instead of bypassing it.
 - Converted all three portal surfaces into direct semantic links. Hover, pointer entry, and keyboard focus immediately select the corresponding industry, open that physical 3D door, reveal its world, shift lighting/depth/camera response, and prefetch the destination. Clicking the door itself enters the demo; the former separate entry CTA was removed.
 - Added permanent, explicit portal labels: **REAL ESTATE**, **PLUMBING**, and **INJURY LAW**.
-- Replaced the former 340-viewport opening showroom track with a bounded final chamber at the end of the document. The hub is now the last page section, resolves in one viewport on desktop, and cannot be accidentally scrolled past. No persistent wheel/touch scroll hijacking was added.
+- Replaced the former 340-viewport opening showroom track with a bounded final chamber late in the document. It resolves in one viewport on desktop and is followed only by a concise ONLEV walkthrough coda. No persistent wheel/touch scroll hijacking was added.
 - Added an authored mobile final chamber with three direct portal targets and the existing no-WebGL fallback. Reduced motion keeps the final composition and direct links while removing spatial motion.
 - Preserved all Real Estate, Plumbing, Injury Law, System Lens, and showroom-control implementations.
 - Stage 1 TypeScript, ESLint, production-contract tests, and the 87-route Webpack production build pass. Desktop rendered structure and the final hub composition were inspected in the local production preview.
