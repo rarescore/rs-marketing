@@ -11,7 +11,7 @@ const signals = [
 
 export function SystemProofPulse() {
   const [active, setActive] = useState(0);
-  const signal = signals[active];
+  const signal = signals[active] ?? signals[0];
   return (
     <section className="onlev-proof-pulse" aria-labelledby="onlev-proof-pulse-title">
       <div className="onlev-proof-pulse__head"><p className="onlev-kicker">Touch the system</p><h2 id="onlev-proof-pulse-title">Follow one customer signal all the way through.</h2><p>ONLEV is not describing a stack. It is designing what happens between intent and a useful human response.</p></div>

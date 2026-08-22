@@ -15,7 +15,7 @@ const decisions = [
 
 export function PropertyDecisionCompass() {
   const [active, setActive] = useState(0);
-  const item = decisions[active];
+  const item = decisions[active] ?? decisions[0];
   return (
     <section className="re-decision-compass" aria-labelledby="re-decision-title">
       <div className="re-decision-compass__intro">

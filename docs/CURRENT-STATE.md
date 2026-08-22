@@ -467,3 +467,13 @@ Verified on 2026-08-22:
 - Homepage, neighborhood, listings, tools, forms, and mobile navigation were visually inspected with no remaining clipping or broken composition.
 - Reduced-motion behavior was verified through implementation inspection because the browser harness exposes no media-emulation capability.
 - A fresh browser pass across homepage, search, and the flagship tool produced zero console warnings/errors and no framework overlay.
+
+## 2026-08-22 — Vercel strict-TypeScript deployment correction
+
+Vercel's production build surfaced three `noUncheckedIndexedAccess`/tuple-inference errors that were not visible in the earlier transpile-only compatibility gate. These are now corrected without changing the visual design or business logic:
+
+- `src/app/showroom/injury-law/after-an-accident/page.tsx`: guidance data is now preserved as readonly 3-item tuples (`as const`) so it satisfies the `GuidanceStep` contract.
+- `src/features/demos/real-estate/editorial-explorers.client.tsx`: the active decision uses the first authored item as a guaranteed fallback when an indexed lookup is considered possibly undefined by strict TypeScript.
+- `src/features/onlev/site/system-proof-pulse.client.tsx`: the active signal uses the first authored signal as the same strict-safe fallback.
+
+The Stage 1–4 compatibility regression suite still passes 8/8 after these deployment corrections. No demo engines, System Lens behavior, Injury Review logic, Three Doors scene, or signature motion systems were altered.
