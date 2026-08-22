@@ -1,0 +1,1 @@
+export default function Loading(){return <main id="injury-main" className="il-form-shell" aria-live="polite"><p className="il-eyebrow">Lev &amp; On Injury Counsel</p><h1 className="il-loading-title">Preparing the clear record…</h1></main>}

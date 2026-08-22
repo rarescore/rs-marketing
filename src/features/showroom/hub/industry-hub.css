@@ -1,0 +1,242 @@
+.hero__reveal {
+  inset: 0;
+  display: block;
+  pointer-events: none;
+}
+
+.industry-hub {
+  --hub-accent: #c7a56f;
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.industry-hub[data-active="plumbing"] { --hub-accent: #6f8fff; }
+.industry-hub[data-active="injury-law"] { --hub-accent: #b87988; }
+
+.industry-hub__heading {
+  position: absolute;
+  top: clamp(7.2rem, 14vh, 9.4rem);
+  left: var(--hero-edge);
+  z-index: 4;
+  width: min(29rem, 31vw);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.industry-hub__heading .hero__kicker { margin-bottom: .75rem; }
+.industry-hub__heading h2 {
+  max-width: 11.4ch;
+  margin: 0;
+  font-size: clamp(2.15rem, 3.55vw, 4.25rem);
+  font-weight: 470;
+  letter-spacing: -.055em;
+  line-height: .94;
+  text-wrap: balance;
+}
+.industry-hub__heading > p:last-child {
+  max-width: 30rem;
+  margin: 1rem 0 0;
+  color: rgb(243 240 233 / 56%);
+  font-size: clamp(.78rem, .9vw, .92rem);
+  line-height: 1.55;
+}
+
+.industry-hub__portals {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+}
+
+.industry-hub__portal-link {
+  position: absolute;
+  top: 21%;
+  bottom: 17%;
+  width: 25%;
+  color: var(--palette-bone);
+  opacity: 0;
+  text-decoration: none;
+  outline: none;
+  pointer-events: auto;
+}
+
+.industry-hub__portal-link[data-industry="real-estate"] { left: 10.5%; }
+.industry-hub__portal-link[data-industry="plumbing"] { left: 37.5%; }
+.industry-hub__portal-link[data-industry="injury-law"] { right: 10.5%; }
+
+.industry-hub__portal-hit {
+  position: absolute;
+  inset: 0 5% 7rem;
+  border: 1px solid transparent;
+  transition: border-color var(--motion-control) ease, background-color var(--motion-control) ease;
+}
+
+.industry-hub__portal-link:hover .industry-hub__portal-hit,
+.industry-hub__portal-link:focus-visible .industry-hub__portal-hit,
+.industry-hub__portal-link[data-selected="true"] .industry-hub__portal-hit {
+  border-color: color-mix(in srgb, var(--hub-accent) 45%, transparent);
+  background: linear-gradient(180deg, transparent 72%, color-mix(in srgb, var(--hub-accent) 8%, transparent));
+}
+
+.industry-hub__portal-link:focus-visible .industry-hub__portal-hit {
+  outline: 2px solid var(--palette-bone);
+  outline-offset: 4px;
+}
+
+.industry-hub__portal-plaque {
+  position: absolute;
+  right: 5%;
+  bottom: 0;
+  left: 5%;
+  display: grid;
+  min-height: 5.8rem;
+  padding: .9rem 2.5rem .9rem .9rem;
+  border-top: 1px solid rgb(243 240 233 / 20%);
+  background: linear-gradient(180deg, rgb(13 15 18 / 32%), rgb(13 15 18 / 72%));
+  backdrop-filter: blur(12px);
+  grid-template-columns: 2rem 1fr;
+  grid-template-rows: auto auto;
+  align-content: center;
+  transition: background-color var(--motion-control) ease, border-color var(--motion-control) ease, transform var(--motion-control) var(--ease-enter);
+}
+
+.industry-hub__portal-link:hover .industry-hub__portal-plaque,
+.industry-hub__portal-link:focus-visible .industry-hub__portal-plaque,
+.industry-hub__portal-link[data-selected="true"] .industry-hub__portal-plaque {
+  border-color: var(--hub-accent);
+  background: linear-gradient(180deg, rgb(13 15 18 / 48%), rgb(13 15 18 / 88%));
+  transform: translateY(-3px);
+}
+
+.industry-hub__portal-plaque small {
+  color: rgb(243 240 233 / 42%);
+  font-family: var(--font-brand-mono);
+  font-size: .58rem;
+  letter-spacing: .08em;
+}
+.industry-hub__portal-plaque strong {
+  font-size: clamp(.86rem,1vw,1rem);
+  font-weight: 580;
+  letter-spacing: -.015em;
+  line-height: 1.2;
+}
+.industry-hub__portal-plaque > span {
+  grid-column: 2;
+  margin-top: .25rem;
+  color: rgb(243 240 233 / 48%);
+  font-size: .65rem;
+  line-height: 1.3;
+}
+.industry-hub__portal-plaque i {
+  position: absolute;
+  right: 1rem;
+  top: 50%;
+  color: var(--hub-accent);
+  font-style: normal;
+  transform: translateY(-50%);
+  transition: transform var(--motion-control) var(--ease-enter);
+}
+.industry-hub__portal-link:hover .industry-hub__portal-plaque i,
+.industry-hub__portal-link:focus-visible .industry-hub__portal-plaque i { transform: translate(3px,-53%); }
+
+.industry-hub__preview {
+  position: absolute;
+  right: var(--hero-edge);
+  top: clamp(7.2rem, 14vh, 9.4rem);
+  z-index: 4;
+  width: min(22rem, 24vw);
+  min-height: 12rem;
+  padding: 1rem 0 0 1.1rem;
+  border-top: 1px solid rgb(243 240 233 / 20%);
+  border-left: 1px solid rgb(243 240 233 / 13%);
+  background: linear-gradient(120deg, rgb(13 15 18 / 70%), rgb(13 15 18 / 12%));
+  opacity: 0;
+  pointer-events: none;
+}
+.industry-hub__preview-name {
+  margin: 0 0 .75rem;
+  color: var(--hub-accent);
+  font-family: var(--font-brand-mono);
+  font-size: .61rem;
+  font-weight: 650;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+.industry-hub__journey { display: grid; margin: 0; gap: .7rem; }
+.industry-hub__journey div { display: grid; grid-template-columns: 5.7rem 1fr; gap: .75rem; }
+.industry-hub__journey dt { color: rgb(243 240 233 / 40%); font-family: var(--font-brand-mono); font-size: .55rem; line-height: 1.45; text-transform: uppercase; }
+.industry-hub__journey dd { margin: 0; color: rgb(243 240 233 / 72%); font-size: .69rem; line-height: 1.42; }
+.industry-hub__enter-hint { margin: .9rem 0 0; color: rgb(243 240 233 / 42%); font-size: .62rem; }
+.industry-hub__status { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+
+.industry-hub__transition {
+  position: absolute;
+  inset: 0;
+  z-index: 12;
+  display: grid;
+  place-items: center;
+  background: #0b0e12;
+  opacity: 0;
+  pointer-events: none;
+  transform: scale(.985);
+  transition: opacity 440ms var(--ease-enter), transform 560ms var(--ease-move);
+}
+.industry-hub__transition::before {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: var(--gateway-origin, 50%);
+  width: 1px;
+  background: var(--hub-accent);
+  box-shadow: 0 0 4rem color-mix(in srgb, var(--hub-accent) 45%, transparent);
+  content: "";
+}
+.industry-hub__transition span {
+  color: rgb(243 240 233 / 72%);
+  font-family: var(--font-brand-mono);
+  font-size: .66rem;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+}
+.industry-hub[data-active="real-estate"] { --gateway-origin: 23%; }
+.industry-hub[data-active="plumbing"] { --gateway-origin: 50%; }
+.industry-hub[data-active="injury-law"] { --gateway-origin: 77%; }
+.industry-hub[data-transitioning] .industry-hub__transition { opacity: 1; transform: scale(1); }
+
+@media (max-width: 63.99rem) {
+  .industry-hub__heading { width: min(24rem, 35vw); }
+  .industry-hub__preview { width: min(18rem, 28vw); }
+  .industry-hub__portal-link[data-industry="real-estate"] { left: 3%; }
+  .industry-hub__portal-link[data-industry="plumbing"] { left: 37.5%; }
+  .industry-hub__portal-link[data-industry="injury-law"] { right: 3%; }
+}
+
+@media (max-width: 47.99rem) {
+  .industry-hub__heading {
+    top: 6.1rem;
+    left: var(--hero-edge);
+    width: calc(100% - var(--hero-edge) * 2);
+  }
+  .industry-hub__heading h2 { max-width: 12ch; font-size: clamp(1.9rem,8.7vw,2.8rem); }
+  .industry-hub__heading > p:last-child { max-width: 34ch; font-size: .72rem; }
+  .industry-hub__preview { display: none; }
+  .industry-hub__portal-link { top: 34%; bottom: 7%; width: 38%; }
+  .industry-hub__portal-link[data-industry="real-estate"] { left: -4%; }
+  .industry-hub__portal-link[data-industry="plumbing"] { left: 31%; }
+  .industry-hub__portal-link[data-industry="injury-law"] { right: -4%; }
+  .industry-hub__portal-hit { inset: 0 3% 7rem; }
+  .industry-hub__portal-plaque { right: 3%; left: 3%; min-height: 5.2rem; padding: .75rem 1.8rem .75rem .7rem; grid-template-columns: 1.35rem 1fr; }
+  .industry-hub__portal-plaque strong { font-size: .77rem; }
+  .industry-hub__portal-plaque > span { font-size: .56rem; }
+  .industry-hub__portal-plaque i { right: .55rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .industry-hub__heading,
+  .industry-hub__portal-link,
+  .industry-hub__preview { opacity: 1 !important; transform: none !important; }
+  .industry-hub__portal-plaque,
+  .industry-hub__portal-plaque i,
+  .industry-hub__transition { transition-duration: .01ms !important; }
+}
