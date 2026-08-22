@@ -117,105 +117,10 @@ function sourceFiles(directory) {
   });
 }
 
-
-
-test("Stage 2 brand and Injury Law contracts stay locked", () => {
-  const review = readFileSync("src/features/demos/injury-law/incident-review.client.tsx", "utf8");
-  const hero = readFileSync("src/features/demos/injury-law/home-hero.client.tsx", "utf8");
-  const confirmation = readFileSync("src/features/demos/injury-law/consultation-form.client.tsx", "utf8");
-  const demoSource = sourceFiles("src").map((file) => readFileSync(file, "utf8")).join("\n");
-
-  assert.ok(existsSync("public/brand/onlev-approved-master.png"));
-  assert.ok(existsSync("public/brand/onlev-approved-boxed.png"));
-  assert.match(demoSource, /Lev & On Residential/);
-  assert.match(demoSource, /Lev & On Home Services/);
-  assert.match(demoSource, /Lev & On Injury Counsel/);
-  assert.doesNotMatch(demoSource, /Atelier North|Field Standard|Morrow & Vale/);
-
-  assert.equal((review.match(/\n\s+short:\s*"/g) ?? []).length, 6);
-  for (const key of [
-    "incident-type",
-    "incident-age",
-    "jurisdiction",
-    "safety",
-    "care",
-    "pain",
-    "daily",
-    "work",
-    "psych",
-    "evidence",
-    "insurance",
-    "contact-readiness",
-  ]) {
-    assert.match(review, new RegExp(`key: "${key}"`));
-  }
-
-  assert.match(hero, /Start Incident Review/);
-  assert.match(hero, /What To Do Now/);
-  assert.match(hero, /il-hero__typed-char/);
-  assert.match(confirmation, /Thank you\. We received your review\./);
-  assert.match(confirmation, /A member of the team will call you shortly\./);
-  assert.match(confirmation, /nothing was actually sent or retained/);
-});
-
 test("source contains no inert hash links or unfinished markers", () => {
   for (const file of sourceFiles("src")) {
     const source = readFileSync(file, "utf8");
     assert.doesNotMatch(source, /href\s*=\s*["']#["']/, `${file} has an inert hash link`);
     assert.doesNotMatch(source, /\b(?:TODO|FIXME)\b/, `${file} has an unfinished marker`);
-  }
-});
-
-test("Stage 3 signature motion systems are real rendered experiences", () => {
-  const injury = readFileSync("src/features/demos/injury-law/clarity-scene.client.tsx", "utf8");
-  const injuryHero = readFileSync("src/features/demos/injury-law/home-hero.client.tsx", "utf8");
-  const estate = readFileSync("src/features/demos/real-estate/architectural-sequence.client.tsx", "utf8");
-  const plumbing = readFileSync("src/features/demos/plumbing/plumbing-system-scene.client.tsx", "utf8");
-  const onlev = readFileSync("src/features/onlev/marketing/system-cinematic.client.tsx", "utf8");
-  const estatePage = readFileSync("src/app/showroom/real-estate/page.tsx", "utf8");
-
-  for (const source of [injury, estate, plumbing, onlev]) {
-    assert.match(source, /<Canvas/);
-    assert.match(source, /useFrame/);
-    assert.doesNotMatch(source, /parallax|pan.?zoom/i);
-  }
-  assert.match(injury, /windshield|crack/i);
-  assert.match(injury, /onResolved/);
-  assert.match(injuryHero, /is-resolved/);
-  assert.match(estate, /CatmullRomCurve3/);
-  assert.match(estatePage, /ArchitecturalSequence/);
-  assert.match(plumbing, /TubeGeometry/);
-  assert.match(onlev, /CatmullRomCurve3/);
-});
-
-test("Stage 4 alive-pass contracts preserve distinct visitor-led page families", () => {
-  const estateListings = readFileSync("src/app/showroom/real-estate/listings/page.tsx", "utf8");
-  const estateNeighborhoods = readFileSync("src/app/showroom/real-estate/neighborhoods/page.tsx", "utf8");
-  const estateExplorer = readFileSync("src/features/demos/real-estate/editorial-explorers.client.tsx", "utf8");
-  const plumbingServices = readFileSync("src/app/showroom/plumbing/services/page.tsx", "utf8");
-  const plumbingExplorer = readFileSync("src/features/demos/plumbing/service-system-explorer.client.tsx", "utf8");
-  const injuryGuide = readFileSync("src/app/showroom/injury-law/after-an-accident/page.tsx", "utf8");
-  const injuryNavigator = readFileSync("src/features/demos/injury-law/guidance-navigator.client.tsx", "utf8");
-  const onlevSystems = readFileSync("src/app/systems/page.tsx", "utf8");
-  const onlevPulse = readFileSync("src/features/onlev/site/system-proof-pulse.client.tsx", "utf8");
-
-  assert.match(estateListings, /PropertyDecisionCompass/);
-  assert.match(estateNeighborhoods, /NeighborhoodStage/);
-  assert.match(estateExplorer, /What does the next home need to solve/);
-  assert.match(estateExplorer, /role="tablist"/);
-
-  assert.match(plumbingServices, /ServiceSystemExplorer/);
-  assert.match(plumbingExplorer, /Which part of the home is asking for attention/);
-  assert.match(plumbingExplorer, /This is orientation, not a diagnosis/);
-
-  assert.match(injuryGuide, /GuidanceNavigator/);
-  assert.match(injuryNavigator, /You do not need to solve everything today/);
-  assert.match(injuryNavigator, /Next useful step/);
-
-  assert.match(onlevSystems, /SystemProofPulse/);
-  assert.match(onlevPulse, /Follow one customer signal all the way through/);
-
-  for (const source of [estateExplorer, plumbingExplorer, injuryNavigator, onlevPulse]) {
-    assert.doesNotMatch(source, /setInterval|requestAnimationFrame/);
   }
 });

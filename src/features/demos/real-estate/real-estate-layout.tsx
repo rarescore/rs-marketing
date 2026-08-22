@@ -1,7 +1,6 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { ShowroomControl } from "@/features/showroom/showroom-control";
-import { LevOnBrand } from "@/features/demos/shared/lev-on-brand";
 import { SystemLensPanel } from "./system-lens-panel.client";
 import { realEstateBase } from "./data";
 
@@ -19,8 +18,8 @@ export function RealEstateLayout({ children }: { children: ReactNode }) {
     <div className="re-site" data-theme="real-estate">
       <a className="re-skip" href="#real-estate-main">Skip to main content</a>
       <header className="re-header">
-        <Link className="re-brand" href={realEstateBase} aria-label="Lev & On Residential, home">
-          <LevOnBrand descriptor="Residential" />
+        <Link className="re-brand" href={realEstateBase} aria-label="Atelier North, home">
+          <span>Atelier</span><span>North</span>
         </Link>
         <nav className="re-nav" aria-label="Real Estate">
           {navigation.map(([label, href]) => <Link key={href} href={href}>{label}</Link>)}
@@ -38,7 +37,7 @@ export function RealEstateLayout({ children }: { children: ReactNode }) {
       {children}
       <footer className="re-footer">
         <div>
-          <Link className="re-brand" href={realEstateBase} aria-label="Lev & On Residential, home"><LevOnBrand descriptor="Residential" compact /></Link>
+          <Link className="re-brand" href={realEstateBase}><span>Atelier</span><span>North</span></Link>
           <p>Residential advisory for Pasadena, Altadena, and the San Gabriel foothills.</p>
         </div>
         <nav aria-label="Footer">

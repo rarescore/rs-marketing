@@ -1,7 +1,6 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { ShowroomControl } from "@/features/showroom/showroom-control";
-import { LevOnBrand } from "@/features/demos/shared/lev-on-brand";
 import { demoPhoneDisplay, demoPhoneHref, plumbingBase } from "./data";
 import { PlumbingSystemLens } from "./system-lens-panel.client";
 
@@ -22,8 +21,9 @@ export function PlumbingLayout({ children }: { children: ReactNode }) {
         <a href={demoPhoneHref} aria-label={`Call demo service line ${demoPhoneDisplay}`}>Service line <strong>{demoPhoneDisplay}</strong></a>
       </div>
       <header className="pl-header">
-        <Link className="pl-brand" href={plumbingBase} aria-label="Lev & On Home Services, home">
-          <LevOnBrand descriptor="Home Services · Plumbing" />
+        <Link className="pl-brand" href={plumbingBase} aria-label="Field Standard Plumbing, home">
+          <span className="pl-brand__mark" aria-hidden="true"><i /><i /><i /></span>
+          <span><strong>FIELD STANDARD</strong><small>PLUMBING SYSTEMS</small></span>
         </Link>
         <nav className="pl-nav" aria-label="Plumbing demo">
           {nav.map(([label, href]) => <Link key={href} href={href}>{label}</Link>)}
@@ -40,14 +40,14 @@ export function PlumbingLayout({ children }: { children: ReactNode }) {
       </header>
       {children}
       <footer className="pl-footer">
-        <div><p className="pl-brandline">LEV &amp; ON / HOME SERVICES · PLUMBING</p><p>Clear findings. Documented options. A practical next step.</p></div>
+        <div><p className="pl-brandline">FIELD STANDARD / PLUMBING SYSTEMS</p><p>Clear findings. Documented options. A practical next step.</p></div>
         <nav aria-label="Plumbing footer">
           <Link href={`${plumbingBase}/services`}>Services</Link>
           <Link href={`${plumbingBase}/tools`}>Planning tools</Link>
           <Link href={`${plumbingBase}/maintenance`}>Maintenance</Link>
           <Link href={`${plumbingBase}/contact`}>Contact</Link>
         </nav>
-        <p className="pl-disclosure">Lev &amp; On Home Services is a fictional demonstration brand. Phone, license, territory, requests, technical outputs, and operating claims are illustrative. Tool results are preliminary and do not replace onsite evaluation, manufacturer instructions, permits, applicable code, or the authority having jurisdiction.</p>
+        <p className="pl-disclosure">Field Standard is a fictional demonstration brand. Phone, license, territory, requests, technical outputs, and operating claims are illustrative. Tool results are preliminary and do not replace onsite evaluation, manufacturer instructions, permits, applicable code, or the authority having jurisdiction.</p>
       </footer>
       <div className="pl-mobile-actions" aria-label="Service actions">
         <a className="pl-mobile-actions__urgent" href={demoPhoneHref}>Urgent? Call</a>

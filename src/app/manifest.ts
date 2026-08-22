@@ -12,9 +12,9 @@ export default function manifest(): MetadataRoute.Manifest {
     theme_color: "#0d0f12",
     icons: [
       {
-        src: "/brand/onlev-approved-boxed-512.png",
-        sizes: "512x512",
-        type: "image/png",
+        src: "/brand/onlev-mark-light.svg",
+        sizes: "any",
+        type: "image/svg+xml",
       },
     ],
   };

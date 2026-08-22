@@ -844,95 +844,187 @@
   }
 }
 
-/* Final Three Doors chamber: this is deliberately the terminal root section. */
-.hero--final {
-  height: 190svh;
-  min-height: 88rem;
+/* The root journey now begins with ONLEV, while the Three Doors resolve as
+   the final, bounded selection chamber at the end of the page. */
+.onlev-opening {
+  --hero-edge: clamp(1.25rem, 3vw, 3.25rem);
+  position: relative;
+  min-height: 100svh;
+  overflow: hidden;
+  isolation: isolate;
+  background:
+    radial-gradient(circle at 71% 47%, rgb(73 105 255 / 17%), transparent 23%),
+    radial-gradient(circle at 68% 48%, rgb(191 146 89 / 12%), transparent 39%),
+    linear-gradient(145deg, #12151a 0%, #080a0d 72%);
+  color: var(--palette-bone);
 }
 
-.hero--final .hero__reveal {
+.onlev-opening::after {
+  position: absolute;
   inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    linear-gradient(90deg, rgb(4 5 7 / 78%) 0%, transparent 52%),
+    url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.88' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.055'/%3E%3C/svg%3E");
+  content: "";
 }
 
-.hero--final .hero__chapter {
-  width: min(11rem, 18vw);
+.onlev-opening__architecture {
+  position: absolute;
+  inset: 5rem 0 0 42%;
+  z-index: -2;
+  perspective: 90rem;
 }
 
-@media (max-width: 63.99rem) {
-  .hero--final {
-    height: 175svh;
-    min-height: 82rem;
-  }
+.onlev-opening__architecture::before,
+.onlev-opening__architecture::after {
+  position: absolute;
+  content: "";
+}
+
+.onlev-opening__architecture::before {
+  inset: 8% 7% 8% 15%;
+  border: 1px solid rgb(243 240 233 / 18%);
+  background: linear-gradient(135deg, rgb(243 240 233 / 6%), transparent 56%);
+  transform: rotateY(-17deg) rotateX(4deg);
+}
+
+.onlev-opening__architecture::after {
+  right: 14%;
+  bottom: 0;
+  left: 2%;
+  height: 42%;
+  background:
+    linear-gradient(90deg, transparent 49.9%, rgb(243 240 233 / 13%) 50%, transparent 50.1%),
+    linear-gradient(165deg, #171b22, #0b0d11);
+  clip-path: polygon(0 48%, 100% 0, 100% 100%, 0 100%);
+  transform: rotateX(18deg);
+  transform-origin: bottom;
+}
+
+.onlev-opening__plane {
+  position: absolute;
+  border: 1px solid rgb(243 240 233 / 10%);
+  background: linear-gradient(145deg, rgb(35 40 49 / 82%), rgb(12 14 18 / 40%));
+}
+
+.onlev-opening__plane--one { inset: 16% 32% 25% 4%; transform: rotateY(26deg); }
+.onlev-opening__plane--two { inset: 9% 8% 18% 54%; transform: rotateY(-21deg); }
+
+.onlev-opening__signal {
+  position: absolute;
+  top: 50%;
+  left: 48%;
+  display: flex;
+  height: 46%;
+  align-items: flex-end;
+  gap: clamp(0.3rem, 0.8vw, 0.8rem);
+  transform: translate(-50%, -50%) skewY(-8deg);
+}
+
+.onlev-opening__signal i {
+  display: block;
+  width: clamp(0.3rem, 0.7vw, 0.65rem);
+  height: var(--signal-height, 72%);
+  background: linear-gradient(180deg, #d4aa70, #4969ff 72%, transparent);
+  box-shadow: 0 0 2rem rgb(73 105 255 / 35%);
+}
+.onlev-opening__signal i:nth-child(2) { --signal-height: 100%; }
+.onlev-opening__signal i:nth-child(3) { --signal-height: 54%; }
+
+.onlev-opening__architecture > .onlev-logo {
+  position: absolute;
+  top: 48%;
+  left: 48%;
+  color: #f3f0e9;
+  transform: translate(-50%, -50%);
+}
+
+.onlev-opening__architecture > .onlev-logo .onlev-logo__mark {
+  width: clamp(9rem, 16vw, 17rem);
+  height: clamp(9rem, 16vw, 17rem);
+  filter: drop-shadow(0 2rem 4rem rgb(0 0 0 / 55%));
+}
+
+.onlev-opening__chapter {
+  position: absolute;
+  right: var(--hero-edge);
+  bottom: clamp(1.5rem, 3vw, 2.75rem);
+  left: var(--hero-edge);
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: rgb(243 240 233 / 42%);
+  font: 0.6rem/1 var(--font-brand-mono);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.onlev-opening__chapter i {
+  height: 1px;
+  flex: 1;
+  background: rgb(243 240 233 / 18%);
+}
+
+.hero--hub {
+  height: 100svh;
+  min-height: 100svh;
+  scroll-margin-top: 0;
+}
+
+.hero--hub .hero__sticky {
+  position: relative;
+}
+
+.hero--hub .hero__reveal {
+  visibility: visible;
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.hero--hub .industry-hub__heading,
+.hero--hub .industry-hub__preview,
+.hero--hub .industry-hub__door {
+  opacity: 1;
 }
 
 @media (max-width: 47.99rem) {
-  .hero--final {
-    height: 155svh;
-    min-height: 68rem;
+  .onlev-opening { min-height: max(100svh, 47rem); }
+  .onlev-opening__architecture { inset: 5rem -20% 0 30%; opacity: 0.72; }
+  .onlev-opening__architecture > .onlev-logo { top: 30%; left: 58%; }
+  .onlev-opening__architecture > .onlev-logo .onlev-logo__mark { width: 8rem; height: 8rem; }
+  .onlev-opening .hero__opening { top: 52%; }
+  .onlev-opening__chapter { bottom: 1.2rem; }
+
+  .hero--hub {
+    height: auto;
+    min-height: 46rem;
   }
 
-  /* Keep the final-chamber labels and fallback architecture in separate visual bands. */
-  .hero--final .hero__portal {
-    top: 34%;
-    height: min(42vh, 22rem);
+  .hero--hub .hero__sticky {
+    height: auto;
+    min-height: 46rem;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .hero--final {
-    height: auto;
-    min-height: 0;
+  .onlev-opening .hero__opening {
+    position: absolute;
+    top: 50%;
+    left: var(--hero-edge);
+    width: min(56rem, calc(100% - var(--hero-edge) * 2));
+    transform: translateY(-44%) !important;
   }
 
-  .hero--final .hero__sticky {
-    position: relative;
-    display: block;
+  .hero--hub,
+  .hero--hub .hero__sticky {
     height: auto;
-    min-height: max(100svh, 54rem);
-    padding: 0;
+    min-height: 46rem;
   }
 
-  .hero--final .hero__reveal {
+  .hero--hub .hero__reveal {
     position: absolute;
     inset: 0;
-    display: block;
-    visibility: visible;
-    opacity: 1 !important;
-  }
-
-  .hero--final .hero__poster {
-    opacity: 0.58;
-    transform: none;
-  }
-
-  .hero--final .hero__chapter {
-    display: none;
   }
 }
-
-/* Authored static portal materials for mobile, reduced motion, and WebGL failure. */
-.hero__portal--estate {
-  border-color: rgb(205 192 166 / 28%);
-  background: linear-gradient(145deg, #9d927f, #5a544a 22%, #2b2722 24% 76%, #716858 78%, #a79a83);
-  box-shadow: 0 2.2rem 5rem rgb(0 0 0 / 42%), inset 0 0 0 .18rem rgb(138 102 65 / 36%);
-}
-.hero__portal--estate::before { border-color: rgb(184 137 84 / 36%); }
-
-.hero__portal--service {
-  border-color: rgb(137 157 168 / 28%);
-  background:
-    radial-gradient(circle at 10% 18%, #9ba7ad 0 .12rem, transparent .14rem),
-    radial-gradient(circle at 90% 18%, #9ba7ad 0 .12rem, transparent .14rem),
-    radial-gradient(circle at 10% 82%, #9ba7ad 0 .12rem, transparent .14rem),
-    radial-gradient(circle at 90% 82%, #9ba7ad 0 .12rem, transparent .14rem),
-    linear-gradient(145deg, #17384d, #0f2635 56%, #345263);
-  box-shadow: 0 2.2rem 5rem rgb(0 0 0 / 45%), inset 0 0 0 .16rem rgb(152 166 173 / 22%);
-}
-.hero__portal--service::before { border-color: rgb(184 119 72 / 42%); }
-
-.hero__portal--law {
-  border-color: rgb(81 76 77 / 46%);
-  background: linear-gradient(145deg, #17191c, #262329 28%, #241b20 72%, #0f1114);
-  box-shadow: 0 2.2rem 5rem rgb(0 0 0 / 48%), inset 0 0 0 .14rem rgb(128 72 84 / 28%);
-}
-.hero__portal--law::before { border-color: rgb(184 121 136 / 30%); }

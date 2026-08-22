@@ -30,9 +30,27 @@ export default function OpenGraphImage() {
               "radial-gradient(circle at 78% 20%, rgba(73,105,255,.22), transparent 32%), radial-gradient(circle at 18% 88%, rgba(202,165,107,.16), transparent 28%), #111318",
           }}
         >
-          <div style={{ display: "flex", alignItems: "center" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "22px" }}>
+            <div
+              style={{
+                display: "flex",
+                width: "72px",
+                height: "72px",
+                alignItems: "center",
+                justifyContent: "center",
+                flexDirection: "column",
+                border: "2px solid #caa56b",
+                fontSize: "20px",
+                fontWeight: 700,
+                letterSpacing: "-1px",
+                lineHeight: .82,
+              }}
+            >
+              <span>ON</span>
+              <span>LEV</span>
+            </div>
             <div style={{ display: "flex", flexDirection: "column" }}>
-              <span style={{ fontSize: "30px", fontWeight: 700, letterSpacing: "4px" }}>ONLEV</span>
+              <span style={{ fontSize: "28px", fontWeight: 700, letterSpacing: "3px" }}>ONLEV</span>
               <span style={{ color: "rgba(243,240,233,.58)", fontSize: "16px", letterSpacing: "3px" }}>DIGITAL SYSTEMS</span>
             </div>
           </div>

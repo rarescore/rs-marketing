@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { OnlevShell } from "@/features/onlev/site/onlev-shell";
-import { SystemProofPulse } from "@/features/onlev/site/system-proof-pulse.client";
 import { DefinitionRows, MarketingPage, PageCta } from "@/features/onlev/site/marketing-page";
 
 export const metadata: Metadata = {
@@ -25,7 +24,6 @@ export default function SystemsPage() {
           <p className="onlev-kicker">The connected scope</p>
           <div className="onlev-page-band__words" aria-label="Typical ONLEV system scope"><span>Positioning</span><span>Brand direction</span><span>Website</span><span>Customer tools</span><span>Qualification</span><span>CRM routing</span><span>Follow-up</span><span>Attribution</span><span>Analytics</span><span>Iteration</span></div>
         </section>
-        <SystemProofPulse />
         <DefinitionRows rows={rows} />
         <section className="onlev-system-map" aria-labelledby="system-map-title">
           <div data-onlev-reveal><p className="onlev-kicker">A useful boundary</p><h2 id="system-map-title">Automation supports the relationship. It does not impersonate it.</h2></div>

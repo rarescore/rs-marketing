@@ -57,15 +57,15 @@
 }
 
 .re-brand {
-  display: inline-flex;
+  display: grid;
   width: max-content;
-  align-items: center;
-  text-decoration: none;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.1rem;
+  letter-spacing: -.04em;
+  line-height: .78;
 }
 
-.re-brand .levon-brand__mark { width: 3.15rem; height: 3.15rem; }
-.re-brand .levon-brand__copy strong { font-family: Georgia, "Times New Roman", serif; font-size: .94rem; font-weight: 500; letter-spacing: .055em; }
-.re-brand .levon-brand__copy small { color: var(--re-muted); font-family: var(--font-brand-sans); letter-spacing: .15em; }
+.re-brand span:last-child { padding-left: 1.45rem; }
 
 .re-nav { display: flex; gap: clamp(1.1rem, 2vw, 2rem); align-items: center; }
 .re-nav a,
@@ -710,76 +710,3 @@
   .re-search-property--lead .re-search-property__body { padding: 1.25rem 0 1.5rem; border-right: 0; }
   .re-search-property h2 { font-size: 2rem; }
 }
-
-/* Stage 3: genuine architectural render + editorial property edit */
-.re-architecture-sequence { position:absolute; inset:0; z-index:0; opacity:0; transition:opacity 700ms cubic-bezier(.2,.7,.2,1); }
-.re-architecture-sequence.is-ready { opacity:1; }
-.re-architecture-sequence canvas { width:100% !important; height:100% !important; }
-.re-architecture-sequence__legend { position:absolute; right:var(--gutter); top:1.5rem; display:flex; align-items:center; gap:.7rem; color:rgb(247 243 234 / 68%); font: .58rem/1 var(--font-brand-mono); letter-spacing:.12em; text-transform:uppercase; }
-.re-architecture-sequence__legend i { width:2rem; height:1px; background:rgb(247 243 234 / 35%); }
-.re-hero__image::after { z-index:1; pointer-events:none; }
-.re-hero__image > img { z-index:-1; }
-.re-property-edit--editorial { grid-template-columns:minmax(0,1.65fr) minmax(18rem,.7fr); gap:clamp(1.5rem,4vw,5rem); align-items:start; }
-.re-property-edit--editorial .re-property-lead { min-height:min(68rem,78svh); }
-.re-property-edit--editorial .re-property-list { position:sticky; top:6.5rem; }
-.re-property-edit--editorial .re-property-row { grid-template-columns:4.6rem 1fr auto; min-height:10.5rem; transition:padding 420ms var(--ease-enter), background-color 420ms var(--ease-enter); }
-.re-property-edit--editorial .re-property-row:hover { padding-inline:.85rem; background:#eee8dc; }
-.re-property-edit--editorial .re-property-row img { width:4.6rem; filter:saturate(.72); transition:filter 420ms var(--ease-enter), transform 520ms var(--ease-enter); }
-.re-property-edit--editorial .re-property-row:hover img { filter:saturate(1); transform:scale(1.04); }
-@media (max-width: 900px) { .re-property-edit--editorial { grid-template-columns:1fr; } .re-property-edit--editorial .re-property-list { position:static; } .re-architecture-sequence { display:none; } }
-
-/* Stage 4 — visitor-led editorial exploration */
-.re-decision-compass { display:grid; grid-template-columns:minmax(16rem,.7fr) minmax(0,1.3fr); gap:clamp(3rem,8vw,8rem); padding:clamp(4rem,8vw,8rem) var(--gutter); border-block:1px solid var(--re-line); background:var(--re-paper); }
-.re-decision-compass__intro h2 { max-width:10ch; margin:0 0 1.25rem; font-size:clamp(2.8rem,5vw,5.5rem); }
-.re-decision-compass__intro > p:last-child { max-width:24rem; color:var(--re-muted); }
-.re-decision-compass__workbench { align-self:end; border-top:1px solid var(--re-ink); }
-.re-decision-compass__tabs { display:grid; grid-template-columns:repeat(4,1fr); border-bottom:1px solid var(--re-line); }
-.re-decision-compass__tabs button { min-height:3.8rem; border:0; border-right:1px solid var(--re-line); background:transparent; color:var(--re-muted); cursor:pointer; font:600 .68rem/1 var(--font-brand-mono); letter-spacing:.08em; text-transform:uppercase; transition:background-color var(--motion-control),color var(--motion-control); }
-.re-decision-compass__tabs button:last-child { border-right:0; }
-.re-decision-compass__tabs button[aria-selected="true"] { background:var(--re-ink); color:var(--re-paper-light); }
-.re-decision-compass__answer { min-height:22rem; padding:clamp(1.5rem,4vw,3rem) 0 0; }
-.re-decision-compass__answer > span { color:var(--re-brass); font:600 .62rem/1 var(--font-brand-mono); letter-spacing:.08em; }
-.re-decision-compass__answer h3 { max-width:14ch; margin:2rem 0 1.25rem; font-size:clamp(2.4rem,4vw,4.6rem); }
-.re-decision-compass__answer p { max-width:37rem; color:var(--re-muted); line-height:1.7; }
-.re-decision-compass__answer a { display:inline-flex; margin-top:1rem; padding-bottom:.25rem; border-bottom:1px solid currentColor; color:inherit; font-size:.8rem; font-weight:650; }
-
-.re-neighborhood-stage { display:grid; min-height:calc(100svh - 5.5rem); grid-template-columns:minmax(0,1.18fr) minmax(25rem,.82fr); background:var(--re-dark); color:var(--re-paper-light); }
-.re-neighborhood-stage__media { position:relative; min-height:44rem; overflow:hidden; background:#28231e; }
-.re-neighborhood-stage__media img { object-fit:cover; animation:re-stage-image-in 800ms var(--ease-enter) both; }
-.re-neighborhood-stage__media::after { position:absolute; inset:0; background:linear-gradient(90deg,transparent 58%,rgb(17 15 13 / 42%)); content:""; }
-.re-neighborhood-stage__counter { position:absolute; z-index:2; right:1rem; bottom:1rem; padding:.65rem .75rem; background:rgb(17 15 13 / 78%); font:.58rem/1 var(--font-brand-mono); letter-spacing:.1em; }
-.re-neighborhood-stage__panel { display:flex; min-width:0; flex-direction:column; padding:clamp(3rem,5vw,6rem) clamp(1.5rem,4vw,4.5rem); }
-.re-neighborhood-stage__panel h1 { max-width:9ch; margin:0 0 1.5rem; font-size:clamp(3.4rem,5vw,6.4rem); }
-.re-neighborhood-stage__question { max-width:31rem; color:rgb(247 243 234 / 68%); line-height:1.6; }
-.re-neighborhood-stage__tabs { display:grid; margin-top:clamp(2rem,6vh,5rem); border-top:1px solid rgb(247 243 234 / 24%); }
-.re-neighborhood-stage__tabs button { display:grid; min-height:3.7rem; padding:.7rem 0; border:0; border-bottom:1px solid rgb(247 243 234 / 18%); background:transparent; color:rgb(247 243 234 / 62%); cursor:pointer; grid-template-columns:2.6rem 1fr; align-items:center; text-align:left; font:500 .78rem/1.25 var(--font-brand-sans); }
-.re-neighborhood-stage__tabs button span { color:var(--re-brass); font:500 .56rem/1 var(--font-brand-mono); }
-.re-neighborhood-stage__tabs button[aria-selected="true"] { color:#fff; transform:translateX(.35rem); }
-.re-neighborhood-stage__readout { margin-top:auto; padding-top:2.5rem; }
-.re-neighborhood-stage__readout h2 { margin:0 0 .8rem; font-size:clamp(2.2rem,3vw,3.7rem); }
-.re-neighborhood-stage__readout > p { max-width:35rem; color:rgb(247 243 234 / 72%); line-height:1.6; }
-.re-neighborhood-stage__readout dl { display:grid; margin:1.5rem 0; grid-template-columns:repeat(3,1fr); border-top:1px solid rgb(247 243 234 / 22%); }
-.re-neighborhood-stage__readout dl div { padding:1rem .8rem 0 0; }
-.re-neighborhood-stage__readout dt { margin-bottom:.45rem; color:var(--re-brass); font:.55rem/1 var(--font-brand-mono); text-transform:uppercase; }
-.re-neighborhood-stage__readout dd { margin:0; color:rgb(247 243 234 / 65%); font-size:.68rem; line-height:1.5; }
-@keyframes re-stage-image-in { from { opacity:.5; transform:scale(1.035); } to { opacity:1; transform:none; } }
-
-@media (max-width: 64rem) {
-  .re-decision-compass { grid-template-columns:1fr; gap:2rem; }
-  .re-neighborhood-stage { grid-template-columns:1fr; }
-  .re-neighborhood-stage__media { min-height:50svh; }
-  .re-neighborhood-stage__panel { min-height:44rem; }
-}
-@media (max-width: 47.99rem) {
-  .re-decision-compass { padding:4rem 1.25rem; }
-  .re-decision-compass__tabs { overflow-x:auto; grid-template-columns:repeat(4,minmax(6.5rem,1fr)); }
-  .re-decision-compass__answer { min-height:20rem; }
-  .re-neighborhood-stage { min-height:auto; }
-  .re-neighborhood-stage__media { min-height:48svh; }
-  .re-neighborhood-stage__panel { min-height:0; padding:3.5rem 1.25rem; }
-  .re-neighborhood-stage__panel h1 { font-size:clamp(3.2rem,15vw,5.2rem); }
-  .re-neighborhood-stage__readout { margin-top:2.5rem; }
-  .re-neighborhood-stage__readout dl { grid-template-columns:1fr; }
-  .re-neighborhood-stage__readout dl div { padding-bottom:.8rem; border-bottom:1px solid rgb(247 243 234 / 12%); }
-}
-@media (prefers-reduced-motion: reduce) { .re-neighborhood-stage__media img { animation:none; } }

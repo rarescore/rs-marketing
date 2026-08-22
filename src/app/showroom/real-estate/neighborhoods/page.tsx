@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { NeighborhoodStage } from "@/features/demos/real-estate/editorial-explorers.client";
+import { PageIntro } from "@/features/demos/real-estate/real-estate-layout";
 import { neighborhoods, realEstateBase } from "@/features/demos/real-estate/data";
 
 export const metadata: Metadata = { title: "Neighborhood Atlas" };
@@ -9,7 +9,7 @@ export const metadata: Metadata = { title: "Neighborhood Atlas" };
 export default function NeighborhoodsPage() {
   return (
     <main className="re-main" id="real-estate-main">
-      <NeighborhoodStage neighborhoods={neighborhoods} />
+      <PageIntro eyebrow="Objective neighborhood atlas" title="Compare places by what can be observed."><p>Housing form, architecture, price range, access, parks, services, and current sample inventory—without demographic steering or coded recommendations.</p></PageIntro>
       <div className="re-atlas-note"><p>All ranges and market activity are illustrative sample data dated August 2026. Verify current property and municipal sources before making a housing decision.</p><Link href={`${realEstateBase}/tools/neighborhood-comparison`}>Open side-by-side comparison →</Link></div>
       <section className="re-atlas">
         {neighborhoods.map((area, index) => <article key={area.slug} className={index % 2 ? "re-atlas-entry re-atlas-entry--reverse" : "re-atlas-entry"}>

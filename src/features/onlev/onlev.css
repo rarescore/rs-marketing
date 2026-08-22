@@ -36,18 +36,15 @@
 }
 
 .onlev-logo__mark {
-  position: relative;
-  width: 3.1rem;
-  height: 3.1rem;
+  width: 2.6rem;
+  height: 2.6rem;
   flex: 0 0 auto;
-  overflow: hidden;
+  overflow: visible;
 }
 
-.onlev-logo__mark img {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-}
+.onlev-logo__frame { fill: none; stroke: var(--onlev-gold, #b9894d); stroke-width: 1; }
+.onlev-logo__ink { fill: currentColor; }
+.onlev-logo__beam { fill: var(--onlev-gold, #b9894d); }
 
 .onlev-logo__word {
   display: grid;
@@ -69,7 +66,7 @@
   text-transform: uppercase;
 }
 
-.onlev-logo--compact .onlev-logo__mark { width: 4.4rem; height: 4.4rem; }
+.onlev-logo--compact .onlev-logo__mark { width: 3.75rem; height: 3.75rem; }
 .onlev-logo--inverse { color: #f3f0e9; }
 
 .onlev-header {
@@ -744,23 +741,3 @@
   .onlev-proof-card__window,
   .onlev-button { transform: none !important; }
 }
-
-/* Stage 3: ONLEV signal-to-system cinematic */
-.onlev-system-cinematic { position:relative; height:clamp(22rem,46vw,42rem); margin:1rem 0 clamp(5rem,8vw,8rem); overflow:hidden; border-block:1px solid rgb(243 240 233 / 16%); background:#111318; }
-.onlev-system-cinematic canvas { width:100% !important; height:100% !important; }
-.onlev-system-cinematic__caption { position:absolute; right:1rem; bottom:1rem; display:flex; align-items:center; gap:.7rem; color:#9da6b4; font:.58rem/1 var(--font-brand-mono); letter-spacing:.11em; text-transform:uppercase; }
-.onlev-system-cinematic__caption i { width:2.5rem; height:1px; background:#637bdf; }
-.onlev-system-cinematic--static { display:flex; align-items:center; justify-content:space-around; padding:4rem 8%; }
-.onlev-system-cinematic--static i { width:10%; height:42%; border:1px solid #505660; background:linear-gradient(#31353c,#171a20); transform:skewY(-4deg); }
-.onlev-flow__track { margin-top:0; }
-@media (max-width:849px) { .onlev-system-cinematic { height:22rem; } }
-
-/* Stage 4 — interactive proof on secondary ONLEV pages */
-.onlev-proof-pulse { display:grid; padding:clamp(5rem,9vw,9rem) var(--gutter); background:#111318;color:#f3f0e9;grid-template-columns:minmax(16rem,.65fr) minmax(0,1.35fr);gap:clamp(3rem,8vw,8rem); }
-.onlev-proof-pulse__head .onlev-kicker{color:#9cacff}.onlev-proof-pulse__head h2{max-width:10ch;margin:0 0 1.5rem;font-size:clamp(3rem,5vw,5.8rem);font-weight:500;letter-spacing:-.06em;line-height:.92}.onlev-proof-pulse__head>p:last-child{max-width:31rem;color:#aeb4c0;line-height:1.65}
-.onlev-proof-pulse__stage{align-self:end}.onlev-proof-pulse__tabs{display:grid;grid-template-columns:repeat(4,1fr);border-block:1px solid rgb(243 240 233 / 16%)}.onlev-proof-pulse__tabs button{display:grid;min-height:5rem;padding:.8rem;border:0;border-right:1px solid rgb(243 240 233 / 12%);background:transparent;color:#8f97a5;cursor:pointer;text-align:left;align-content:center;gap:.45rem;font:600 .7rem/1 var(--font-brand-sans)}.onlev-proof-pulse__tabs button span{font:.54rem/1 var(--font-brand-mono);color:#637bdf}.onlev-proof-pulse__tabs button[aria-selected="true"]{background:#f3f0e9;color:#111318}.onlev-proof-pulse__line{position:relative;height:3px;margin:1.5rem 0 2rem;background:rgb(243 240 233 / 12%);overflow:hidden}.onlev-proof-pulse__line i{position:absolute;left:0;top:0;width:25%;height:100%;background:#637bdf;transition:transform 420ms var(--ease-enter)}
-.onlev-proof-pulse__readout{display:grid;grid-template-columns:repeat(2,1fr);border-top:1px solid rgb(243 240 233 / 14%)}.onlev-proof-pulse__readout>div{min-height:8rem;padding:1.1rem 1rem 1rem 0;border-bottom:1px solid rgb(243 240 233 / 12%)}.onlev-proof-pulse__readout>div:nth-child(odd){border-right:1px solid rgb(243 240 233 / 12%)}.onlev-proof-pulse__readout span{display:block;margin-bottom:1.8rem;color:#7f8794;font:.56rem/1 var(--font-brand-mono);letter-spacing:.08em;text-transform:uppercase}.onlev-proof-pulse__readout strong{display:block;max-width:18rem;font-size:clamp(1rem,1.4vw,1.3rem);font-weight:520;line-height:1.35}
-.onlev-work-item__scene::after{position:absolute;inset:0;pointer-events:none;background:linear-gradient(115deg,transparent 35%,rgb(255 255 255 / 13%) 48%,transparent 60%);content:"";transform:translateX(-120%);transition:transform 900ms var(--ease-enter)}.onlev-work-item:hover .onlev-work-item__scene::after{transform:translateX(120%)}.onlev-work-item__scene>div{transition:transform 700ms var(--ease-enter)}.onlev-work-item:hover .onlev-work-item__scene>div{transform:perspective(70rem) rotateY(-2deg) translateY(-.5rem)}.onlev-work-item--02 .onlev-work-item__scene>div{grid-template-columns:repeat(3,1fr);background-image:linear-gradient(#dce5ea 1px,transparent 1px),linear-gradient(90deg,#dce5ea 1px,transparent 1px);background-size:22px 22px}.onlev-work-item--02 .onlev-work-item__scene i:first-child{grid-row:auto}.onlev-work-item--03 .onlev-work-item__scene>div{grid-template-columns:.4fr 1fr .65fr;gap:.6rem}.onlev-work-item--03 .onlev-work-item__scene i{background:linear-gradient(#9c6672,#6e3f49)}
-@media(max-width:64rem){.onlev-proof-pulse{grid-template-columns:1fr}.onlev-proof-pulse__head h2{max-width:13ch}.onlev-proof-pulse__stage{max-width:60rem}}
-@media(max-width:48rem){.onlev-proof-pulse{padding:5rem 1rem}.onlev-proof-pulse__tabs{overflow-x:auto;grid-template-columns:repeat(4,minmax(7rem,1fr))}.onlev-proof-pulse__readout{grid-template-columns:1fr}.onlev-proof-pulse__readout>div:nth-child(odd){border-right:0}.onlev-work-item__scene::after{display:none}}
-@media(prefers-reduced-motion:reduce){.onlev-proof-pulse__line i,.onlev-work-item__scene>div{transition:none}.onlev-work-item:hover .onlev-work-item__scene>div{transform:perspective(70rem) rotateY(-7deg)}}

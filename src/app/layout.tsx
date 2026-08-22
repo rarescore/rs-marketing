@@ -38,7 +38,7 @@ export const metadata: Metadata = {
     images: ["/opengraph-image"],
   },
   icons: {
-    icon: "/brand/onlev-approved-boxed-512.png",
+    icon: "/brand/onlev-mark-light.svg",
   },
 };
 
@@ -55,7 +55,7 @@ const organizationSchema = {
   "@type": "Organization",
   name: "ONLEV",
   url: "https://onlev.site",
-  logo: "https://onlev.site/brand/onlev-approved-boxed.png",
+  logo: "https://onlev.site/brand/onlev-mark.svg",
   email: "hello@onlev.site",
   description:
     "ONLEV designs complete client-winning digital systems for lead-driven local businesses.",

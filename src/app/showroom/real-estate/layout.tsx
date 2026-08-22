@@ -4,7 +4,7 @@ import { RealEstateLayout } from "@/features/demos/real-estate/real-estate-layou
 import "@/features/demos/real-estate/real-estate.css";
 
 export const metadata: Metadata = {
-  title: { default: "Lev & On Residential — Real Estate System Demo", template: "%s | Lev & On Residential" },
+  title: { default: "Atelier North — Real Estate System Demo", template: "%s | Atelier North" },
   description: "A fictional, client-ready real-estate advisory system demonstration for Pasadena and the San Gabriel foothills.",
 };
 

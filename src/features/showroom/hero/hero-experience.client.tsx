@@ -58,7 +58,7 @@ function canRunCinematicLayer() {
   }
 }
 
-export function HeroExperience() {
+export function HeroExperience({ mode = "sequence" }: { mode?: "sequence" | "hub" }) {
   const root = useRef<HTMLDivElement>(null);
   const [sceneEnabled, setSceneEnabled] = useState(false);
   const [sceneReady, setSceneReady] = useState(false);
@@ -90,7 +90,7 @@ export function HeroExperience() {
   useEffect(() => {
     let hubVisible = false;
     const syncHubState = (state: ReturnType<typeof useHeroScroll.getState>) => {
-      const nextHubVisible = state.progress >= 0.2;
+      const nextHubVisible = state.progress >= 0.58;
       if (hubVisible === nextHubVisible) return;
       hubVisible = nextHubVisible;
       root.current?.toggleAttribute("data-hub", nextHubVisible);
@@ -101,9 +101,17 @@ export function HeroExperience() {
 
   useGSAP(
     () => {
+      if (mode === "hub") {
+        setProgress(1);
+        root.current?.setAttribute("data-hub", "");
+        gsap.set(".hero__reveal", { autoAlpha: 1, pointerEvents: "auto" });
+        return () => setProgress(0);
+      }
+
       if (reducedMotion) {
         setProgress(1);
         gsap.set(".hero__reveal", { autoAlpha: 1, pointerEvents: "auto" });
+        gsap.set(".hero__opening", { autoAlpha: 1 });
         return;
       }
 
@@ -121,37 +129,39 @@ export function HeroExperience() {
       });
 
       timeline
+        .to(".hero__opening", { yPercent: -10, opacity: 0, duration: 0.2 }, 0.16)
+        .to(".hero__scroll-cue", { opacity: 0, duration: 0.08 }, 0.08)
         .fromTo(
           ".hero__reveal",
           { autoAlpha: 0 },
-          { autoAlpha: 1, duration: 0.16 },
-          0.18,
+          { autoAlpha: 1, duration: 0.12 },
+          0.56,
         )
-        .set(".hero__reveal", { pointerEvents: "auto" }, 0.22)
+        .set(".hero__reveal", { pointerEvents: "auto" }, 0.62)
         .fromTo(
           ".industry-hub__heading",
-          { y: 20, opacity: 0 },
+          { y: 24, opacity: 0 },
           { y: 0, opacity: 1, duration: 0.18 },
-          0.2,
+          0.58,
         )
         .fromTo(
-          ".industry-hub__portal-link",
-          { y: 16, opacity: 0 },
+          ".industry-hub__door",
+          { y: 20, opacity: 0 },
           { y: 0, opacity: 1, duration: 0.16, stagger: 0.025 },
-          0.29,
+          0.66,
         )
         .fromTo(
           ".industry-hub__preview",
-          { x: 12, opacity: 0 },
+          { x: 16, opacity: 0 },
           { x: 0, opacity: 1, duration: 0.18 },
-          0.34,
+          0.7,
         )
-        .to(".hero__chapter i", { scaleX: 1, duration: 0.82 }, 0.08)
-        .to(".hero__header p", { opacity: 0.56, duration: 0.2 }, 0.42);
+        .to(".hero__chapter i", { scaleX: 1, duration: 0.75 }, 0)
+        .to(".hero__header p", { opacity: 0.5, duration: 0.2 }, 0.5);
 
       return () => setProgress(0);
     },
-    { dependencies: [reducedMotion, setProgress] },
+    { dependencies: [mode, reducedMotion, setProgress] },
   );
 
   return (

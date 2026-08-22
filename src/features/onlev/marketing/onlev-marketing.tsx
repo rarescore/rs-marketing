@@ -4,7 +4,6 @@ import { ContactForm } from "../site/contact-form.client";
 import { OnlevFooter } from "../site/onlev-footer";
 import { OnlevHeader } from "../site/onlev-header.client";
 import { MarketingMotion } from "../site/marketing-motion.client";
-import { OnlevSystemCinematic } from "./system-cinematic.client";
 
 const systemLayers = [
   { name: "Positioning", detail: "A clear reason to choose you, expressed in language your market understands." },
@@ -21,9 +20,7 @@ const demos = [
     slug: "estate",
     number: "01",
     label: "Real Estate",
-    brand: "Lev & On Residential",
-    route: "/showroom/real-estate",
-    tool: "/showroom/real-estate/tools/move-strategy-studio",
+    brand: "Atelier North",
     proof: "Property discovery, decision tools, tour planning, and a context-rich advisor handoff.",
     interaction: "Move Strategy Studio",
   },
@@ -31,9 +28,7 @@ const demos = [
     slug: "service",
     number: "02",
     label: "Home Services",
-    brand: "Lev & On Home Services",
-    route: "/showroom/plumbing",
-    tool: "/showroom/plumbing/tools/plumbing-passport",
+    brand: "Field Standard",
     proof: "Emergency clarity, service triage, homeowner records, and prepared service requests.",
     interaction: "Whole-Home Plumbing Passport",
   },
@@ -41,9 +36,7 @@ const demos = [
     slug: "law",
     number: "03",
     label: "Injury Law",
-    brand: "Lev & On Injury Counsel",
-    route: "/showroom/injury-law",
-    tool: "/showroom/injury-law/case-review",
+    brand: "Morrow & Vale",
     proof: "Trauma-aware guidance, evidence planning, and a calm path to human legal review.",
     interaction: "Incident & Impact Review",
   },
@@ -51,7 +44,7 @@ const demos = [
 
 export function OnlevMarketing() {
   return (
-    <div className="onlev-marketing" id="onlev-story">
+    <div className="onlev-marketing" id="onlev">
       <MarketingMotion />
       <OnlevHeader />
 
@@ -61,8 +54,8 @@ export function OnlevMarketing() {
           <p>ONLEV / onlev.site</p>
         </div>
         <div className="onlev-bridge__statement" data-onlev-reveal>
-          <p className="onlev-kicker">The opening was the thesis</p>
-          <h2 id="onlev-bridge-title">The website is the visible layer. <em>The system carries the signal.</em></h2>
+          <p className="onlev-kicker">The visible layer is only the beginning</p>
+          <h2 id="onlev-bridge-title">The website is the visible layer. <em>The system wins the response.</em></h2>
           <p>ONLEV builds complete client-winning digital systems for businesses whose next customer is already searching.</p>
         </div>
         <div className="onlev-signal" aria-hidden="true">
@@ -94,8 +87,7 @@ export function OnlevMarketing() {
               <div className="onlev-proof-card__body">
                 <div><p className="onlev-proof-card__brand">{demo.brand}</p><h3>{demo.proof}</h3></div>
                 <div className="onlev-proof-card__actions">
-                  <Link href={demo.route}>Enter the website <span aria-hidden="true">↗</span></Link>
-                  <Link href={demo.tool}>Use the flagship tool <span aria-hidden="true">→</span></Link>
+                  <a href="#three-doors">Choose this industry in the final showroom <span aria-hidden="true">↓</span></a>
                 </div>
               </div>
             </article>
@@ -127,7 +119,6 @@ export function OnlevMarketing() {
           <p className="onlev-kicker">What happens underneath</p>
           <h2 id="onlev-flow-title">A customer raises their hand. The system keeps the context.</h2>
         </div>
-        <OnlevSystemCinematic />
         <div className="onlev-flow__track" data-onlev-line aria-label="Example customer-to-business flow">
           <div><span>01</span><strong>Search intent</strong><p>Source and entry context</p></div>
           <div><span>02</span><strong>Useful interaction</strong><p>Need and readiness signal</p></div>

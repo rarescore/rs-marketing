@@ -10,10 +10,7 @@ export function ConsultationForm({source="consultation",compact=false}:{source?:
   const statusRef=useRef<HTMLDivElement>(null);
   const record=useSystemLens(s=>s.record);
   useEffect(()=>{if(state.message)statusRef.current?.focus();if(state.success)record({scope:"injury-law",type:"consultation_prepared",signal:"A visitor chose a human follow-up path",response:"Consent and minimal contact details validated in a no-send preview",value:"A calmer, contextual consultation pathway",status:"demo-preview"});},[state,record]);
-  if(state.success){
-    if(source==="case-review-result")return <div className="il-form-status il-form-status--confirmation" role="status" tabIndex={-1} ref={statusRef}><small>Demonstration confirmation</small><h3>Thank you. We received your review.</h3><strong>A member of the team will call you shortly.</strong><p>This is the production confirmation state being demonstrated. In this preview, nothing was actually sent or retained, no review answers were attached, and no attorney-client relationship was created.</p><span>Preview receipt · {state.receipt}</span></div>;
-    return <div className="il-form-status" role="status" tabIndex={-1} ref={statusRef}><strong>Preview ready · {state.receipt}</strong><p>{state.message}</p><p>You may close this page. No review answers or contact details were retained.</p></div>;
-  }
+  if(state.success)return <div className="il-form-status" role="status" tabIndex={-1} ref={statusRef}><strong>Preview ready · {state.receipt}</strong><p>{state.message}</p><p>You may close this page. No review answers or contact details were retained.</p></div>;
   const error=(name:string)=>state.errors?.[name]?.[0];
   return <form action={action} className="il-form-grid" noValidate>
     {state.message&&<div className="il-form-status il-field--full" role="alert" tabIndex={-1} ref={statusRef}><strong>{state.message}</strong></div>}

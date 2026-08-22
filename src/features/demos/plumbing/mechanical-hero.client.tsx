@@ -6,7 +6,6 @@ import gsap from "gsap";
 import Link from "next/link";
 import { plumbingBase } from "./data";
 import { useSystemLens } from "@/features/system-lens/system-lens-store";
-import { PlumbingSystemScene } from "./plumbing-system-scene.client";
 
 const symptoms = [["Active leak", "leaks-and-shutoffs", "Supply isolation"], ["No hot water", "water-heaters", "Water heating"], ["Low pressure", "pressure-and-flow", "Pressure & flow"], ["Drain / sewer", "drains-and-sewers", "Drainage"]] as const;
 
@@ -26,7 +25,6 @@ export function MechanicalHero() {
   return <div className="pl-mechanical" ref={root} data-assembly="frame">
     <div className="pl-mechanical__top"><span>WHOLE-HOME SYSTEM / LIVE ORIENTATION</span><span>FIELD PLATE 01</span></div>
     <div className="pl-house-section" aria-label="Simplified house plumbing systems diagram">
-      <PlumbingSystemScene />
       <svg viewBox="0 0 760 500" role="img" aria-labelledby="pl-diagram-title pl-diagram-desc">
         <title id="pl-diagram-title">House plumbing systems section</title><desc id="pl-diagram-desc">A technical section showing water supply, water heating, fixtures, shutoffs, and drainage as separate labeled systems.</desc>
         <path className="pl-house" d="M73 211 380 53l307 158v231H73Z" /><path className="pl-level" d="M73 330h614M380 53v389" />

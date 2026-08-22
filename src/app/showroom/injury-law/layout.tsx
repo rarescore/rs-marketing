@@ -4,7 +4,7 @@ import { InjuryLayout } from "@/features/demos/injury-law/injury-layout";
 import "@/features/demos/injury-law/injury.css";
 
 export const metadata: Metadata = {
-  title: { default: "Lev & On Injury Counsel — Injury Law System Demo", template: "%s | Lev & On Injury Counsel" },
+  title: { default: "Morrow & Vale — Injury Law System Demo", template: "%s | Morrow & Vale" },
   description: "A fictional, trauma-aware personal injury client-acquisition system demonstration.",
 };
 

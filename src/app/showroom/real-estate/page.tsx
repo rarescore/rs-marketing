@@ -3,7 +3,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { ViewTransition } from "react";
 import { EditorialCta } from "@/features/demos/real-estate/real-estate-layout";
-import { ArchitecturalSequence } from "@/features/demos/real-estate/architectural-sequence.client";
 import { formatPrice, listings, realEstateBase } from "@/features/demos/real-estate/data";
 
 export const metadata: Metadata = { title: "Residential advisory for Pasadena" };
@@ -18,7 +17,6 @@ export default function RealEstateDemoPage() {
         <section className="re-hero" aria-labelledby="re-home-title">
           <div className="re-hero__image">
             <Image src={lead.image} alt="" fill priority loading="eager" sizes="100vw" />
-            <ArchitecturalSequence />
           </div>
           <div className="re-hero__content">
             <div className="re-hero__copy">
@@ -42,7 +40,7 @@ export default function RealEstateDemoPage() {
           <h2>Four houses. Four different decisions.</h2>
           <p>Sample inventory selected to demonstrate how the system handles architectural detail, practical criteria, and context—not just a photo grid.</p>
         </div>
-        <div className="re-property-edit re-property-edit--editorial">
+        <div className="re-property-edit">
           <Link className="re-property-lead" href={`${realEstateBase}/listings/${lead.slug}`}>
             <Image src={lead.image} alt={lead.alt} width={1800} height={1200} loading="eager" sizes="(max-width: 768px) 100vw, 65vw" />
             <div className="re-property-lead__caption">

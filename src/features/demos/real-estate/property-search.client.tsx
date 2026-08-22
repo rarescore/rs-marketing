@@ -41,13 +41,7 @@ export function PropertySearch() {
     if (values.type !== "all") params.set("type", values.type);
     if (values.feature !== "all") params.set("feature", values.feature);
     router.replace(`${pathname}${params.size ? `?${params}` : ""}`, { scroll: false });
-    const nextResultCount = listings.filter((listing) =>
-      (values.location === "all" || listing.neighborhoodSlug === values.location) &&
-      listing.price <= values.maxPrice && listing.beds >= values.beds && listing.baths >= values.baths &&
-      (values.type === "all" || listing.type === values.type) &&
-      (values.feature === "all" || listing.features.some((item) => item.toLowerCase().includes(values.feature)))
-    ).length;
-    record({ type: "search_intent", signal: "Property criteria selected", response: "Search intent summarized without personal data", value: `${nextResultCount} relevant sample properties can guide follow-up`, status: "derived" });
+    record({ type: "search_intent", signal: "Property criteria selected", response: "Search intent summarized without personal data", value: `${results.length} relevant sample properties can guide follow-up`, status: "derived" });
   }
 
   function reset() {

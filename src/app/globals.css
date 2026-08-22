@@ -1,7 +1,6 @@
 @import "tailwindcss";
 @import "../styles/tokens.css";
 @import "../styles/base.css";
-@import "../features/onlev/opening/onlev-opening.css";
 @import "../features/showroom/hero/hero.css";
 @import "../features/showroom/hub/industry-hub.css";
 @import "../features/showroom/demo-shell/demo-shell.css";

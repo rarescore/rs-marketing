@@ -1,7 +1,6 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { ShowroomControl } from "@/features/showroom/showroom-control";
-import { LevOnBrand } from "@/features/demos/shared/lev-on-brand";
 import { InjurySystemLens } from "./system-lens-panel.client";
 import { demoLawPhoneDisplay, demoLawPhoneHref, injuryBase } from "./data";
 
@@ -22,8 +21,9 @@ export function InjuryLayout({ children }: { children: ReactNode }) {
         <a href={demoLawPhoneHref}>Human help <strong>{demoLawPhoneDisplay}</strong></a>
       </div>
       <header className="il-header">
-        <Link className="il-brand" href={injuryBase} aria-label="Lev & On Injury Counsel, home">
-          <LevOnBrand descriptor="Injury Counsel · Demonstration" />
+        <Link className="il-brand" href={injuryBase} aria-label="Morrow and Vale, home">
+          <span className="il-brand__mark" aria-hidden="true"><i /><i /><i /></span>
+          <span><strong>MORROW &amp; VALE</strong><small>INJURY COUNSEL · DEMONSTRATION</small></span>
         </Link>
         <nav className="il-nav" aria-label="Injury law demonstration">
           {nav.map(([label, href]) => <Link key={href} href={href}>{label}</Link>)}
@@ -40,14 +40,14 @@ export function InjuryLayout({ children }: { children: ReactNode }) {
       </header>
       {children}
       <footer className="il-footer">
-        <div><p className="il-footer__brand">LEV &amp; ON INJURY COUNSEL</p><p>Clarity first. Decisions without pressure.</p></div>
+        <div><p className="il-footer__brand">MORROW &amp; VALE</p><p>Clarity first. Decisions without pressure.</p></div>
         <nav aria-label="Injury law footer">
           <Link href={`${injuryBase}/after-an-accident`}>Immediate guide</Link>
           <Link href={`${injuryBase}/case-review`}>Incident review</Link>
           <Link href={`${injuryBase}/process`}>Process</Link>
           <Link href={`${injuryBase}/consultation`}>Contact</Link>
         </nav>
-        <p className="il-disclosure">Lev &amp; On Injury Counsel is a fictional brand and this is an educational interface demonstration. It is not a law firm, does not provide legal or medical advice, does not send or retain submitted information, and does not create an attorney-client relationship. Deadlines and rights vary by jurisdiction; speak with a qualified lawyer about a specific situation.</p>
+        <p className="il-disclosure">Morrow &amp; Vale is a fictional brand and this is an educational interface demonstration. It is not a law firm, does not provide legal or medical advice, does not send or retain submitted information, and does not create an attorney-client relationship. Deadlines and rights vary by jurisdiction; speak with a qualified lawyer about a specific situation.</p>
       </footer>
       <div className="il-mobile-actions" aria-label="Immediate actions">
         <a href={demoLawPhoneHref}>Call human help</a>

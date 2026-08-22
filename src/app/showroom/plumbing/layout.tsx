@@ -4,7 +4,7 @@ import { PlumbingLayout } from "@/features/demos/plumbing/plumbing-layout";
 import "@/features/demos/plumbing/plumbing.css";
 
 export const metadata: Metadata = {
-  title: { default: "Lev & On Home Services — Plumbing System Demo", template: "%s | Lev & On Home Services" },
+  title: { default: "Field Standard — Plumbing System Demo", template: "%s | Field Standard" },
   description: "A fictional, client-ready plumbing and home-services system demonstration for the Pasadena foothills.",
 };
 

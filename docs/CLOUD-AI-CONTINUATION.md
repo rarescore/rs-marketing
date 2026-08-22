@@ -1,57 +1,87 @@
-# ONLEV Cloud-AI Continuation
+# ONLEV Cloud-AI Continuation Note
 
-This document is the implementation boundary for the visual-production pass begun on 2026-08-22.
+Use this note as the handoff prompt and technical boundary for the next visual-production pass.
 
-## Locked journey
+## Start here
 
-**ONLEV opening → complete ONLEV story → final Three Doors hub → selected demo**
+1. Read `docs/CURRENT-STATE.md`, `docs/DESIGN-SYSTEM.md`, `docs/MOTION-SYSTEM.md`, `docs/SITE-ARCHITECTURE.md`, and `docs/QUALITY-GATES.md`.
+2. Inspect the current root experience and these files before changing anything:
+   - `src/app/page.tsx`
+   - `src/features/showroom/hero/showroom-hero.tsx`
+   - `src/features/showroom/hero/hero-experience.client.tsx`
+   - `src/features/showroom/hero/three-doors-scene.client.tsx`
+   - `src/features/showroom/hero/hero.css`
+   - `src/features/showroom/hub/industry-hub.client.tsx`
+   - `src/features/showroom/hub/industry-hub.css`
+   - `src/features/onlev/marketing/onlev-marketing.tsx`
+3. Preserve the locked order: **ONLEV opening → complete ONLEV story → final Three Doors hub → selected demo**.
+4. Do not redesign the Real Estate, Plumbing, or Injury Law websites. Do not weaken their tools, forms, privacy boundaries, System Lens integration, or showroom controls.
 
-The Real Estate, Plumbing, and Injury Law demo websites are already complete systems. Do not redesign them or weaken their tools, forms, privacy boundaries, System Lens integration, or showroom controls.
+## Honest current limitation
 
-## Visual-production target
+The implementation is technically complete and the final doors are real interactive R3F geometry, not flat illustrations. However, the ONLEV opening is still an authored CSS architectural composition, and the Three Doors environment is procedural geometry. It does not yet have the model, material, lighting, and cinematic-media specificity of a commissioned KODE/Malvah-level production.
 
-The parent ONLEV experience must remain stronger and more memorable than any one demo while preserving each demo's distinct identity. This pass is visual production, not an information-architecture rewrite.
+The next pass should be a **visual-production pass**, not another information-architecture rewrite.
 
-### ONLEV opening
+## How to make it materially better
 
-- Present ONLEV as a systems company through a real mechanism/signal/alignment visual rather than decorative particles or a still-image pan.
-- Preserve immediate semantic HTML positioning and CTA before any cinematic layer is ready.
-- Use mineral paper, graphite, nickel, signal blue, and restrained warm metal. Do not turn ONLEV into a black-and-gold luxury template.
-- Desktop may use a high-quality cinematic layer; mobile, reduced-motion, low-capability, media-failure, or WebGL-failure paths must retain a deliberately composed static alternative.
-- No mandatory loader, forced intro, generic neon gradients, particle fog, glossy random forms, floating blobs, or filler text.
+### 1. Replace generic procedural surfaces with authored production assets
 
-### Final Three Doors
+- Create three genuinely different architectural portal assemblies, not one door recolored three times.
+- Model frames, jambs, hinges, handles, reveals, thresholds, wall returns, ceiling coves, and believable room depth.
+- Give each portal a clear material story:
+  - Real Estate: warm oxidized bronze, dark oak or smoked timber, limestone, warm architectural light.
+  - Plumbing: dark technical enamel, brushed steel, copper, precision blue task light, visible mechanical depth.
+  - Injury Law: ink-blackened metal, deep oxblood textile/wood, archival glass or vellum, calm directional light.
+- Use authored GLB/glTF assets with baked normal, roughness, AO, and light information. Optimize with Meshopt or Draco and KTX2/Basis textures. Avoid shipping raw 4K PNG/JPEG maps.
+- Keep the semantic DOM links over each portal. The 3D canvas is visual enhancement; accessibility and navigation must never depend on raycasting alone.
 
-- Three portals must be genuinely different architectural assemblies, not one door recolored three times.
-- Real Estate: limestone / oxidized bronze / smoked timber / warm architectural light.
-- Plumbing: technical enamel / brushed steel / copper / calibrated cool task light / mechanical depth.
-- Injury Law: blackened metal / oxblood / archival vellum or glass / calm directional light.
-- Keep semantic DOM links over the portals. Navigation and accessibility must never depend on raycasting.
-- Hover or keyboard focus must begin the selected door response immediately. The selected door opens on its real hinge with a latch-release/weight/settle response.
-- Selection may subtly bias key light, room exposure, and camera target. Avoid large or sickness-inducing camera travel.
-- The same door click must continue into the existing portal transition. Do not add a separate Enter button.
-- World detail motion must communicate meaning and settle; do not run decorative idle loops.
+### 2. Upgrade the ONLEV opening with genuine cinematic motion
 
-### Performance and fallback tiers
+- If a high-quality cinematic generator such as Runway or Higgsfield is available, create real rendered motion rather than panning or zooming a still.
+- The sequence should depict ONLEV as a systems company: signal entering an architectural mechanism, layers aligning, pathways connecting, then resolving into the ONLEV mark and the existing headline composition.
+- Target a restrained 6–10 second seamless visual loop or a short scroll-addressable rendered sequence. No mandatory loader, no long forced intro, no stock “futuristic particles,” and no random glossy shapes.
+- Render at 16:9 with a clean center-right subject area so the live HTML headline remains readable on the left. Produce a separate vertical/mobile crop rather than shrinking the desktop video.
+- Export production derivatives such as AV1/WebM and H.265/MP4 with a poster frame. Preload metadata only; keep semantic headline and CTA visible before media is ready.
+- Reduced motion must show a deliberately composed final frame with a short opacity reveal only.
 
-- High desktop: authored assets, shadows, selective post-processing, DPR capped around 1.5.
-- Tablet: reduced DPR and shadows, no expensive post-processing.
-- Mobile/reduced-motion/low-capability: authored static/lightweight fallback with the same labels and direct links.
-- Stop rendering when the chamber is offscreen.
-- Avoid per-frame React state, per-frame object allocation, animated layout properties, and multiple scroll controllers.
-- Keep the portal scene lazy and prefer a small number of authored meshes to brute-force triangle counts/effects.
+### 3. Make the final portal hover feel physically convincing
 
-## Art-direction constraints
+- Response must begin in under 100 ms on pointer entry or keyboard focus.
+- Use the existing active-industry store as the single state source.
+- Animate the selected door on its actual hinge with weight: slight initial latch release, controlled acceleration, slow settle. Do not use a flat scale, fake zoom, or endless idle movement.
+- Shift key light, room exposure, and camera target subtly toward the selected world. Keep camera travel small enough to avoid motion sickness.
+- Reveal meaningful moving details inside each world: architectural daylight/shadow change, calibrated plumbing flow/gauge response, and Injury Law record planes resolving into order.
+- Clicking the same door must continue into the existing portal transition. Do not reintroduce a separate “Enter” button.
 
-- No generic AI decoration, neon-gradient spectacle, glass-card wall, cheap blobs, particle fog, or oversized filler text.
+### 4. Preserve performance while increasing fidelity
+
+- Desktop high tier: full assets, shadows, selective post-processing, DPR capped around 1.5.
+- Tablet tier: lower DPR, reduced shadows, no expensive post-processing.
+- Mobile/reduced-motion/low-capability tier: authored static or lightweight CSS/WebGL alternative with the same labels and direct links.
+- Stop rendering while the final chamber is offscreen. Avoid per-frame React state updates, new object allocation inside `useFrame`, animated layout properties, and multiple scroll controllers.
+- Budget the portal scene as a lazy chunk. Prefer a small number of well-authored meshes over high triangle counts and layered post effects.
+
+## Non-negotiable art-direction rules
+
+- ONLEV must remain mineral paper, graphite, nickel, signal blue, and restrained warm metal—not a black-and-gold luxury template.
+- No generic neon gradients, particle fog, cheap glass cards, floating blobs, oversized filler text, or identical card grids.
 - Do not invent awards, clients, testimonials, performance statistics, ROI, or prices.
-- KODE, Malvah, and Awwwards work are craft benchmarks only. Do not copy their recognizable compositions, assets, navigation, or motion signatures.
+- Do not copy KODE, Malvah, or Awwwards references. Match their authorship, restraint, spatial composition, and finish.
+- The parent ONLEV experience must remain stronger and more memorable than any one demo while the three demos retain distinct identities.
 
-## Acceptance gate
+## Acceptance gate for the cloud pass
 
-Inspect the complete root journey at 390, 768, 1440, and 1920 widths. Test hover, focus, keyboard activation, touch activation, forward entry, showroom return, reduced motion, WebGL failure, loading/failure fallback, and context loss. The root must end at the selection chamber; there must be no post-hub content to scroll past before selecting a door. Check for blank/black frames, collisions, bad crops, horizontal overflow, console errors, dead links, and unstable frame pacing.
+- Inspect the complete root journey at 390, 768, 1440, and 1920 widths.
+- Test direct door hover, focus, keyboard activation, touch activation, forward entry, and showroom return.
+- Verify the visitor cannot scroll beyond the final selection chamber before choosing a door.
+- Check normal and reduced-motion paths, WebGL failure fallback, media failure fallback, loading state, and context loss.
+- Confirm no blank/black frames, label collisions, bad crops, horizontal overflow, console errors, or dead links.
+- Profile the hover sequence and camera movement for stable frame pacing.
+- Run TypeScript, ESLint, tests, and the production build.
+- Update `docs/CURRENT-STATE.md` with exact assets added, budgets, test evidence, and any honest limitations.
 
-Required commands when dependencies/tooling are available:
+## Validation commands
 
 ```bash
 pnpm exec tsc --noEmit
@@ -60,4 +90,4 @@ pnpm test
 pnpm build
 ```
 
-Do not call the pass complete because it builds. Visual acceptance remains the deciding gate.
+Do not call the work complete merely because it builds. The final decision is visual: the opening and Three Doors must look commissioned, physically believable, and specific to ONLEV rather than AI-generated decoration.
