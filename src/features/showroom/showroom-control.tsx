@@ -21,16 +21,13 @@ export function ShowroomControl({
     <details className="showroom-control">
       <summary aria-label="Open showroom controls">
         <span className="showroom-control__mark" aria-hidden="true"><i /><i /><i /></span>
-        <span>Exit / Switch</span>
+        <span>Showroom</span>
       </summary>
       <div className="showroom-control__panel">
         <p>Three Doors</p>
         <nav aria-label="Showroom navigation">
-          <Link href="/#onlev">
-            <span>Back to ONLEV</span><b aria-hidden="true">↖</b>
-          </Link>
           <Link href={`/?industry=${current}#three-doors`} transitionTypes={["portal-back"]}>
-            <span>Three Doors</span><b aria-hidden="true">←</b>
+            <span>Return to showroom</span><b aria-hidden="true">←</b>
           </Link>
           {industryHubItems.map((item) => (
             <Link

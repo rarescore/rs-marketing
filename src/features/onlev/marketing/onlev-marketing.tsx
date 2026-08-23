@@ -21,6 +21,8 @@ const demos = [
     number: "01",
     label: "Real Estate",
     brand: "Atelier North",
+    route: "/showroom/real-estate",
+    tool: "/showroom/real-estate/tools/move-strategy-studio",
     proof: "Property discovery, decision tools, tour planning, and a context-rich advisor handoff.",
     interaction: "Move Strategy Studio",
   },
@@ -29,6 +31,8 @@ const demos = [
     number: "02",
     label: "Home Services",
     brand: "Field Standard",
+    route: "/showroom/plumbing",
+    tool: "/showroom/plumbing/tools/plumbing-passport",
     proof: "Emergency clarity, service triage, homeowner records, and prepared service requests.",
     interaction: "Whole-Home Plumbing Passport",
   },
@@ -37,6 +41,8 @@ const demos = [
     number: "03",
     label: "Injury Law",
     brand: "Morrow & Vale",
+    route: "/showroom/injury-law",
+    tool: "/showroom/injury-law/case-review",
     proof: "Trauma-aware guidance, evidence planning, and a calm path to human legal review.",
     interaction: "Incident & Impact Review",
   },
@@ -54,7 +60,7 @@ export function OnlevMarketing() {
           <p>ONLEV / onlev.site</p>
         </div>
         <div className="onlev-bridge__statement" data-onlev-reveal>
-          <p className="onlev-kicker">The visible layer is only the beginning</p>
+          <p className="onlev-kicker">The showroom was the proof</p>
           <h2 id="onlev-bridge-title">The website is the visible layer. <em>The system wins the response.</em></h2>
           <p>ONLEV builds complete client-winning digital systems for businesses whose next customer is already searching.</p>
         </div>
@@ -87,7 +93,8 @@ export function OnlevMarketing() {
               <div className="onlev-proof-card__body">
                 <div><p className="onlev-proof-card__brand">{demo.brand}</p><h3>{demo.proof}</h3></div>
                 <div className="onlev-proof-card__actions">
-                  <a href="#three-doors">Choose this industry in the final showroom <span aria-hidden="true">↓</span></a>
+                  <Link href={demo.route}>Enter the website <span aria-hidden="true">↗</span></Link>
+                  <Link href={demo.tool}>Use the flagship tool <span aria-hidden="true">→</span></Link>
                 </div>
               </div>
             </article>

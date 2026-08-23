@@ -2,9 +2,9 @@ import Link from "next/link";
 import { OnlevLogo } from "../brand/onlev-logo";
 
 const demoLinks = [
-  ["Real Estate", "/?industry=real-estate#three-doors"],
-  ["Plumbing", "/?industry=plumbing#three-doors"],
-  ["Injury Law", "/?industry=injury-law#three-doors"],
+  ["Real Estate", "/showroom/real-estate"],
+  ["Home Services", "/showroom/plumbing"],
+  ["Injury Law", "/showroom/injury-law"],
 ] as const;
 
 export function OnlevFooter() {

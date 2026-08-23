@@ -58,7 +58,7 @@ function canRunCinematicLayer() {
   }
 }
 
-export function HeroExperience({ mode = "sequence" }: { mode?: "sequence" | "hub" }) {
+export function HeroExperience() {
   const root = useRef<HTMLDivElement>(null);
   const [sceneEnabled, setSceneEnabled] = useState(false);
   const [sceneReady, setSceneReady] = useState(false);
@@ -101,13 +101,6 @@ export function HeroExperience({ mode = "sequence" }: { mode?: "sequence" | "hub
 
   useGSAP(
     () => {
-      if (mode === "hub") {
-        setProgress(1);
-        root.current?.setAttribute("data-hub", "");
-        gsap.set(".hero__reveal", { autoAlpha: 1, pointerEvents: "auto" });
-        return () => setProgress(0);
-      }
-
       if (reducedMotion) {
         setProgress(1);
         gsap.set(".hero__reveal", { autoAlpha: 1, pointerEvents: "auto" });
@@ -145,7 +138,7 @@ export function HeroExperience({ mode = "sequence" }: { mode?: "sequence" | "hub
           0.58,
         )
         .fromTo(
-          ".industry-hub__door",
+          ".industry-hub__selectors button",
           { y: 20, opacity: 0 },
           { y: 0, opacity: 1, duration: 0.16, stagger: 0.025 },
           0.66,
@@ -161,7 +154,7 @@ export function HeroExperience({ mode = "sequence" }: { mode?: "sequence" | "hub
 
       return () => setProgress(0);
     },
-    { dependencies: [mode, reducedMotion, setProgress] },
+    { dependencies: [reducedMotion, setProgress] },
   );
 
   return (

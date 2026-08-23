@@ -2,30 +2,7 @@
 
 Last updated: 2026-08-22
 
-Current phase: **ONLEV cinematic opening revision implemented and production checks passing**
-
-## ONLEV cinematic opening revision
-
-- Replaced the flat CSS-only ONLEV opening composition with a capability-gated React Three Fiber monument. Independent frame, letterform, nickel, graphite, translucent system-layer, and warm-metal beam geometry now travels from an exploded architectural state into the resolved ONLEV mark.
-- The opening uses a reversible GSAP/ScrollTrigger master progression. Real object transforms, camera lateral travel, lighting response, shadows, material response, and selective bloom/vignette provide the motion; no still-image zoom, pan, parallax, generated slideshow, music, or mandatory intro is used.
-- Added three concise semantic narrative beats outside WebGL so the offer remains clear immediately and without the cinematic layer. The authored mobile and reduced-motion alternatives retain the same story without mounting WebGL or scroll-scrubbed depth motion.
-- Added a dedicated `?qa=cinematic` software-WebGL QA override for controlled testing without weakening normal capability checks.
-- Corrected mobile opening typography and progress treatment at 390px so the headline and actions do not clip.
-- The Three Doors remains late in the ONLEV journey but is no longer the absolute page ending. A short post-showroom coda gives visitors who do not match one of the three demonstrations a clear walkthrough route without weakening direct door selection.
-- Demo showroom controls now expose **Exit / Switch**, with explicit routes back to ONLEV, the Three Doors, and each other demo. Root hash resolution is stabilized for returns from demo routes.
-- TypeScript, ESLint, all five production-contract tests, and the Next.js Webpack production build pass. Desktop and 390px fallback compositions were rendered and inspected; the forced WebGL path mounted and rendered frames without application errors. Three.js emits its upstream `Clock` deprecation warning through the current R3F dependency, but no project console error was observed.
-
-## Stage 1 — ONLEV order and Three Doors correction
-
-- Reordered the root journey to **cinematic ONLEV opening → ONLEV marketing/storytelling → final Three Doors selection → demo entry**. The industry hub no longer appears near the beginning.
-- Replaced early demo-entry actions on the root journey with links to the final showroom. Footer industry links now return to the final selection state instead of bypassing it.
-- Converted all three portal surfaces into direct semantic links. Hover, pointer entry, and keyboard focus immediately select the corresponding industry, open that physical 3D door, reveal its world, shift lighting/depth/camera response, and prefetch the destination. Clicking the door itself enters the demo; the former separate entry CTA was removed.
-- Added permanent, explicit portal labels: **REAL ESTATE**, **PLUMBING**, and **INJURY LAW**.
-- Replaced the former 340-viewport opening showroom track with a bounded final chamber late in the document. It resolves in one viewport on desktop and is followed only by a concise ONLEV walkthrough coda. No persistent wheel/touch scroll hijacking was added.
-- Added an authored mobile final chamber with three direct portal targets and the existing no-WebGL fallback. Reduced motion keeps the final composition and direct links while removing spatial motion.
-- Preserved all Real Estate, Plumbing, Injury Law, System Lens, and showroom-control implementations.
-- Stage 1 TypeScript, ESLint, production-contract tests, and the 87-route Webpack production build pass. Desktop rendered structure and the final hub composition were inspected in the local production preview.
-- The remaining visual ceiling is documented in `docs/CLOUD-AI-CONTINUATION.md`: commissioned/cinematic media and authored high-detail portal assets can still exceed the procedural opening and door geometry without changing the locked journey.
+Current phase: **Phase 9 final validation in progress — implementation and production gates complete; live visual acceptance waiting on preview reconnection**
 
 ## Phase 9 working state
 
