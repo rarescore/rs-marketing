@@ -94,7 +94,7 @@ export function InjuryHero({ onlineReady }: { onlineReady: boolean }) {
       onLeave: () => seek(1, true),
     } });
     timeline.to(".il-cinematic__shade", { opacity: 0.9, duration: 0.12 }, 0.62)
-      .fromTo(".il-cinematic__question", { autoAlpha: 0, y: 24 }, { autoAlpha: 1, y: 0, duration: 0.15 }, 0.7);
+      .fromTo(".il-cinematic__question", { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.15 }, 0.7);
     "ACCIDENT?".split("").forEach((_, index) => {
       timeline.fromTo(`.il-cinematic__char:nth-child(${index + 1})`, { opacity: 0 }, { opacity: 1, duration: 0.014 }, 0.73 + index * 0.008);
     });
