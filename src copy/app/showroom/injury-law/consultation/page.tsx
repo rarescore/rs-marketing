@@ -1,5 +1,0 @@
-import { ConsultationForm } from "@/features/demos/injury-law/consultation-form.client";
-import { InjuryPageIntro } from "@/features/demos/injury-law/injury-layout";
-import { demoLawPhoneDisplay, demoLawPhoneHref } from "@/features/demos/injury-law/data";
-export const metadata={title:"Confidential Consultation Pathway"};
-export default function Page(){return <main id="injury-main"><InjuryPageIntro eyebrow="Consultation pathway · No-send demonstration" title="A calm conversation, when you are ready."><p>Tell the interface how you prefer to be contacted. Do not include medical records, incident narratives, documents, or sensitive evidence in this demonstration.</p></InjuryPageIntro><section className="il-form-shell"><div className="il-content-grid"><aside className="il-annotation"><strong>Privacy boundary</strong>This preview validates the minimum contact details on screen and retains nothing. It cannot promise legal confidentiality or privilege. Submission does not create representation.<br/><br/><a href={demoLawPhoneHref} style={{borderBottom:"1px solid"}}>Human-help line {demoLawPhoneDisplay}</a></aside><div><ConsultationForm/></div></div></section></main>}
