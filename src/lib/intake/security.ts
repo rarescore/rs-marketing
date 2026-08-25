@@ -13,5 +13,5 @@ export async function verifyTurnstile(token: string, ip: string) {
 }
 
 export function pipelineConfigured() {
-  return ["RESEND_API_KEY", "INTAKE_FROM_EMAIL", "TURNSTILE_SECRET_KEY"].every((key) => Boolean(process.env[key]));
+  return ["RESEND_API_KEY", "INTAKE_FROM_EMAIL", "TURNSTILE_SECRET_KEY", "NEXT_PUBLIC_TURNSTILE_SITE_KEY"].every((key) => Boolean(process.env[key]));
 }

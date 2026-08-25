@@ -14,7 +14,7 @@ export async function notifyFirm(leadId: string, lead: LeadSubmission) {
   const from = process.env.INTAKE_FROM_EMAIL;
   if (!from) throw new Error("Lead email is not configured.");
   const { data, error } = await client().emails.send({
-    from, to: "hello.rarescore@gmail.com", replyTo: lead.email || undefined,
+    from, to: process.env.INTAKE_TO_EMAIL || "hello.rarescore@gmail.com", replyTo: lead.email || undefined,
     subject: `New case-review request — ${lead.fullName}`,
     html: `<h1>New case-review request</h1><p><strong>Lead ID:</strong> ${escapeHtml(leadId)}</p><p><strong>Name:</strong> ${escapeHtml(lead.fullName)}</p><p><strong>Phone:</strong> ${escapeHtml(lead.phone)}</p><p><strong>Email:</strong> ${escapeHtml(lead.email || "Not provided")}</p><p><strong>Preferred time:</strong> ${escapeHtml(lead.preferredContactTime || "No preference")}</p><hr><p><strong>Someone else may have caused it:</strong> ${escapeHtml(lead.faultAnswer)}</p><p><strong>Injured:</strong> ${escapeHtml(lead.injuryAnswer)}</p><p><strong>When:</strong> ${escapeHtml(lead.accidentWhen)}</p><p><strong>Exact date:</strong> ${escapeHtml(lead.accidentDate || "Not provided")}</p><p><strong>Source:</strong> ${escapeHtml(lead.source)}</p><p><strong>Submitted:</strong> ${new Date().toISOString()}</p>`,
   }, { idempotencyKey: `firm-intake-${leadId}` });

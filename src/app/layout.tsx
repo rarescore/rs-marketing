@@ -13,7 +13,6 @@ export const metadata: Metadata = {
   description:
     "Clear, trauma-aware guidance after an accident, with practical next steps and a no-pressure consultation path.",
   applicationName: "Lev & On Law Firm",
-  alternates: { canonical: "/" },
   openGraph: {
     title: "Lev & On Law Firm — Personal Injury Counsel",
     description: "Clear, trauma-aware guidance after an accident.",
@@ -28,13 +27,7 @@ export const metadata: Metadata = {
   },
 };
 
-export const viewport: Viewport = {
-  colorScheme: "light dark",
-  themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#ecebe7" },
-    { media: "(prefers-color-scheme: dark)", color: "#0d0f12" },
-  ],
-};
+export const viewport: Viewport = { colorScheme: "light", themeColor: "#172334" };
 
 const organizationSchema = {
   "@context": "https://schema.org",
@@ -42,6 +35,8 @@ const organizationSchema = {
   name: "Lev & On Law Firm",
   description:
     "California personal injury counsel prepared from the first call.",
+  telephone: "+1-818-913-6158",
+  areaServed: "California",
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {

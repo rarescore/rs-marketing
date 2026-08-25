@@ -18,7 +18,7 @@ export function InjuryLayout({ children }: { children: ReactNode }) {
     <footer className="il-footer">
       <div><p className="il-footer__brand">LEV &amp; ON LAW FIRM</p><p>Early action. Serious preparation. Direct answers.</p><a href={lawPhoneHref}>{lawPhoneDisplay}</a></div>
       <nav aria-label="Footer navigation"><Link href="/practice-areas">Practice areas</Link><Link href="/resources">Resources</Link><Link href="/consultation">Contact</Link><Link href="/privacy">Privacy</Link><Link href="/terms">Terms</Link><Link href="/advertising">Attorney Advertising</Link><Link href="/accessibility">Accessibility</Link></nav>
-      <p className="il-disclosure">This website provides general information and is not legal advice. Sending a form does not create an attorney-client relationship. Representation begins only after conflicts review and a written agreement. Do not send confidential or time-sensitive information through this website. Legal content requires attorney review before publication.</p>
+      <p className="il-disclosure">Attorney Advertising. This website provides general information, not legal advice. Sending a form does not create an attorney-client relationship. Representation begins only after a conflicts check and a written agreement. Do not send confidential or time-sensitive information through this website. No outcome is promised or guaranteed.</p>
     </footer>
     <div className="il-mobile-actions" aria-label="Immediate actions"><a href={lawPhoneHref}>Call Now</a><Link href="/#free-case-review">Free Case Review</Link></div>
   </div>;

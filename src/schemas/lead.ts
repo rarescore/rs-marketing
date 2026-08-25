@@ -42,5 +42,12 @@ export type LeadActionState = {
   leadId?: string;
   firstName?: string;
   phoneLastFour?: string;
+  values?: {
+    fullName: string;
+    phone: string;
+    email: string;
+    preferredContactTime: string;
+    consent: string;
+  };
 };
 export const initialLeadState: LeadActionState = { status: "idle", message: "" };

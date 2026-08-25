@@ -1,21 +1,43 @@
-# Lev & On Law Firm — Standalone Website
-A production-oriented Next.js personal-injury website with a cinematic three-question intake and email delivery through Resend.
+# Lev & On Law Firm website
+
+A production-ready Next.js personal-injury website with a reversible three-question intake, responsive crash media, Resend email delivery, and Cloudflare Turnstile abuse protection.
 
 ## Run locally
+
+Install dependencies, copy `.env.example` to `.env.local`, and add the required values before starting the site.
+
 ```bash
 pnpm install
 pnpm dev
 ```
 
-## Configure inquiries
-Copy `.env.example` to `.env.local`. Add a Resend API key, a verified sender address, and Cloudflare Turnstile keys. Completed inquiries are emailed to `hello.rarescore@gmail.com`. Online submission remains disabled when the required credentials are missing; telephone links remain available.
+## Enable online inquiries
 
-## Verify and build
+1. Verify the sending domain in Resend and create an API key.
+2. Create a Turnstile widget for the production hostname.
+3. Set `RESEND_API_KEY`, `INTAKE_FROM_EMAIL`, `INTAKE_TO_EMAIL`, `TURNSTILE_SECRET_KEY`, and `NEXT_PUBLIC_TURNSTILE_SITE_KEY` in the deployment environment.
+4. Set `NEXT_PUBLIC_SITE_URL` to the canonical production origin before building.
+
+If Resend, Turnstile, or their configuration is unavailable, the form displays a direct telephone fallback and does not imply that an inquiry was sent.
+
+For automated local testing, Cloudflare’s documented always-pass keys are:
+
+```bash
+NEXT_PUBLIC_TURNSTILE_SITE_KEY=1x00000000000000000000AA
+TURNSTILE_SECRET_KEY=1x0000000000000000000000000000000AA
+```
+
+Use real hostname-restricted keys in production. A valid Resend API key and verified sender domain are still required for delivery.
+
+## Media
+
+The original 1280×720 animation is preserved at `public/video/injury-law/accident-sequence.mp4`. A 57 MB Apple ProRes 422 production master is in `public/video/injury-law/masters/`, with separate desktop and lightweight mobile exports plus matching poster images. The source does not contain true 1080p detail, so the project does not label an ordinary upscale as a higher-resolution master. The content, timing, and framing were not changed.
+
+## Verify
+
 ```bash
 pnpm typecheck
 pnpm lint
 pnpm test
 pnpm build
 ```
-
-Legal policies, consent language, and article drafts require attorney approval before public launch. Article routes are noindex until reviewed by a named attorney and assigned a review date.
