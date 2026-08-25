@@ -1,0 +1,11 @@
+"use client";
+import Link from "next/link";
+import type { ReactNode } from "react";
+import type { ToolResult } from "../tool-engines";
+import { plumbingBase } from "../data";
+
+export function ToolFrame({ eyebrow, title, intro, children }: { eyebrow: string; title: string; intro: string; children: ReactNode }) { return <div className="pl-tool"><header><p className="pl-eyebrow">{eyebrow}</p><h1>{title}</h1><p>{intro}</p></header><div className="pl-tool__workspace">{children}</div><aside className="pl-tool__limits"><strong>Professional boundary</strong><p>Preliminary homeowner guidance only. No diagnosis, equipment selection, code approval, price, or promise of service. Onsite evaluation, manufacturer instructions, permits, applicable code, and the authority having jurisdiction take precedence.</p></aside></div>; }
+
+export function Result({ result, onDownload, cta = "Discuss this result" }: { result: ToolResult; onDownload?: () => void; cta?: string }) { return <section className="pl-tool-result" aria-live="polite" tabIndex={-1}><p className="pl-eyebrow">Useful output · Before contact</p><h2>{result.title}</h2><p>{result.summary}</p><dl>{result.metrics.map((item) => <div key={item.label}><dt>{item.label}</dt><dd>{item.value}</dd></div>)}</dl><div className="pl-result-columns"><div><h3>Important limits</h3><ul>{result.flags.map((item) => <li key={item}>{item}</li>)}</ul></div><div><h3>Next actions</h3><ol>{result.actions.map((item) => <li key={item}>{item}</li>)}</ol></div></div><details><summary>Assumptions used</summary><ul>{result.assumptions.map((item) => <li key={item}>{item}</li>)}</ul></details><div className="pl-inline-actions">{onDownload && <button className="pl-button" type="button" onClick={onDownload}>Download text record</button>}<Link className="pl-button pl-button--primary" href={`${plumbingBase}/request-service`}>{cta}</Link></div></section>; }
+
+export function downloadRecord(filename: string, content: string) { const blob = new Blob([content], { type: "text/plain;charset=utf-8" }); const url = URL.createObjectURL(blob); const anchor = document.createElement("a"); anchor.href = url; anchor.download = filename; anchor.click(); URL.revokeObjectURL(url); }

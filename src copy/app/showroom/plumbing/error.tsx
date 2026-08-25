@@ -1,0 +1,2 @@
+"use client";
+export default function PlumbingError({ reset }: { error: Error & { digest?: string }; reset: () => void }) { return <main className="pl-main pl-error" id="plumbing-main"><p>Field Standard / route interruption</p><h1>This service view did not load cleanly.</h1><p>Your tool drafts remain browser-local. Try rendering the view again.</p><button className="pl-button pl-button--primary" type="button" onClick={reset}>Try again</button></main>; }
