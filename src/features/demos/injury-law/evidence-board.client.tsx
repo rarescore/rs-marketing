@@ -17,7 +17,7 @@ const matters = [
 
 export function EvidenceBoard() {
   const [active, setActive] = useState(0);
-  const matter = matters[active];
+  const matter = matters[active] ?? matters[0];
 
   return <section className="il-evidence" aria-labelledby="evidence-heading">
     <div className="il-shell">
