@@ -2,7 +2,7 @@ import Link from "next/link";
 import type { ReactNode } from "react";
 import { firmName, lawPhoneDisplay, lawPhoneHref } from "./data";
 
-const nav = [["What to do now", "/after-an-accident"], ["Practice areas", "/practice-areas"], ["Our process", "/process"], ["Resources", "/resources"]] as const;
+const nav = [["What To Do Now", "/after-an-accident"], ["Accidents", "/practice-areas"], ["How We Help", "/process"], ["Attorneys", "/attorneys"], ["Resources", "/resources"], ["Contact", "/consultation"]] as const;
 
 export function InjuryLayout({ children }: { children: ReactNode }) {
   return <div className="il-site" data-theme="injury-law">
@@ -11,16 +11,16 @@ export function InjuryLayout({ children }: { children: ReactNode }) {
     <header className="il-header">
       <Link className="il-brand" href="/" aria-label={`${firmName}, home`}><span className="il-brand__mark" aria-hidden="true"><i/><i/><i/></span><span><strong>LEV &amp; ON</strong><small>LAW FIRM</small></span></Link>
       <nav className="il-nav" aria-label="Primary navigation">{nav.map(([label, href])=><Link key={href} href={href}>{label}</Link>)}</nav>
-      <Link className="il-button il-button--ink il-header__cta" href="/#free-case-review">Free Case Review</Link>
-      <details className="il-menu"><summary>Menu</summary><nav aria-label="Mobile navigation">{nav.map(([label,href])=><Link key={href} href={href}>{label}</Link>)}<Link href="/consultation">Contact</Link></nav></details>
+      <div className="il-header__actions"><a href={lawPhoneHref}>{lawPhoneDisplay}</a><Link className="il-button il-button--ink il-header__cta" href="/#tell-us">Free Case Review</Link></div>
+      <details className="il-menu"><summary>Menu</summary><nav aria-label="Mobile navigation">{nav.map(([label,href])=><Link key={href} href={href}>{label}</Link>)}</nav></details>
     </header>
     {children}
     <footer className="il-footer">
-      <div><p className="il-footer__brand">LEV &amp; ON LAW FIRM</p><p>Early action. Serious preparation. Direct answers.</p><a href={lawPhoneHref}>{lawPhoneDisplay}</a></div>
-      <nav aria-label="Footer navigation"><Link href="/practice-areas">Practice areas</Link><Link href="/resources">Resources</Link><Link href="/consultation">Contact</Link><Link href="/privacy">Privacy</Link><Link href="/terms">Terms</Link><Link href="/advertising">Attorney Advertising</Link><Link href="/accessibility">Accessibility</Link></nav>
-      <p className="il-disclosure">Attorney Advertising. This website provides general information, not legal advice. Sending a form does not create an attorney-client relationship. Representation begins only after a conflicts check and a written agreement. Do not send confidential or time-sensitive information through this website. No outcome is promised or guaranteed.</p>
+      <div className="il-footer__identity"><p className="il-footer__brand">LEV &amp; ON LAW FIRM</p><p>California personal-injury counsel.</p><a href={lawPhoneHref}>{lawPhoneDisplay}</a><a href="mailto:hello.rarescore@gmail.com">hello.rarescore@gmail.com</a><small>Office address, intake hours, languages, and individual California Bar details are awaiting firm verification and will not be invented.</small></div>
+      <div className="il-footer__links"><nav aria-label="Firm navigation"><strong>Firm</strong><Link href="/process">How We Help</Link><Link href="/process">Our Process</Link><Link href="/attorneys">Attorneys</Link><Link href="/consultation">Contact</Link><Link href="/#tell-us">Free Case Review</Link></nav><nav aria-label="Information navigation"><strong>Information</strong><Link href="/after-an-accident">What To Do Now</Link><Link href="/practice-areas">Accidents</Link><Link href="/resources">Resources</Link><Link href="/sitemap.xml">Sitemap</Link></nav><nav aria-label="Legal navigation"><strong>Legal</strong><Link href="/privacy">Privacy Policy</Link><Link href="/terms">Terms of Use</Link><Link href="/accessibility">Accessibility</Link><Link href="/advertising">Attorney Advertising</Link></nav></div>
+      <p className="il-disclosure">This website provides general information and is not legal advice. Submitting a form does not create an attorney-client relationship. Representation begins only after conflicts review and a written agreement. Have all legal and advertising language reviewed by a licensed California attorney before publication.</p>
     </footer>
-    <div className="il-mobile-actions" aria-label="Immediate actions"><a href={lawPhoneHref}>Call Now</a><Link href="/#free-case-review">Free Case Review</Link></div>
+    <div className="il-mobile-actions" aria-label="Immediate actions"><a href={lawPhoneHref}>Call Now</a><Link href="/#tell-us">Request a Call</Link></div>
   </div>;
 }
 

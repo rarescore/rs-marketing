@@ -21,6 +21,9 @@ export const leadSubmissionSchema = z.object({
   injuryAnswer: injuryAnswerSchema,
   accidentWhen: accidentWhenSchema,
   accidentDate: z.union([z.literal(""), z.iso.date()]),
+  accidentType: z.string().trim().max(100).default(""),
+  accidentLocation: z.string().trim().max(160).default(""),
+  medicalAttention: z.enum(["yes", "no", "not-sure"]).default("not-sure"),
   source: z.string().trim().min(1).max(120),
   consent: z.literal("on", { error: "Confirm that Lev & On may contact you about your request." }),
   website: z.string().max(0, "Unable to process this request."),
@@ -35,6 +38,17 @@ export const leadSubmissionSchema = z.object({
 });
 
 export type LeadSubmission = z.infer<typeof leadSubmissionSchema>;
+export const directMessageSchema = z.object({
+  fullName: z.string().trim().min(2, "Enter your full name.").max(100),
+  contactDetail: z.string().trim().min(5, "Enter a phone number or email address.").max(160),
+  preferredContactMethod: z.enum(["phone", "email"]),
+  message: z.string().trim().max(1000),
+  source: z.string().trim().min(1).max(120),
+  consent: z.literal("on", { error: "Confirm that Lev & On may contact you about your request." }),
+  website: z.string().max(0, "Unable to process this request."),
+  turnstileToken: z.string().max(4096),
+});
+export type DirectMessageSubmission = z.infer<typeof directMessageSchema>;
 export type LeadActionState = {
   status: "idle" | "error" | "success";
   message: string;

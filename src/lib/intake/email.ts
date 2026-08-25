@@ -1,5 +1,5 @@
 import { Resend } from "resend";
-import type { LeadSubmission } from "@/schemas/lead";
+import type { DirectMessageSubmission, LeadSubmission } from "@/schemas/lead";
 import { lawPhoneDisplay } from "@/features/demos/injury-law/data";
 
 function escapeHtml(value: string) {
@@ -16,7 +16,7 @@ export async function notifyFirm(leadId: string, lead: LeadSubmission) {
   const { data, error } = await client().emails.send({
     from, to: process.env.INTAKE_TO_EMAIL || "hello.rarescore@gmail.com", replyTo: lead.email || undefined,
     subject: `New case-review request — ${lead.fullName}`,
-    html: `<h1>New case-review request</h1><p><strong>Lead ID:</strong> ${escapeHtml(leadId)}</p><p><strong>Name:</strong> ${escapeHtml(lead.fullName)}</p><p><strong>Phone:</strong> ${escapeHtml(lead.phone)}</p><p><strong>Email:</strong> ${escapeHtml(lead.email || "Not provided")}</p><p><strong>Preferred time:</strong> ${escapeHtml(lead.preferredContactTime || "No preference")}</p><hr><p><strong>Someone else may have caused it:</strong> ${escapeHtml(lead.faultAnswer)}</p><p><strong>Injured:</strong> ${escapeHtml(lead.injuryAnswer)}</p><p><strong>When:</strong> ${escapeHtml(lead.accidentWhen)}</p><p><strong>Exact date:</strong> ${escapeHtml(lead.accidentDate || "Not provided")}</p><p><strong>Source:</strong> ${escapeHtml(lead.source)}</p><p><strong>Submitted:</strong> ${new Date().toISOString()}</p>`,
+    html: `<h1>New case-review request</h1><p><strong>Lead ID:</strong> ${escapeHtml(leadId)}</p><p><strong>Name:</strong> ${escapeHtml(lead.fullName)}</p><p><strong>Phone:</strong> ${escapeHtml(lead.phone)}</p><p><strong>Email:</strong> ${escapeHtml(lead.email || "Not provided")}</p><p><strong>Preferred time:</strong> ${escapeHtml(lead.preferredContactTime || "No preference")}</p><hr><p><strong>Accident type:</strong> ${escapeHtml(lead.accidentType || "Not provided")}</p><p><strong>Location:</strong> ${escapeHtml(lead.accidentLocation || "Not provided")}</p><p><strong>Someone else may have caused it:</strong> ${escapeHtml(lead.faultAnswer)}</p><p><strong>Injured:</strong> ${escapeHtml(lead.injuryAnswer)}</p><p><strong>Medical attention:</strong> ${escapeHtml(lead.medicalAttention)}</p><p><strong>When:</strong> ${escapeHtml(lead.accidentWhen)}</p><p><strong>Exact date:</strong> ${escapeHtml(lead.accidentDate || "Not provided")}</p><p><strong>Source:</strong> ${escapeHtml(lead.source)}</p><p><strong>Submitted:</strong> ${new Date().toISOString()}</p>`,
   }, { idempotencyKey: `firm-intake-${leadId}` });
   if (error || !data?.id) throw new Error("The intake notification was not accepted.");
   return data.id;
@@ -30,4 +30,17 @@ export async function sendVisitorConfirmation(leadId: string, lead: LeadSubmissi
     subject: "We received your request — Lev & On Law Firm",
     html: `<h1>Thank you, ${escapeHtml(firstName)}.</h1><p>Your request has been received. A member of the Lev & On Law Firm intake team will contact you shortly.</p><p>If you need to speak now, call <a href="tel:+18189136158">${lawPhoneDisplay}</a>.</p><p>Submitting a request does not create an attorney-client relationship.</p>`,
   }, { idempotencyKey: `visitor-confirmation-${leadId}` });
+}
+
+export async function notifyFirmDirect(leadId: string, message: DirectMessageSubmission) {
+  const from = process.env.INTAKE_FROM_EMAIL;
+  if (!from) throw new Error("Lead email is not configured.");
+  const { data, error } = await client().emails.send({
+    from, to: process.env.INTAKE_TO_EMAIL || "hello.rarescore@gmail.com",
+    replyTo: message.preferredContactMethod === "email" && message.contactDetail.includes("@") ? message.contactDetail : undefined,
+    subject: `New direct message — ${message.fullName}`,
+    html: `<h1>New direct message</h1><p><strong>Lead ID:</strong> ${escapeHtml(leadId)}</p><p><strong>Name:</strong> ${escapeHtml(message.fullName)}</p><p><strong>Contact:</strong> ${escapeHtml(message.contactDetail)}</p><p><strong>Preferred method:</strong> ${escapeHtml(message.preferredContactMethod)}</p><p><strong>Message:</strong> ${escapeHtml(message.message || "Not provided")}</p><p><strong>Source:</strong> ${escapeHtml(message.source)}</p>`,
+  }, { idempotencyKey: `direct-message-${leadId}` });
+  if (error || !data?.id) throw new Error("The direct message was not accepted.");
+  return data.id;
 }

@@ -130,11 +130,11 @@ export const resources: Resource[] = [
 ].map(([slug,title,category,readTime,summary,answer,steps,mistakes,whenCounselHelps,sources,relatedAreas,relatedArticles]) => ({ slug,title,category,readTime,summary,answer,steps,mistakes,whenCounselHelps,sources,relatedAreas,relatedArticles } as Resource));
 
 export const processStages = [
-  ["Tell us what happened", "Call or complete the three-question review. The first conversation stays focused on what matters now."],
-  ["Speak with our intake team", "We gather the information needed for an attorney to evaluate the situation."],
-  ["Attorney evaluation", "A lawyer reviews timing, injuries, available evidence, responsibility, and coverage."],
-  ["Understand your options", "The firm explains whether it can assist and what may happen next."],
-  ["Move forward together", "If representation is offered and accepted in writing, the legal work begins."],
+  ["Listen", "We begin with what happened and what is affecting you now."],
+  ["Protect", "We identify records, evidence, and information that may need to be preserved."],
+  ["Investigate", "We examine responsibility, available coverage, injuries, and documented losses."],
+  ["Explain", "We tell you what is known, what is still uncertain, and which decisions come next."],
+  ["Pursue", "If representation is offered and accepted, the firm handles the legal and insurance process while keeping the client informed."],
 ] as const;
 
 export const homeFaqs = [
