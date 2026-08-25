@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { ViewTransition } from "react";
+import { RealEstateHero } from "@/features/demos/real-estate/real-estate-hero.client";
 import { EditorialCta } from "@/features/demos/real-estate/real-estate-layout";
 import { formatPrice, listings, realEstateBase } from "@/features/demos/real-estate/data";
 
@@ -14,27 +15,10 @@ export default function RealEstateDemoPage() {
   return (
     <main className="re-main" id="real-estate-main">
       <ViewTransition name="portal-real-estate" share="portal-morph" default="none">
-        <section className="re-hero" aria-labelledby="re-home-title">
-          <div className="re-hero__image">
-            <Image src={lead.image} alt="" fill priority loading="eager" sizes="100vw" />
-          </div>
-          <div className="re-hero__content">
-            <div className="re-hero__copy">
-              <p className="re-kicker">Pasadena · Altadena · San Gabriel foothills</p>
-              <h1 id="re-home-title">A clear way through a consequential move.</h1>
-              <p>Property search, sale strategy, and decision tools led by one local advisory practice.</p>
-              <Link className="re-button re-button--light" href={`${realEstateBase}/listings`}>Explore sample properties <span aria-hidden="true">→</span></Link>
-            </div>
-            <Link className="re-hero__folio" href={`${realEstateBase}/listings/${lead.slug}`}>
-              <p>Current property edit · Sample listing</p>
-              <strong>{lead.address}</strong>
-              <p>{formatPrice(lead.price)} · {lead.beds} bed · {lead.area.toLocaleString()} sq ft</p>
-            </Link>
-          </div>
-        </section>
+        <RealEstateHero />
       </ViewTransition>
 
-      <section className="re-section re-section--light">
+      <section className="re-section re-section--light" id="properties">
         <div className="re-section__head">
           <p className="re-kicker">The current property edit</p>
           <h2>Four houses. Four different decisions.</h2>
