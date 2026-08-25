@@ -42,7 +42,7 @@ export function CallbackIntake({ onlineReady }: { onlineReady: boolean }) {
 
   return <div className="il-callback">
     {key && <Script src="https://challenges.cloudflare.com/turnstile/v0/api.js" strategy="afterInteractive" onError={() => setSecurityFailed(true)} />}
-    <div className="il-callback__progress" aria-label={`Step ${step} of 5`}><span style={{ width: `${step * 20}%` }} /><b>Step {step} of 5</b></div>
+    <div className="il-callback__progress" aria-label={`Step ${step} of 5`}><span style={{ transform: `scaleX(${step / 5})` }} /><b>Step {step} of 5</b></div>
     <div className="il-callback__stage">
       {step === 1 && <><p className="il-eyebrow">Accident</p><h3>What kind of accident happened?</h3><label className="il-field"><span>Accident type</span><select value={accidentType} onChange={(event) => setAccidentType(event.target.value)}><option value="">Choose the closest answer</option>{accidentTypes.map((item) => <option key={item}>{item}</option>)}</select></label><button className="il-button il-button--oxblood" type="button" disabled={!accidentType} onClick={advance}>Continue</button></>}
       {step === 2 && <><p className="il-eyebrow">Timing and location</p><h3>When and where did it happen?</h3><div className="il-callback__fields"><label className="il-field"><span>Approximate date <small>Optional</small></span><input type="date" max={today} value={accidentDate} onChange={(event) => setAccidentDate(event.target.value)} /></label><label className="il-field"><span>City or location</span><input value={location} onChange={(event) => setLocation(event.target.value)} required /></label></div><button className="il-button il-button--oxblood" type="button" disabled={!location.trim()} onClick={advance}>Continue</button></>}

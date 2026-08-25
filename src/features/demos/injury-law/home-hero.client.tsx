@@ -36,6 +36,9 @@ export function InjuryHero({ onlineReady }: { onlineReady: boolean }) {
   const contactRef = useRef<HTMLHeadingElement>(null);
   const reduced = useReducedMotion();
   const progress = useRef(0);
+  const pendingSeek = useRef(0);
+  const seekFrame = useRef<number | null>(null);
+  const lastSeekAt = useRef(0);
   const [step, setStep] = useState<Step>("fault");
   const [answers, setAnswers] = useState<Partial<Answers>>({});
   const [showDate, setShowDate] = useState(false);
@@ -45,19 +48,41 @@ export function InjuryHero({ onlineReady }: { onlineReady: boolean }) {
     if (step !== "fault") (step === "contact" ? contactRef : titleRef).current?.focus({ preventScroll: true });
   }, [step]);
 
-  const seek = (position: number) => {
-    progress.current = position;
+  const commitSeek = (timestamp: number) => {
+    seekFrame.current = null;
+    if (timestamp - lastSeekAt.current < 34) {
+      seekFrame.current = requestAnimationFrame(commitSeek);
+      return;
+    }
     const element = video.current;
     if (!element || !Number.isFinite(element.duration)) return;
-    const scene = Math.min(position / 0.7, 1);
-    element.currentTime = gsap.parseEase("power1.inOut")(scene) * Math.max(element.duration - 0.04, 0);
+    const scene = Math.min(pendingSeek.current / 0.7, 1);
+    const target = gsap.parseEase("power1.inOut")(scene) * Math.max(element.duration - 0.04, 0);
+    if (Math.abs(element.currentTime - target) > 0.035) element.currentTime = target;
+    lastSeekAt.current = timestamp;
   };
+
+  const seek = (position: number, immediate = false) => {
+    progress.current = position;
+    pendingSeek.current = position;
+    if (immediate) {
+      if (seekFrame.current !== null) cancelAnimationFrame(seekFrame.current);
+      lastSeekAt.current = 0;
+      commitSeek(performance.now());
+    } else if (seekFrame.current === null) {
+      seekFrame.current = requestAnimationFrame(commitSeek);
+    }
+  };
+
+  useEffect(() => () => {
+    if (seekFrame.current !== null) cancelAnimationFrame(seekFrame.current);
+  }, []);
 
   useGSAP(() => {
     if (!root.current) return;
     if (reduced) {
       gsap.set(".il-cinematic__question", { autoAlpha: 1 });
-      seek(1);
+      seek(1, true);
       return;
     }
     const timeline = gsap.timeline({ scrollTrigger: {
@@ -66,7 +91,7 @@ export function InjuryHero({ onlineReady }: { onlineReady: boolean }) {
       end: "bottom bottom",
       scrub: 0.55,
       onUpdate: (state) => seek(state.progress),
-      onLeave: () => seek(1),
+      onLeave: () => seek(1, true),
     } });
     timeline.to(".il-cinematic__shade", { opacity: 0.9, duration: 0.12 }, 0.62)
       .fromTo(".il-cinematic__question", { autoAlpha: 0, y: 24 }, { autoAlpha: 1, y: 0, duration: 0.15 }, 0.7);
@@ -121,7 +146,7 @@ export function InjuryHero({ onlineReady }: { onlineReady: boolean }) {
     <div className="il-cinematic__sticky">
       <div className="il-cinematic__visual" aria-hidden="true">
         <div className="il-cinematic__fallback" />
-        <video ref={video} className="il-cinematic__video" muted playsInline preload={reduced ? "metadata" : "auto"} poster="/media/injury-aftermath-desktop.jpg" tabIndex={-1} onLoadedMetadata={() => reduced ? seek(1) : seek(progress.current)}>
+        <video ref={video} className="il-cinematic__video" muted playsInline preload={reduced ? "metadata" : "auto"} poster="/media/injury-aftermath-desktop.jpg" tabIndex={-1} disablePictureInPicture onLoadedMetadata={() => seek(reduced ? 1 : progress.current, true)}>
           <source src="/video/injury-law/accident-sequence-desktop.m4v" type="video/mp4" media="(min-width: 761px)" />
           <source src="/video/injury-law/accident-sequence-mobile.m4v" type="video/mp4" />
         </video>
