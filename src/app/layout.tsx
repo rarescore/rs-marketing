@@ -1,44 +1,30 @@
 import type { Metadata, Viewport } from "next";
+import type { ReactNode } from "react";
 import { GeistMono } from "geist/font/mono";
 import { GeistSans } from "geist/font/sans";
 import { AppProviders } from "@/providers/app-providers";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://onlev.site"),
   title: {
-    default: "ONLEV — Client-winning digital systems",
-    template: "%s | ONLEV",
+    default: "Lev & On Law Firm — Personal Injury Counsel",
+    template: "%s | Lev & On Law Firm",
   },
   description:
-    "Client-winning website systems designed around how local businesses get chosen.",
-  applicationName: "ONLEV",
-  manifest: "/manifest.webmanifest",
+    "Clear, trauma-aware guidance after an accident, with practical next steps and a no-pressure consultation path.",
+  applicationName: "Lev & On Law Firm",
   alternates: { canonical: "/" },
   openGraph: {
-    title: "ONLEV — Client-winning digital systems",
-    description: "Websites, useful tools, lead capture, qualification, follow-up, and attribution—built as one connected business system.",
-    url: "https://onlev.site",
-    siteName: "ONLEV",
+    title: "Lev & On Law Firm — Personal Injury Counsel",
+    description: "Clear, trauma-aware guidance after an accident.",
+    siteName: "Lev & On Law Firm",
     type: "website",
-    images: [
-      {
-        url: "/opengraph-image",
-        width: 1200,
-        height: 630,
-        alt: "ONLEV — client-winning digital systems",
-      },
-    ],
   },
   twitter: {
-    card: "summary_large_image",
-    title: "ONLEV — Client-winning digital systems",
+    card: "summary",
+    title: "Lev & On Law Firm — Personal Injury Counsel",
     description:
-      "Websites, useful tools, lead capture, qualification, follow-up, and attribution—built as one connected business system.",
-    images: ["/opengraph-image"],
-  },
-  icons: {
-    icon: "/brand/onlev-mark-light.svg",
+      "Clear, trauma-aware guidance after an accident.",
   },
 };
 
@@ -52,16 +38,13 @@ export const viewport: Viewport = {
 
 const organizationSchema = {
   "@context": "https://schema.org",
-  "@type": "Organization",
-  name: "ONLEV",
-  url: "https://onlev.site",
-  logo: "https://onlev.site/brand/onlev-mark.svg",
-  email: "hello@onlev.site",
+  "@type": "LegalService",
+  name: "Lev & On Law Firm",
   description:
-    "ONLEV designs complete client-winning digital systems for lead-driven local businesses.",
+    "California personal injury counsel prepared from the first call.",
 };
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
+export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html
       lang="en"

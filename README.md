@@ -1,29 +1,21 @@
-# Three Doors Showroom
+# Lev & On Law Firm — Standalone Website
+A production-oriented Next.js personal-injury website with a cinematic three-question intake and email delivery through Resend.
 
-A premium live showroom for industry-specific client-acquisition website systems serving real estate, plumbing/home services, and injury law.
-
-## Source of truth
-
-Read these before implementation:
-
-1. `docs/MASTER-BRIEF.md`
-2. `docs/CURRENT-STATE.md`
-3. The domain document relevant to the change
-
-Locked decisions may change only through the protocol in the master brief.
-
-## Commands
-
+## Run locally
 ```bash
+pnpm install
 pnpm dev
-pnpm typecheck
-pnpm lint
-pnpm build
-pnpm check
 ```
 
-The production build currently uses Next.js with Webpack because Turbopack's CSS worker cannot bind its local helper port in the managed build environment. This is an implementation constraint, not a product decision.
+## Configure inquiries
+Copy `.env.example` to `.env.local`. Add a Resend API key, a verified sender address, and Cloudflare Turnstile keys. Completed inquiries are emailed to `hello.rarescore@gmail.com`. Online submission remains disabled when the required credentials are missing; telephone links remain available.
 
-## Current scope
+## Verify and build
+```bash
+pnpm typecheck
+pnpm lint
+pnpm test
+pnpm build
+```
 
-Phase 2 contains documentation, design tokens, foundational UI/layout/accessibility primitives, and isolated motion/3D infrastructure. It intentionally does not contain the public hero, industry hub, System Lens, or demo websites.
+Legal policies, consent language, and article drafts require attorney approval before public launch. Article routes are noindex until reviewed by a named attorney and assigned a review date.

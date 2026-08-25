@@ -1,11 +1,1 @@
-import type { MetadataRoute } from "next";
-
-export default function robots(): MetadataRoute.Robots {
-  return {
-    rules: [
-      { userAgent: "*", allow: ["/", "/systems", "/process", "/work", "/contact", "/privacy", "/terms", "/accessibility"], disallow: ["/showroom/"] },
-    ],
-    sitemap: "https://onlev.site/sitemap.xml",
-    host: "https://onlev.site",
-  };
-}
+import type { MetadataRoute } from "next"; export default function robots():MetadataRoute.Robots{const base=process.env.NEXT_PUBLIC_SITE_URL||"https://example.com";return {rules:{userAgent:"*",allow:"/",disallow:["/resources/","/thank-you"]},sitemap:`${base}/sitemap.xml`};}
