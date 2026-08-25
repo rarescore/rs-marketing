@@ -89,11 +89,11 @@ export function IndustryHub() {
       data-transitioning={transitionIndustry ?? undefined}
     >
       <div className="industry-hub__heading">
-        <p className="hero__kicker">One standard. Three purpose-built worlds.</p>
-        <h2 id="industry-hub-title">Choose the door your clients walk through.</h2>
+        <p className="hero__kicker">You have seen the system. Now enter the work.</p>
+        <h2 id="industry-hub-title">Choose your industry.</h2>
       </div>
 
-      <div className="industry-hub__selectors" role="tablist" aria-label="Industry systems">
+      <nav className="industry-hub__doors" aria-label="Choose an industry website">
         {industryHubItems.map((item) => {
           const selected = item.slug === activeIndustry;
           return (
@@ -103,46 +103,35 @@ export function IndustryHub() {
               share="portal-morph"
               default="none"
             >
-              <button
-                type="button"
-                role="tab"
-                id={`industry-tab-${item.slug}`}
-                aria-selected={selected}
-                aria-controls="industry-preview"
-                tabIndex={selected ? 0 : -1}
-                onClick={() => selectIndustry(item.slug)}
-                onFocus={() => selectIndustry(item.slug)}
-                onMouseEnter={() => selectIndustry(item.slug)}
-                onKeyDown={(event) => {
-                  const currentIndex = industryHubItems.findIndex(
-                    (candidate) => candidate.slug === item.slug,
-                  );
-                  const delta = event.key === "ArrowRight" ? 1 : event.key === "ArrowLeft" ? -1 : 0;
-                  if (!delta) return;
-                  event.preventDefault();
-                  const nextIndex =
-                    (currentIndex + delta + industryHubItems.length) %
-                    industryHubItems.length;
-                  const next = industryHubItems[nextIndex]!;
-                  setActiveIndustry(next.slug);
-                  document.getElementById(`industry-tab-${next.slug}`)?.focus();
+              <Link
+                className={`industry-hub__door industry-hub__door--${item.slug}`}
+                href={item.route}
+                aria-label={`Enter ${item.name}`}
+                aria-current={selected ? "true" : undefined}
+                transitionTypes={["portal-forward"]}
+                onPointerEnter={() => {
+                  selectIndustry(item.slug);
+                  router.prefetch(item.route);
                 }}
+                onFocus={() => {
+                  selectIndustry(item.slug);
+                  router.prefetch(item.route);
+                }}
+                onClick={(event) => enterIndustry(event, item)}
               >
-                <span>{item.number}</span>
-                <strong>{item.shortName}</strong>
-                <small>{item.tool}</small>
-              </button>
+                <span className="industry-hub__door-number">{item.number}</span>
+                <strong>{item.doorLabel}</strong>
+                <span className="industry-hub__door-action">Enter <i aria-hidden="true">↗</i></span>
+              </Link>
             </ViewTransition>
           );
         })}
-      </div>
+      </nav>
 
       <div
         id="industry-preview"
         className="industry-hub__preview"
-        role="tabpanel"
-        tabIndex={0}
-        aria-labelledby={`industry-tab-${active.slug}`}
+        aria-live="polite"
       >
         <AnimatePresence mode="wait" initial={false}>
           <motion.div
@@ -168,19 +157,6 @@ export function IndustryHub() {
                 <dd>{active.outcome}</dd>
               </div>
             </dl>
-            <Link
-              className="industry-hub__enter"
-              href={active.route}
-              transitionTypes={["portal-forward"]}
-              onMouseEnter={() => router.prefetch(active.route)}
-              onFocus={() => router.prefetch(active.route)}
-              onClick={(event) => enterIndustry(event, active)}
-            >
-              <span>Enter the {active.shortName} demo</span>
-              <svg aria-hidden="true" viewBox="0 0 20 20">
-                <path d="M4 10h11M11 6l4 4-4 4" />
-              </svg>
-            </Link>
           </motion.div>
         </AnimatePresence>
       </div>

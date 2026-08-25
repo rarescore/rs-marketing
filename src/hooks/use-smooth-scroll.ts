@@ -15,14 +15,18 @@ export function useSmoothScroll(enabled = true) {
       syncTouch: false,
     });
     const update = (time: number) => lenis.raf(time * 1000);
+    const root = document.documentElement;
+    const previousScrollBehavior = root.style.scrollBehavior;
+
+    root.style.scrollBehavior = "auto";
 
     lenis.on("scroll", ScrollTrigger.update);
     gsap.ticker.add(update);
-    gsap.ticker.lagSmoothing(0);
 
     return () => {
       gsap.ticker.remove(update);
       lenis.destroy();
+      root.style.scrollBehavior = previousScrollBehavior;
     };
   }, [enabled]);
 }

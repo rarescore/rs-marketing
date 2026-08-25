@@ -2,7 +2,40 @@
 
 Last updated: 2026-08-22
 
-Current phase: **Phase 9 final validation in progress — implementation and production gates complete; live visual acceptance waiting on preview reconnection**
+## Injury Law cinematic revision in progress
+
+- The latest approved direction narrowly supersedes the former prohibition on a fractured-windshield viewpoint. The new signature begins after impact inside a stopped vehicle and remains non-graphic: no collision reenactment, body or injury imagery, gore, shock audio, or fear-based conversion pressure.
+- Replaced the finite floating-record scene with a scroll-controlled hybrid aftermath environment. An original project-owned photorealistic environment plate provides live-action set realism while independently rendered dimensional windshield shards, fracture lines, rain, depth layers, camera travel, lighting response, selective bloom, grain, and vignette create the motion. The environment plate stays fixed; the sequence is not a pan, zoom, parallax, or generated slideshow.
+- The final environment asset is `public/media/injury-aftermath-environment.jpg` (408 KB). It was generated for this project with the built-in image-generation tool using a no-people/no-injury/no-gore/no-impact brief; no reference-site media was copied.
+- Added the letter-by-letter “Are you okay?” handoff and a short keyboard-operable orientation covering wellbeing, whether an accident occurred, and an optional date. The complete Incident & Impact Review also accepts an optional exact incident date in volatile page memory only.
+- Automated intake still does not approve or reject a case. Result language provides safety, evidence, documentation, and human-review guidance before optional contact. Production privacy, consent, retention, advertising, jurisdiction, and intake language still requires qualified attorney review.
+- Visual QA covered the 1440px opening, mid-camera fracture passage, completed question state, reverse return, and the 390px authored mobile opening/question states. Mobile mounts no Canvas, has no horizontal overflow, and keeps questions above the fixed human-help/showroom controls. The wellbeing → accident → optional date → review handoff was exercised; the no-date path and full review route remain available.
+- TypeScript, ESLint, all five production-contract tests, and the 87-route Next.js Webpack production build pass. The local production preview has no application console errors; the existing upstream Three.js `Clock` deprecation warning remains the only observed warning on the WebGL path.
+
+Current phase: **ONLEV cinematic opening revision implemented and production checks passing**
+
+## ONLEV cinematic opening revision
+
+- Replaced the flat CSS-only ONLEV opening composition with a capability-gated React Three Fiber monument. Independent frame, letterform, nickel, graphite, translucent system-layer, and warm-metal beam geometry now travels from an exploded architectural state into the resolved ONLEV mark.
+- The opening uses a reversible GSAP/ScrollTrigger master progression. Real object transforms, camera lateral travel, lighting response, shadows, material response, and selective bloom/vignette provide the motion; no still-image zoom, pan, parallax, generated slideshow, music, or mandatory intro is used.
+- Added three concise semantic narrative beats outside WebGL so the offer remains clear immediately and without the cinematic layer. The authored mobile and reduced-motion alternatives retain the same story without mounting WebGL or scroll-scrubbed depth motion.
+- Added a dedicated `?qa=cinematic` software-WebGL QA override for controlled testing without weakening normal capability checks.
+- Corrected mobile opening typography and progress treatment at 390px so the headline and actions do not clip.
+- The Three Doors remains late in the ONLEV journey but is no longer the absolute page ending. A short post-showroom coda gives visitors who do not match one of the three demonstrations a clear walkthrough route without weakening direct door selection.
+- Demo showroom controls now expose **Exit / Switch**, with explicit routes back to ONLEV, the Three Doors, and each other demo. Root hash resolution is stabilized for returns from demo routes.
+- TypeScript, ESLint, all five production-contract tests, and the Next.js Webpack production build pass. Desktop and 390px fallback compositions were rendered and inspected; the forced WebGL path mounted and rendered frames without application errors. Three.js emits its upstream `Clock` deprecation warning through the current R3F dependency, but no project console error was observed.
+
+## Stage 1 — ONLEV order and Three Doors correction
+
+- Reordered the root journey to **cinematic ONLEV opening → ONLEV marketing/storytelling → final Three Doors selection → demo entry**. The industry hub no longer appears near the beginning.
+- Replaced early demo-entry actions on the root journey with links to the final showroom. Footer industry links now return to the final selection state instead of bypassing it.
+- Converted all three portal surfaces into direct semantic links. Hover, pointer entry, and keyboard focus immediately select the corresponding industry, open that physical 3D door, reveal its world, shift lighting/depth/camera response, and prefetch the destination. Clicking the door itself enters the demo; the former separate entry CTA was removed.
+- Added permanent, explicit portal labels: **REAL ESTATE**, **PLUMBING**, and **INJURY LAW**.
+- Replaced the former 340-viewport opening showroom track with a bounded final chamber late in the document. It resolves in one viewport on desktop and is followed only by a concise ONLEV walkthrough coda. No persistent wheel/touch scroll hijacking was added.
+- Added an authored mobile final chamber with three direct portal targets and the existing no-WebGL fallback. Reduced motion keeps the final composition and direct links while removing spatial motion.
+- Preserved all Real Estate, Plumbing, Injury Law, System Lens, and showroom-control implementations.
+- Stage 1 TypeScript, ESLint, production-contract tests, and the 87-route Webpack production build pass. Desktop rendered structure and the final hub composition were inspected in the local production preview.
+- The remaining visual ceiling is documented in `docs/CLOUD-AI-CONTINUATION.md`: commissioned/cinematic media and authored high-detail portal assets can still exceed the procedural opening and door geometry without changing the locked journey.
 
 ## Phase 9 working state
 
@@ -140,7 +173,7 @@ Current phase: **Phase 9 final validation in progress — implementation and pro
 - Plumbing outputs remain preliminary homeowner records. They do not diagnose, price, size, approve, certify code compliance, or replace onsite evaluation, manufacturer instructions, permits, applicable code, licensed review, or the authority having jurisdiction.
 - Emergency access is immediate and never gated. Broad safety content requires licensed and jurisdictional review before production.
 - Major signature video remains conditional on a suitable genuine cinematic generator. The available presenter-video capability is not appropriate for service cinematography; this phase therefore uses an honest authored technical cutaway and bounded mechanical animation rather than simulated video from still imagery.
-- Injury Law’s identity is **The Clear Record**: uncertainty resolving into a calm, legible chronology. Do not add crash reenactments, shattered-windshield POV, sirens, blood, injured-body imagery, gavels, scales, glossy gold law-firm clichés, fear tactics, case-value calculators, or aggressive “fighter” copy.
+- Injury Law’s identity is **The Clear Record**: uncertainty resolving into a calm, legible chronology. The approved signature may begin from a tasteful post-impact fractured-windshield viewpoint, but it must not depict the collision, bodies, injuries, gore, shock audio, siren spectacle, fear tactics, gavels, scales, glossy gold clichés, case-value calculators, or aggressive “fighter” copy.
 - Injury Law safety, medical, legal, insurance, timing, consent, advertising, and jurisdiction content requires qualified review before production. The website never diagnoses, decides eligibility, estimates value, computes a deadline, guarantees an outcome, or implies that consultation establishes representation.
 - Injury Law review answers remain volatile page memory only. No review answer may enter a URL, browser storage, cookie, analytics event, Lens event, contact payload, server-action closure, log, or external adapter.
 - Major Injury Law Hero motion uses a real rendered WebGL sequence because the installed stack supports procedural rendered motion but no suitable general-purpose cinematic video generator is callable. It must never be replaced by a fake still-image pan/zoom/parallax.

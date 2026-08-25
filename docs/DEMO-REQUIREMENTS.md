@@ -168,7 +168,7 @@ Ask whether the person is 18 or older when required. Full date of birth is defer
 - Do not store sensitive answers in URLs, analytics, or local storage
 - Provide understandable no-attorney-client-relationship and confidentiality notices approved for the jurisdiction
 - Preserve a human escalation route
-- Avoid graphic, triggering, or coercive accident imagery
+- A tasteful accident-aftermath viewpoint may support the signature Hero when it avoids impact depiction, bodies, gore, injury imagery, shock audio, fear tactics, and coercive copy. Immediate safety and an exit route remain available outside the cinematic layer.
 - Attorney review is required for rules, claims, disclaimers, deadlines, privacy, retention, and contact consent
 
 ## Tool-output quality

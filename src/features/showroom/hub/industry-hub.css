@@ -44,108 +44,116 @@
   text-wrap: balance;
 }
 
-.industry-hub__selectors {
+.industry-hub__doors {
   position: absolute;
-  right: var(--hero-edge);
-  bottom: clamp(2rem, 4vw, 3.75rem);
-  left: min(31vw, 31rem);
+  z-index: 4;
+  top: 20%;
+  right: 14.5%;
+  bottom: 21%;
+  left: 14.5%;
   display: grid;
-  border-top: 1px solid rgb(243 240 233 / 20%);
+  gap: 2.2%;
   grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
-.industry-hub__selectors button {
+.industry-hub__door {
   position: relative;
-  display: grid;
-  min-height: 7.25rem;
-  padding: 1rem clamp(0.8rem, 1.35vw, 1.35rem);
-  border: 0;
-  border-right: 1px solid rgb(243 240 233 / 13%);
-  background: transparent;
+  display: flex;
+  min-width: 0;
+  align-items: flex-end;
+  justify-content: space-between;
+  padding: 1rem clamp(0.7rem, 1.2vw, 1.2rem);
+  border: 1px solid transparent;
   color: var(--palette-bone);
   cursor: pointer;
-  opacity: 0;
-  text-align: left;
-  grid-template-columns: 1.6rem 1fr;
-  grid-template-rows: auto 1fr;
+  opacity: 1;
+  text-decoration: none;
   transition:
+    border-color var(--motion-control) ease,
     background-color var(--motion-control) ease,
-    color var(--motion-control) ease;
+    transform var(--motion-control) var(--ease-enter);
 }
 
-.industry-hub__selectors button:last-child {
-  border-right: 0;
-}
-
-.industry-hub__selectors button::before {
+.industry-hub__door::before {
   position: absolute;
-  top: -1px;
-  right: 0;
-  left: 0;
-  height: 2px;
-  background: var(--hub-accent);
+  inset: -0.45rem;
+  border: 1px solid var(--hub-accent);
   content: "";
   opacity: 0;
-  transform: scaleX(0.25);
-  transform-origin: left;
+  transform: scale(0.985);
   transition:
     opacity var(--motion-control) ease,
-    transform var(--motion-component) var(--ease-enter);
+    transform var(--motion-control) var(--ease-enter);
 }
 
-.industry-hub__selectors button:hover,
-.industry-hub__selectors button[aria-selected="true"] {
-  background: rgb(243 240 233 / 4.5%);
+.industry-hub__door:hover,
+.industry-hub__door:focus-visible,
+.industry-hub__door[aria-current="true"] {
+  border-color: rgb(243 240 233 / 22%);
+  background: linear-gradient(180deg, transparent 58%, rgb(5 7 10 / 72%));
+  transform: translateY(-0.18rem);
 }
 
-.industry-hub__selectors button[aria-selected="true"]::before,
-.industry-hub__selectors button:focus-visible::before {
+.industry-hub__door:hover::before,
+.industry-hub__door:focus-visible::before,
+.industry-hub__door[aria-current="true"]::before {
   opacity: 1;
-  transform: scaleX(1);
+  transform: scale(1);
 }
 
-.industry-hub__selectors button > span {
+.industry-hub__door-number {
+  position: absolute;
+  top: 0.85rem;
+  left: 0.9rem;
   color: rgb(243 240 233 / 42%);
   font-family: var(--font-brand-mono);
-  font-size: 0.625rem;
+  font-size: 0.58rem;
   line-height: 1.5;
 }
 
-.industry-hub__selectors strong {
-  font-size: clamp(0.9rem, 1.1vw, 1.05rem);
-  font-weight: 560;
-  letter-spacing: -0.02em;
-  line-height: 1.3;
+.industry-hub__door strong {
+  position: absolute;
+  top: 0.82rem;
+  left: 2.15rem;
+  font-family: var(--font-brand-mono);
+  font-size: clamp(0.72rem, 0.85vw, 0.86rem);
+  font-weight: 650;
+  letter-spacing: 0.13em;
+  line-height: 1.2;
 }
 
-.industry-hub__selectors small {
-  align-self: end;
-  color: rgb(243 240 233 / 46%);
+.industry-hub__door-action {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  color: rgb(243 240 233 / 62%);
   font-size: 0.68rem;
-  line-height: 1.35;
-  grid-column: 2;
+  font-weight: 600;
+}
+
+.industry-hub__door-action i {
+  color: var(--hub-accent);
+  font-style: normal;
 }
 
 .industry-hub__preview {
   position: absolute;
-  top: clamp(7.5rem, 17vh, 11rem);
+  top: auto;
   right: var(--hero-edge);
+  bottom: clamp(1.75rem, 3.5vw, 3rem);
   z-index: 2;
-  width: min(24rem, 29vw);
-  min-height: 23rem;
-  padding: 1.2rem 0 0 1.4rem;
+  width: min(42rem, 52vw);
+  min-height: 0;
+  padding: 0.85rem 0 0;
   border-top: 1px solid rgb(243 240 233 / 22%);
-  border-left: 1px solid rgb(243 240 233 / 14%);
-  background: linear-gradient(115deg, rgb(13 15 18 / 78%), rgb(13 15 18 / 22%));
+  background: linear-gradient(180deg, rgb(13 15 18 / 88%), rgb(13 15 18 / 22%));
   opacity: 0;
 }
 
 .industry-hub[data-active="injury-law"] .industry-hub__preview {
-  right: auto;
-  left: var(--hero-edge);
-  border-right: 1px solid rgb(243 240 233 / 14%);
-  border-left: 0;
-  background: linear-gradient(245deg, rgb(13 15 18 / 78%), rgb(13 15 18 / 22%));
+  right: var(--hero-edge);
+  left: auto;
+  background: linear-gradient(180deg, rgb(13 15 18 / 88%), rgb(13 15 18 / 22%));
 }
 
 .industry-hub__preview-content {
@@ -166,19 +174,20 @@
 .industry-hub__journey {
   display: grid;
   margin: 0;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
 .industry-hub__journey div {
   position: relative;
   display: grid;
   gap: 0.3rem;
-  padding: 0.85rem 0.75rem 0.85rem 1.3rem;
+  padding: 0.7rem 0.7rem 0.7rem 1.05rem;
   border-top: 1px solid rgb(243 240 233 / 11%);
 }
 
 .industry-hub__journey div::before {
   position: absolute;
-  top: 1.15rem;
+  top: 0.98rem;
   left: 0;
   width: 0.42rem;
   height: 0.42rem;
@@ -330,35 +339,32 @@
     width: min(22rem, 32vw);
   }
 
-  .industry-hub__selectors {
-    left: 35vw;
+  .industry-hub__doors {
+    right: 8.5%;
+    left: 8.5%;
   }
 
   .industry-hub__preview {
-    top: 9rem;
-    width: min(22rem, 38vw);
+    width: min(38rem, 58vw);
   }
 }
 
 @media (max-width: 47.99rem) {
   .industry-hub {
-    display: grid;
-    padding: min(42vh, 22rem) var(--hero-edge) 1.25rem;
-    align-content: end;
-    gap: 0.85rem;
+    min-height: 46rem;
   }
 
   .industry-hub__heading,
-  .industry-hub__selectors,
   .industry-hub__preview,
   .industry-hub[data-active="injury-law"] .industry-hub__preview {
-    position: relative;
-    inset: auto;
     width: 100%;
   }
 
   .industry-hub__heading {
-    opacity: 0;
+    top: 6.75rem;
+    bottom: auto;
+    width: calc(100% - var(--hero-edge) * 2);
+    opacity: 1;
   }
 
   .industry-hub__heading .hero__kicker {
@@ -371,34 +377,47 @@
     font-size: clamp(1.5rem, 7vw, 2.1rem);
   }
 
-  .industry-hub__selectors {
-    display: grid;
+  .industry-hub__doors {
+    top: 14rem;
+    right: var(--hero-edge);
+    bottom: 12rem;
+    left: var(--hero-edge);
+    gap: 0.45rem;
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
-  .industry-hub__selectors button {
-    min-height: 4.65rem;
-    padding: 0.65rem 0.4rem;
-    grid-template-columns: 1fr;
-    grid-template-rows: auto 1fr;
+  .industry-hub__door {
+    min-height: 18rem;
+    padding: 0.75rem 0.55rem;
+    background: linear-gradient(180deg, transparent 55%, rgb(5 7 10 / 78%));
   }
 
-  .industry-hub__selectors button > span {
+  .industry-hub__door-number {
+    top: 0.6rem;
+    left: 0.55rem;
     font-size: 0.52rem;
   }
 
-  .industry-hub__selectors strong {
-    font-size: 0.72rem;
+  .industry-hub__door strong {
+    top: 2rem;
+    left: 0.55rem;
+    max-width: 8ch;
+    font-size: 0.62rem;
+    letter-spacing: 0.08em;
     line-height: 1.2;
   }
 
-  .industry-hub__selectors small {
+  .industry-hub__door-action {
     display: none;
   }
 
   .industry-hub__preview,
   .industry-hub[data-active="injury-law"] .industry-hub__preview {
-    min-height: 0;
+    top: auto;
+    right: var(--hero-edge);
+    bottom: 1rem;
+    left: var(--hero-edge);
+    min-height: 9.5rem;
     padding: 0.65rem 0 0;
     border-right: 0;
     border-left: 0;
@@ -442,42 +461,18 @@
     -webkit-line-clamp: 3;
   }
 
-  .industry-hub__enter {
-    min-height: 2.8rem;
-    font-size: 0.7rem;
-  }
-
-  .industry-hub__enter svg {
-    width: 2.35rem;
-    height: 2.35rem;
-  }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .hero__reveal {
-    inset: auto;
-    display: block;
-    pointer-events: auto;
-  }
-
-  .industry-hub {
-    display: grid;
-    height: auto;
-    gap: 2rem;
-  }
-
   .industry-hub__heading,
-  .industry-hub__selectors,
+  .industry-hub__doors,
   .industry-hub__preview,
   .industry-hub[data-active="injury-law"] .industry-hub__preview {
-    position: relative;
-    inset: auto;
-    width: 100%;
     opacity: 1 !important;
     transform: none !important;
   }
 
-  .industry-hub__selectors button {
+  .industry-hub__door {
     opacity: 1 !important;
     transform: none !important;
   }

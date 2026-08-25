@@ -338,7 +338,7 @@ export function ThreeDoorsScene({ onFailure, onReady }: ThreeDoorsSceneProps) {
 
   return (
     <div ref={host} className="hero__canvas">
-      <Canvas shadows="soft" dpr={[1, fullQuality ? 1.45 : 1.2]} frameloop={visible ? "always" : "never"} camera={{ position: [-1.15, 0.72, 6.72], fov: 40, near: 0.1, far: 50 }} gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }} onCreated={({ gl }) => { gl.outputColorSpace = THREE.SRGBColorSpace; gl.toneMapping = THREE.ACESFilmicToneMapping; gl.toneMappingExposure = 0.82; }}>
+      <Canvas shadows dpr={[1, fullQuality ? 1.45 : 1.2]} frameloop={visible ? "always" : "never"} camera={{ position: [-1.15, 0.72, 6.72], fov: 40, near: 0.1, far: 50 }} gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }} onCreated={({ gl }) => { gl.outputColorSpace = THREE.SRGBColorSpace; gl.toneMapping = THREE.ACESFilmicToneMapping; gl.toneMappingExposure = 0.82; }}>
         <color attach="background" args={["#0b0e12"]} /><fog attach="fog" args={["#0b0e12", 8.4, 19]} /><ambientLight intensity={0.23} />
         <directionalLight castShadow shadow-mapSize-width={1024} shadow-mapSize-height={1024} position={[4, 6.5, 6]} intensity={2.7} color="#f3e8d5" /><directionalLight position={[-5, 2.5, 3]} intensity={0.9} color="#6479a9" />
         <Suspense fallback={null}><Showroom /><ShowroomEnvironment /></Suspense>

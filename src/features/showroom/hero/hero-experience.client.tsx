@@ -46,10 +46,6 @@ function canRunCinematicLayer() {
   if (typeof window === "undefined") return false;
   if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return false;
   if (!window.matchMedia("(min-width: 48rem)").matches) return false;
-  if (navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 2) {
-    return false;
-  }
-
   try {
     const canvas = document.createElement("canvas");
     return Boolean(canvas.getContext("webgl2") || canvas.getContext("webgl"));
@@ -58,7 +54,7 @@ function canRunCinematicLayer() {
   }
 }
 
-export function HeroExperience() {
+export function HeroExperience({ mode = "sequence" }: { mode?: "sequence" | "hub" }) {
   const root = useRef<HTMLDivElement>(null);
   const [sceneEnabled, setSceneEnabled] = useState(false);
   const [sceneReady, setSceneReady] = useState(false);
@@ -101,6 +97,13 @@ export function HeroExperience() {
 
   useGSAP(
     () => {
+      if (mode === "hub") {
+        setProgress(1);
+        root.current?.setAttribute("data-hub", "");
+        gsap.set(".hero__reveal", { autoAlpha: 1, pointerEvents: "auto" });
+        return () => setProgress(0);
+      }
+
       if (reducedMotion) {
         setProgress(1);
         gsap.set(".hero__reveal", { autoAlpha: 1, pointerEvents: "auto" });
@@ -138,7 +141,7 @@ export function HeroExperience() {
           0.58,
         )
         .fromTo(
-          ".industry-hub__selectors button",
+          ".industry-hub__door",
           { y: 20, opacity: 0 },
           { y: 0, opacity: 1, duration: 0.16, stagger: 0.025 },
           0.66,
@@ -154,7 +157,7 @@ export function HeroExperience() {
 
       return () => setProgress(0);
     },
-    { dependencies: [reducedMotion, setProgress] },
+    { dependencies: [mode, reducedMotion, setProgress] },
   );
 
   return (
