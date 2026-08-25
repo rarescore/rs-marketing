@@ -31,7 +31,7 @@ export default function Page() {
 
     <section className="il-reassurance" aria-labelledby="reassurance-heading">
       <div className="il-shell il-reassurance__layout">
-        <div className="il-reassurance__image" role="img" aria-label="A quiet view of the roadway after an accident" />
+        <div className="il-reassurance__image" role="img" aria-label="A calm Los Angeles boulevard after rain at blue hour" />
         <div className="il-reassurance__copy">
           <p className="il-eyebrow">After the moment of impact</p>
           <h2 id="reassurance-heading">The accident may be over. <em>The effects are not.</em></h2>
