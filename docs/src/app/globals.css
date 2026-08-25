@@ -1,0 +1,31 @@
+@import "tailwindcss";
+@import "../styles/tokens.css";
+@import "../styles/base.css";
+@import "../features/showroom/hero/hero.css";
+@import "../features/showroom/hub/industry-hub.css";
+@import "../features/showroom/demo-shell/demo-shell.css";
+@import "../features/onlev/onlev.css";
+
+@theme inline {
+  --color-canvas: var(--semantic-canvas);
+  --color-surface: var(--semantic-surface);
+  --color-surface-raised: var(--semantic-surface-raised);
+  --color-ink: var(--semantic-ink);
+  --color-ink-muted: var(--semantic-ink-muted);
+  --color-line: var(--semantic-line);
+  --color-accent: var(--semantic-accent);
+  --color-accent-strong: var(--semantic-accent-strong);
+  --color-warm: var(--semantic-warm);
+  --color-success: var(--semantic-success);
+  --color-warning: var(--semantic-warning);
+  --color-danger: var(--semantic-danger);
+  --color-focus: var(--semantic-focus);
+  --color-scrim: var(--semantic-scrim);
+  --font-sans: var(--font-brand-sans);
+  --font-mono: var(--font-brand-mono);
+  --radius-sm: var(--shape-radius-sm);
+  --radius-md: var(--shape-radius-md);
+  --radius-lg: var(--shape-radius-lg);
+  --shadow-soft: var(--elevation-soft);
+  --shadow-raised: var(--elevation-raised);
+}
