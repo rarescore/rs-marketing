@@ -202,6 +202,7 @@ export function InjuryHero({ onlineReady }: { onlineReady: boolean }) {
       <div className="il-cinematic__visual" aria-hidden="true">
         <div className="il-cinematic__fallback" />
         <video ref={video} className="il-cinematic__video" muted playsInline preload={reduced ? "metadata" : "auto"} tabIndex={-1} disablePictureInPicture onLoadedMetadata={() => seek(reduced ? 1 : progress.current, true)}>
+          <source src="/video/injury-law/accident-sequence-4k.m4v" type="video/mp4" media="(min-width: 1600px), (min-width: 1200px) and (min-resolution: 1.5dppx)" />
           <source src="/video/injury-law/accident-sequence-desktop.m4v" type="video/mp4" media="(min-width: 761px)" />
           <source src="/video/injury-law/accident-sequence-mobile.m4v" type="video/mp4" />
         </video>

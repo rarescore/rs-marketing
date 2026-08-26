@@ -31,7 +31,7 @@ Use real hostname-restricted keys in production. A valid Resend API key and veri
 
 ## Media
 
-The original 1280×720 animation is preserved at `public/video/injury-law/accident-sequence.mp4`, with separate desktop and lightweight mobile exports plus matching poster images. The source does not contain true 1080p detail, so the project does not label an ordinary upscale as a higher-resolution master. The content, timing, and framing were not changed.
+The original 1280×720 animation is preserved at `public/video/injury-law/accident-sequence.mp4`, with separate 3840×2160 large-display, desktop, and lightweight mobile exports. The 4K file is a high-quality H.264 upscale for cleaner large-screen rendering; the source does not contain native 4K detail. The content, timing, and framing were not changed.
 
 A 57 MB Apple ProRes 422 production master is kept locally at `public/video/injury-law/masters/` for re-exporting if needed, but `.gitignore` excludes it from version control and deploys — it's never linked from a page and has no reason to be publicly served or shipped in a production bundle.
 
