@@ -3,6 +3,7 @@ import { InjuryHero } from "@/features/demos/injury-law/home-hero.client";
 import { EvidenceBoard } from "@/features/demos/injury-law/evidence-board.client";
 import { CallbackIntake } from "@/features/demos/injury-law/callback-intake.client";
 import { DirectContact } from "@/features/demos/injury-law/direct-contact.client";
+import { ScrollMotionStory } from "@/features/demos/injury-law/scroll-motion-story.client";
 import { lawPhoneDisplay, lawPhoneHref, processStages } from "@/features/demos/injury-law/data";
 import { pipelineConfigured } from "@/lib/intake/security";
 
@@ -43,11 +44,15 @@ export default function Page() {
 
     <EvidenceBoard />
 
+    <ScrollMotionStory sequence="evidence-network" frameCount={26} eyebrow="Every detail connects" heading="Evidence forms a picture." copy="Photographs, records, witness information, vehicle data, and timing can support one another. Preserving the connections matters." label="An abstract violet evidence network moving with the page scroll" />
+
     <section className="il-insurance" aria-labelledby="insurance-heading"><div className="il-shell il-insurance__layout">
       <p className="il-insurance__label">Before you sign or accept</p>
       <div><h2 id="insurance-heading">An early offer can arrive before the full impact is known.</h2><p>A settlement offer may arrive before treatment is complete, missed income is fully documented, or the long-term effect on work and daily life is clear. Before making a final decision, make sure the available evidence reflects what the accident has actually changed.</p></div>
       <aside><strong>You deserve to understand what an offer includes—and what it may leave out.</strong><Link className="il-button il-button--paper" href="/case-review">Let Us Review What Happened</Link><Link href="/resources/insurance-adjuster-call">What to Know Before Speaking With an Adjuster →</Link></aside>
     </div></section>
+
+    <ScrollMotionStory sequence="uncertainty-cloud" frameCount={30} eyebrow="Clarity through uncertainty" heading="You do not need to see the whole path yet." copy="The first useful step is often simply organizing what happened, what changed, and what information is still available." label="A violet cloud field moving gradually with the page scroll" tone="ink" />
 
     <section className="il-recovery" aria-labelledby="recovery-heading"><div className="il-shell">
       <header className="il-recovery__head"><p className="il-eyebrow">The complete impact</p><h2 id="recovery-heading">Recovery is more than a repair bill.</h2></header>
@@ -65,6 +70,8 @@ export default function Page() {
       <header className="il-help__head"><p className="il-eyebrow">How the firm helps</p><h2 id="help-heading">From the first call to the final decision, you should know what is happening.</h2></header>
       <ol className="il-help__timeline">{processStages.map(([heading, copy], index) => <li key={heading}><b>{String(index + 1).padStart(2, "0")}</b><div><h3>{heading}</h3><p>{copy}</p></div></li>)}</ol>
     </div></section>
+
+    <ScrollMotionStory sequence="forward-vortex" frameCount={34} eyebrow="A clear direction forward" heading="Move ahead with the facts you have." copy="You can begin without a perfect timeline. The firm can help identify the next practical questions and records to preserve." label="A white particle current moving forward with the page scroll" tone="ink" />
 
     <section className="il-trust" aria-labelledby="trust-heading"><div className="il-shell il-trust__layout">
       <div className="il-trust__path" aria-label="Your request moves from intake to attorney evaluation"><p>What happens to your information</p><ol><li><b>01</b><span><strong>Your request</strong><small>Only the basic facts you choose to share</small></span></li><li><b>02</b><span><strong>Intake review</strong><small>The team organizes the information for evaluation</small></span></li><li><b>03</b><span><strong>Attorney evaluation</strong><small>A California-licensed attorney considers the next step</small></span></li></ol></div>

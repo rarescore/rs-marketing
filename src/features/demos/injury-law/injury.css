@@ -784,3 +784,29 @@
   .il-reassurance__image:hover::before{animation:none;transform:scale(1.025)}
   .il-reassurance__image::after{display:none}
 }
+
+/* User-supplied scroll frame sequences */
+.il-frame-sequence{display:block;width:100%;height:100%;object-fit:cover;background:#06080d}
+.il-cinematic__frames{position:absolute;inset:0;width:100%;height:100%}
+.il-scroll-story{position:relative;height:180svh;background:#080b12;color:white}
+.il-scroll-story__sticky{position:sticky;top:0;height:100svh;overflow:hidden;isolation:isolate}
+.il-scroll-story__sticky>.il-frame-sequence{position:absolute;z-index:-3;inset:0}
+.il-scroll-story__shade{position:absolute;z-index:-2;inset:0;background:linear-gradient(90deg,rgba(4,7,12,.9),rgba(8,10,18,.34) 58%,rgba(6,8,14,.6)),linear-gradient(180deg,rgba(2,4,8,.1),rgba(2,4,8,.72));pointer-events:none}
+.il-scroll-story--violet .il-scroll-story__shade{background:linear-gradient(90deg,rgba(9,5,21,.9),rgba(20,8,45,.25) 58%,rgba(8,4,18,.65)),linear-gradient(180deg,rgba(4,2,10,.05),rgba(4,2,10,.72))}
+.il-scroll-story__copy{height:100%;display:flex;flex-direction:column;justify-content:center;align-items:flex-start}
+.il-scroll-story__copy .il-eyebrow{color:#d7a9c9}
+.il-scroll-story__copy h2{max-width:10ch;margin:.7rem 0 1.25rem;font-family:var(--il-display);font-size:clamp(3rem,6vw,6.4rem);font-weight:400;line-height:.98;letter-spacing:-.04em}
+.il-scroll-story__copy>p:last-child{max-width:48ch;margin:0;color:rgba(255,255,255,.72);font-size:clamp(1rem,1.4vw,1.2rem);line-height:1.7}
+
+@media(max-width:760px){
+  .il-scroll-story{height:145svh}
+  .il-scroll-story__copy{justify-content:flex-end;padding-bottom:8rem}
+  .il-scroll-story__copy h2{font-size:clamp(2.55rem,12vw,3.7rem);line-height:1.02}
+  .il-scroll-story__shade{background:linear-gradient(180deg,rgba(4,7,12,.08),rgba(4,7,12,.34) 42%,rgba(4,7,12,.94) 83%)}
+  .il-scroll-story--violet .il-scroll-story__shade{background:linear-gradient(180deg,rgba(8,3,18,.06),rgba(9,4,20,.34) 42%,rgba(7,3,16,.94) 83%)}
+}
+
+@media(prefers-reduced-motion:reduce){
+  .il-scroll-story{height:auto}
+  .il-scroll-story__sticky{position:relative;height:72svh;min-height:520px}
+}

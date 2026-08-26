@@ -7,6 +7,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useReducedMotion } from "motion/react";
 import { ConsultationForm } from "./consultation-form.client";
 import { lawPhoneDisplay, lawPhoneHref } from "./data";
+import { ScrollFrameSequence, type ScrollFrameSequenceHandle } from "./scroll-frame-sequence.client";
 
 gsap.registerPlugin(ScrollTrigger, useGSAP);
 
@@ -31,15 +32,11 @@ const whenLabel = {
 
 export function InjuryHero({ onlineReady }: { onlineReady: boolean }) {
   const root = useRef<HTMLElement>(null);
-  const video = useRef<HTMLVideoElement>(null);
+  const crashFrames = useRef<ScrollFrameSequenceHandle>(null);
   const titleRef = useRef<HTMLLegendElement>(null);
   const contactRef = useRef<HTMLHeadingElement>(null);
   const reduced = useReducedMotion();
   const progress = useRef(0);
-  const pendingSeek = useRef(0);
-  const seekFrame = useRef<number | null>(null);
-  const lastSeekAt = useRef(0);
-  const videoUnlocked = useRef(false);
   const [step, setStep] = useState<Step>("fault");
   const [answers, setAnswers] = useState<Partial<Answers>>({});
   const [showDate, setShowDate] = useState(false);
@@ -49,95 +46,17 @@ export function InjuryHero({ onlineReady }: { onlineReady: boolean }) {
     if (step !== "fault") (step === "contact" ? contactRef : titleRef).current?.focus({ preventScroll: true });
   }, [step]);
 
-  const commitSeek = useCallback(function updateVideoFrame(timestamp: number) {
-    seekFrame.current = null;
-    if (timestamp - lastSeekAt.current < 34) {
-      seekFrame.current = requestAnimationFrame(updateVideoFrame);
-      return;
-    }
-    const element = video.current;
-    if (!element || (!reduced && !videoUnlocked.current) || !Number.isFinite(element.duration)) return;
-    const scene = Math.min(pendingSeek.current / 0.7, 1);
-    const target = gsap.parseEase("power1.inOut")(scene) * Math.max(element.duration - 0.04, 0);
-    if (Math.abs(element.currentTime - target) > 0.035) element.currentTime = target;
-    lastSeekAt.current = timestamp;
-  }, [reduced]);
-
-  const seek = useCallback((position: number, immediate = false) => {
+  const seek = useCallback((position: number) => {
     progress.current = position;
-    pendingSeek.current = position;
-    if (immediate) {
-      if (seekFrame.current !== null) cancelAnimationFrame(seekFrame.current);
-      lastSeekAt.current = 0;
-      commitSeek(performance.now());
-    } else if (seekFrame.current === null) {
-      seekFrame.current = requestAnimationFrame(commitSeek);
-    }
-  }, [commitSeek]);
-
-  useEffect(() => {
-    const element = video.current;
-    if (!element) return;
-    const media: HTMLVideoElement = element;
-    if (reduced) {
-      media.classList.add("il-cinematic__video--ready");
-      return;
-    }
-
-    let active = true;
-    let unlocking = false;
-
-    const removeUnlockListeners = () => {
-      window.removeEventListener("touchstart", unlockVideo);
-      window.removeEventListener("pointerdown", unlockVideo);
-      window.removeEventListener("scroll", unlockVideo);
-    };
-
-    const finishUnlock = () => {
-      if (!active) return;
-      media.pause();
-      videoUnlocked.current = true;
-      unlocking = false;
-      media.classList.add("il-cinematic__video--ready");
-      removeUnlockListeners();
-      seek(progress.current, true);
-    };
-
-    function unlockVideo() {
-      if (!active || videoUnlocked.current || unlocking) return;
-      unlocking = true;
-      media.muted = true;
-      media.playsInline = true;
-      const playback = media.play();
-      if (playback) playback.then(finishUnlock).catch(() => { unlocking = false; });
-      else finishUnlock();
-    }
-
-    window.addEventListener("touchstart", unlockVideo, { passive: true });
-    window.addEventListener("pointerdown", unlockVideo, { passive: true });
-    window.addEventListener("scroll", unlockVideo, { passive: true });
-
-    // Muted inline playback is allowed immediately in most browsers. Mobile
-    // Safari can reject this attempt until the first real touch; the listeners
-    // above retry inside that gesture and then restore scroll-controlled pause.
-    unlockVideo();
-
-    return () => {
-      active = false;
-      removeUnlockListeners();
-      media.pause();
-    };
-  }, [reduced, seek]);
-
-  useEffect(() => () => {
-    if (seekFrame.current !== null) cancelAnimationFrame(seekFrame.current);
+    const scene = Math.min(position / 0.7, 1);
+    crashFrames.current?.seek(gsap.parseEase("power1.inOut")(scene));
   }, []);
 
   useGSAP(() => {
     if (!root.current) return;
     if (reduced) {
       gsap.set(".il-cinematic__question", { autoAlpha: 1 });
-      seek(1, true);
+      seek(1);
       return;
     }
     const timeline = gsap.timeline({ scrollTrigger: {
@@ -146,7 +65,7 @@ export function InjuryHero({ onlineReady }: { onlineReady: boolean }) {
       end: "bottom bottom",
       scrub: 0.55,
       onUpdate: (state) => seek(state.progress),
-      onLeave: () => seek(1, true),
+      onLeave: () => seek(1),
     } });
     timeline.to(".il-cinematic__shade", { opacity: 0.9, duration: 0.12 }, 0.62)
       .fromTo(".il-cinematic__question", { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.15 }, 0.7);
@@ -201,11 +120,7 @@ export function InjuryHero({ onlineReady }: { onlineReady: boolean }) {
     <div className="il-cinematic__sticky">
       <div className="il-cinematic__visual" aria-hidden="true">
         <div className="il-cinematic__fallback" />
-        <video ref={video} className="il-cinematic__video" muted playsInline preload={reduced ? "metadata" : "auto"} tabIndex={-1} disablePictureInPicture onLoadedMetadata={() => seek(reduced ? 1 : progress.current, true)}>
-          <source src="/video/injury-law/accident-sequence-4k.m4v" type="video/mp4" media="(min-width: 1600px), (min-width: 1200px) and (min-resolution: 1.5dppx)" />
-          <source src="/video/injury-law/accident-sequence-desktop.m4v" type="video/mp4" media="(min-width: 761px)" />
-          <source src="/video/injury-law/accident-sequence-mobile.m4v" type="video/mp4" />
-        </video>
+        <ScrollFrameSequence ref={crashFrames} sequence="crash" frameCount={19} eager className="il-cinematic__frames" />
       </div>
       <div className="il-cinematic__shade" aria-hidden="true" />
       <div id="free-case-review" className="il-cinematic__question">

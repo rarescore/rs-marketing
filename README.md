@@ -1,6 +1,6 @@
 # Lev & On Law Firm website
 
-A production-ready Next.js personal-injury website with a reversible three-question intake, responsive crash media, Resend email delivery, and Cloudflare Turnstile abuse protection.
+A production-ready Next.js personal-injury website with a reversible three-question intake, responsive scroll animation, Resend email delivery, and Cloudflare Turnstile abuse protection.
 
 ## Run locally
 
@@ -31,9 +31,7 @@ Use real hostname-restricted keys in production. A valid Resend API key and veri
 
 ## Media
 
-The original 1280×720 animation is preserved at `public/video/injury-law/accident-sequence.mp4`, with separate 3840×2160 large-display, desktop, and lightweight mobile exports. The 4K file is a high-quality H.264 upscale for cleaner large-screen rendering; the source does not contain native 4K detail. The content, timing, and framing were not changed.
-
-A 57 MB Apple ProRes 422 production master is kept locally at `public/video/injury-law/masters/` for re-exporting if needed, but `.gitignore` excludes it from version control and deploys — it's never linked from a page and has no reason to be publicly served or shipped in a production bundle.
+The four supplied GIFs are converted to optimized WebP frame sequences under `public/media/scroll/`. The crash sequence drives the hero, while the other three sequences appear as lazy-loaded scroll stories farther down the homepage. This frame-based approach responds directly to scroll and is reliable on iPhone Safari without depending on autoplay video behavior.
 
 ## Verify
 

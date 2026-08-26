@@ -1,0 +1,26 @@
+{
+  "crash": {
+    "frames": 19,
+    "width": 500,
+    "height": 281,
+    "pattern": "/media/scroll/crash/frame-%03d.webp"
+  },
+  "evidence-network": {
+    "frames": 26,
+    "width": 600,
+    "height": 600,
+    "pattern": "/media/scroll/evidence-network/frame-%03d.webp"
+  },
+  "uncertainty-cloud": {
+    "frames": 30,
+    "width": 640,
+    "height": 640,
+    "pattern": "/media/scroll/uncertainty-cloud/frame-%03d.webp"
+  },
+  "forward-vortex": {
+    "frames": 34,
+    "width": 720,
+    "height": 720,
+    "pattern": "/media/scroll/forward-vortex/frame-%03d.webp"
+  }
+}
