@@ -85,7 +85,8 @@
 .il-cinematic__visual { z-index:-3; }
 .il-cinematic__fallback { background:#080d13; }
 .il-cinematic__fallback::before { content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(4,8,12,.06),rgba(4,8,12,.28)); }
-.il-cinematic__video { width:100%;height:100%;object-fit:cover;object-position:center center;will-change:transform; }
+.il-cinematic__video { width:100%;height:100%;object-fit:cover;object-position:center center;opacity:0;transition:opacity .18s ease;will-change:transform; }
+.il-cinematic__video--ready{opacity:1}
 .il-cinematic__shade { z-index:-2;background:linear-gradient(90deg,rgba(4,8,12,.9),rgba(5,9,13,.48) 46%,rgba(5,9,13,.12) 70%,rgba(5,9,13,.62)),linear-gradient(180deg,rgba(0,0,0,.18),transparent 58%,rgba(0,0,0,.68));pointer-events:none; }
 .il-cinematic__opening { position:absolute;z-index:2;left:clamp(1.2rem,5vw,6rem);top:calc(50% - 61px);width:min(690px,calc(100% - 2.4rem));transform:translateY(-48%); }
 .il-cinematic__opening .il-eyebrow { color:#d9b0a5; }

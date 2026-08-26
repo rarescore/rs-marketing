@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -39,6 +39,7 @@ export function InjuryHero({ onlineReady }: { onlineReady: boolean }) {
   const pendingSeek = useRef(0);
   const seekFrame = useRef<number | null>(null);
   const lastSeekAt = useRef(0);
+  const videoUnlocked = useRef(false);
   const [step, setStep] = useState<Step>("fault");
   const [answers, setAnswers] = useState<Partial<Answers>>({});
   const [showDate, setShowDate] = useState(false);
@@ -48,21 +49,21 @@ export function InjuryHero({ onlineReady }: { onlineReady: boolean }) {
     if (step !== "fault") (step === "contact" ? contactRef : titleRef).current?.focus({ preventScroll: true });
   }, [step]);
 
-  const commitSeek = (timestamp: number) => {
+  const commitSeek = useCallback(function updateVideoFrame(timestamp: number) {
     seekFrame.current = null;
     if (timestamp - lastSeekAt.current < 34) {
-      seekFrame.current = requestAnimationFrame(commitSeek);
+      seekFrame.current = requestAnimationFrame(updateVideoFrame);
       return;
     }
     const element = video.current;
-    if (!element || !Number.isFinite(element.duration)) return;
+    if (!element || (!reduced && !videoUnlocked.current) || !Number.isFinite(element.duration)) return;
     const scene = Math.min(pendingSeek.current / 0.7, 1);
     const target = gsap.parseEase("power1.inOut")(scene) * Math.max(element.duration - 0.04, 0);
     if (Math.abs(element.currentTime - target) > 0.035) element.currentTime = target;
     lastSeekAt.current = timestamp;
-  };
+  }, [reduced]);
 
-  const seek = (position: number, immediate = false) => {
+  const seek = useCallback((position: number, immediate = false) => {
     progress.current = position;
     pendingSeek.current = position;
     if (immediate) {
@@ -72,7 +73,61 @@ export function InjuryHero({ onlineReady }: { onlineReady: boolean }) {
     } else if (seekFrame.current === null) {
       seekFrame.current = requestAnimationFrame(commitSeek);
     }
-  };
+  }, [commitSeek]);
+
+  useEffect(() => {
+    const element = video.current;
+    if (!element) return;
+    const media: HTMLVideoElement = element;
+    if (reduced) {
+      media.classList.add("il-cinematic__video--ready");
+      return;
+    }
+
+    let active = true;
+    let unlocking = false;
+
+    const removeUnlockListeners = () => {
+      window.removeEventListener("touchstart", unlockVideo);
+      window.removeEventListener("pointerdown", unlockVideo);
+      window.removeEventListener("scroll", unlockVideo);
+    };
+
+    const finishUnlock = () => {
+      if (!active) return;
+      media.pause();
+      videoUnlocked.current = true;
+      unlocking = false;
+      media.classList.add("il-cinematic__video--ready");
+      removeUnlockListeners();
+      seek(progress.current, true);
+    };
+
+    function unlockVideo() {
+      if (!active || videoUnlocked.current || unlocking) return;
+      unlocking = true;
+      media.muted = true;
+      media.playsInline = true;
+      const playback = media.play();
+      if (playback) playback.then(finishUnlock).catch(() => { unlocking = false; });
+      else finishUnlock();
+    }
+
+    window.addEventListener("touchstart", unlockVideo, { passive: true });
+    window.addEventListener("pointerdown", unlockVideo, { passive: true });
+    window.addEventListener("scroll", unlockVideo, { passive: true });
+
+    // Muted inline playback is allowed immediately in most browsers. Mobile
+    // Safari can reject this attempt until the first real touch; the listeners
+    // above retry inside that gesture and then restore scroll-controlled pause.
+    unlockVideo();
+
+    return () => {
+      active = false;
+      removeUnlockListeners();
+      media.pause();
+    };
+  }, [reduced, seek]);
 
   useEffect(() => () => {
     if (seekFrame.current !== null) cancelAnimationFrame(seekFrame.current);
@@ -99,7 +154,7 @@ export function InjuryHero({ onlineReady }: { onlineReady: boolean }) {
       timeline.fromTo(`.il-cinematic__char:nth-child(${index + 1})`, { opacity: 0 }, { opacity: 1, duration: 0.014 }, 0.73 + index * 0.008);
     });
     return () => timeline.scrollTrigger?.kill();
-  }, { scope: root, dependencies: [reduced] });
+  }, { scope: root, dependencies: [reduced, seek] });
 
   const chooseFault = (value: Answers["faultAnswer"]) => {
     setAnswers((current) => ({ ...current, faultAnswer: value }));
