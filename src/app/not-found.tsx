@@ -1,1 +1,0 @@
-import Link from "next/link"; export default function NotFound(){return <main className="il-legal"><p className="il-eyebrow">404</p><h1>This page is not here.</h1><p>The information may have moved. Return home or request a free case review.</p><Link className="il-button il-button--ink" href="/">Return home</Link></main>}

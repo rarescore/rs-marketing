@@ -1,1 +1,0 @@
-export default function Loading(){return <main id="injury-main" className="il-form-shell" aria-live="polite"><p className="il-eyebrow">Lev &amp; On Law Firm</p><h1 style={{fontSize:"clamp(2.8rem,6vw,5rem)",margin:0}}>Preparing your page…</h1></main>}

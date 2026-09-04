@@ -1,6 +1,0 @@
-import { ConsultationForm } from "@/features/demos/injury-law/consultation-form.client";
-import { InjuryPageIntro } from "@/features/demos/injury-law/injury-layout";
-import { lawPhoneDisplay, lawPhoneHref } from "@/features/demos/injury-law/data";
-import { pipelineConfigured } from "@/lib/intake/security";
-export const metadata={title:"Contact",description:"Request a free personal injury case review from Lev & On Law Firm."};
-export default function Page(){const onlineReady=pipelineConfigured();return <main id="injury-main"><InjuryPageIntro eyebrow="Free case review" title="Tell us what happened."><p>You do not need a finished timeline or a perfect file. Leave your contact details and our intake team will return your call. To speak now, call <a href={lawPhoneHref}>{lawPhoneDisplay}</a>.</p></InjuryPageIntro><section className="il-form-shell"><div className="il-content-grid"><aside className="il-annotation"><strong>What to expect</strong>We will ask about when the incident happened, how you are feeling, what records exist, and who has contacted you. Sending a form does not create an attorney-client relationship.</aside><ConsultationForm onlineReady={onlineReady}/></div></section></main>}
